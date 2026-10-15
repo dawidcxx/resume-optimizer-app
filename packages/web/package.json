@@ -10,8 +10,9 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@tailwindcss/vite": "^4.2.2",
     "@resume-optimzer-app/common": "workspace:*",
+    "@tailwindcss/vite": "^4.2.2",
+    "@tanstack/react-form": "^1.33.5",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "swr": "^2.4.1",

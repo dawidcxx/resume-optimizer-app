@@ -2,6 +2,7 @@ import { Link, Route, Router, Switch, useLocation } from "wouter";
 import { cn } from "@/lib/cn";
 import { Text, ThemeSwitcher } from "@/ui";
 import { ButtonDemo } from "./demos/ButtonDemo";
+import { FormDemo } from "./demos/FormDemo";
 import { InputDemo } from "./demos/InputDemo";
 import { LabelDemo } from "./demos/LabelDemo";
 import { ListDemo } from "./demos/ListDemo";
@@ -18,6 +19,7 @@ const NAV = [
   { path: "/label", label: "Label" },
   { path: "/list", label: "List" },
   { path: "/table", label: "Table" },
+  { path: "/form", label: "Form" },
   { path: "/theme", label: "Theme" },
 ] as const;
 
@@ -36,6 +38,7 @@ export function DesignApp() {
               <Route path="/label" component={LabelDemo} />
               <Route path="/list" component={ListDemo} />
               <Route path="/table" component={TableDemo} />
+              <Route path="/form" component={FormDemo} />
               <Route path="/theme" component={ThemeDemo} />
               <Route path="/" component={OverviewDemo} />
               <Route component={OverviewDemo} />
