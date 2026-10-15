@@ -20,8 +20,8 @@ If a brand new feature is requested, start by modeling the domain first (see `do
 
 This project serves multiple SPAs from a single Vite dev server:
 
-- `/` → `index.html` (root SPA, todo demo)
-- `/design` → `design.html` (UI sandbox SPA)
+- `/` → `index.html` (main app SPA)
+- `/design` → `design.html` (UI library sandbox SPA)
 
 Both dev (Vite) and production (backend `serveStaticAssets`) serve the correct page HTML for sub-routes. For example, `/design/components` correctly serves `design.html`, not `index.html`.
 

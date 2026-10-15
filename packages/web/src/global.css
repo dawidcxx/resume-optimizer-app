@@ -1,1 +1,119 @@
 @import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  color-scheme: light;
+
+  --background: #ffffff;
+  --foreground: #1f1f1f;
+
+  --surface: #ffffff;
+  --subtle: #f8f9fa;
+  --muted: #f1f3f4;
+  --muted-foreground: #5f6368;
+
+  --border: #dadce0;
+  --border-strong: #bdc1c6;
+
+  --primary: #1a73e8;
+  --primary-hover: #1765cc;
+  --primary-foreground: #ffffff;
+
+  --secondary: #f1f3f4;
+  --secondary-hover: #e8eaed;
+  --secondary-foreground: #1f1f1f;
+
+  --accent: #e8f0fe;
+  --accent-foreground: #1967d2;
+
+  --danger: #d93025;
+  --danger-hover: #b3261e;
+  --danger-foreground: #ffffff;
+
+  --success: #188038;
+  --warning: #b06000;
+  --ring: #1a73e8;
+
+  --radius: 4px;
+}
+
+.dark {
+  color-scheme: dark;
+
+  --background: #1f1f1f;
+  --foreground: #e8eaed;
+
+  --surface: #292a2d;
+  --subtle: #232427;
+  --muted: #303134;
+  --muted-foreground: #9aa0a6;
+
+  --border: #3c4043;
+  --border-strong: #5f6368;
+
+  --primary: #8ab4f8;
+  --primary-hover: #aecbfa;
+  --primary-foreground: #202124;
+
+  --secondary: #303134;
+  --secondary-hover: #3c4043;
+  --secondary-foreground: #e8eaed;
+
+  --accent: #2b3a55;
+  --accent-foreground: #aecbfa;
+
+  --danger: #f28b82;
+  --danger-hover: #f6aea9;
+  --danger-foreground: #202124;
+
+  --success: #81c995;
+  --warning: #fdd663;
+  --ring: #8ab4f8;
+}
+
+@theme inline {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial,
+    sans-serif;
+  --font-serif: "Source Serif 4", ui-serif, Georgia, "Times New Roman", serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-subtle: var(--subtle);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-hover: var(--secondary-hover);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-danger: var(--danger);
+  --color-danger-hover: var(--danger-hover);
+  --color-danger-foreground: var(--danger-foreground);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-ring: var(--ring);
+
+  --radius-ui: var(--radius);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  body {
+    @apply bg-background font-sans text-sm text-foreground antialiased;
+  }
+
+  ::selection {
+    @apply bg-accent text-accent-foreground;
+  }
+}
