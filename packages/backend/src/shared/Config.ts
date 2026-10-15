@@ -1,5 +1,5 @@
 import { injectable } from "@needle-di/core";
-import { isNil } from "@the_application_name/common";
+import { isNil } from "@resume-optimzer-app/common";
 import { LOG_LEVELS, type LogLevel } from "@/lib/Logger";
 
 @injectable()

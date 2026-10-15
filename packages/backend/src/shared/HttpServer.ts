@@ -2,7 +2,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { serve } from "@hono/node-server";
 import { inject, injectable } from "@needle-di/core";
-import { HttpStatusCodes, invariant } from "@the_application_name/common";
+import { HttpStatusCodes, invariant } from "@resume-optimzer-app/common";
 import { Hono } from "hono";
 import { bodyLimit } from "hono/body-limit";
 import { cors } from "hono/cors";

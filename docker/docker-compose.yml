@@ -1,13 +1,13 @@
-name: the_application_name
+name: resume-optimzer-app
 services:
   db:
     image: postgres:17-alpine
     environment:
-      POSTGRES_USER: the_application_name
-      POSTGRES_PASSWORD: the_application_name
-      POSTGRES_DB: the_application_name
+      POSTGRES_USER: resume-optimzer-app
+      POSTGRES_PASSWORD: resume-optimzer-app
+      POSTGRES_DB: resume-optimzer-app
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U the_application_name -d the_application_name"]
+      test: ["CMD-SHELL", "pg_isready -U resume-optimzer-app -d resume-optimzer-app"]
       interval: 2s
       timeout: 5s
       retries: 5
@@ -27,11 +27,11 @@ services:
       - db
 
   app:
-    image: the_application_name:local
+    image: resume-optimzer-app:local
     profiles:
       - full
     environment:
-      DATABASE_URL: postgresql://the_application_name:the_application_name@db:5432/the_application_name
+      DATABASE_URL: postgresql://resume-optimzer-app:resume-optimzer-app@db:5432/resume-optimzer-app
       PORT: 8080
       HOST: 0.0.0.0
     ports:

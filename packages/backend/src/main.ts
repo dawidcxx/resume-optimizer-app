@@ -9,7 +9,7 @@ import { OnInit } from "./shared/OnInit";
 const logger = Logger.for("main");
 const container = createContainer();
 
-process.title = "the_application_name";
+process.title = "resume-optimzer-app";
 
 try {
   await container.get(Migrator).up();

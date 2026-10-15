@@ -1,3 +1,3 @@
-import { createFetchClient, todosContract } from "@the_application_name/common";
+import { createFetchClient, todosContract } from "@resume-optimzer-app/common";
 
 export const todosApi = createFetchClient(todosContract, { baseUrl: "/api" });

@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { existsSync, readdirSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { isAbsolute, relative, resolve } from "node:path";
-import { invariant, pages } from "@the_application_name/common";
+import { invariant, pages } from "@resume-optimzer-app/common";
 import type { Context } from "hono";
 import { createMiddleware } from "hono/factory";
 

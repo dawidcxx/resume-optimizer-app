@@ -1,5 +1,5 @@
 import "@/global.css";
-import { uuidFromString } from "@the_application_name/common";
+import { uuidFromString } from "@resume-optimzer-app/common";
 import { useState, StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Route, Router, Switch, useLocation } from "wouter";

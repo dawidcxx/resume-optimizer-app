@@ -1,4 +1,4 @@
-import type { HttpStatusCodes } from "@the_application_name/common";
+import type { HttpStatusCodes } from "@resume-optimzer-app/common";
 
 type HttpErrorMetadata = {
   status: (typeof HttpStatusCodes)[keyof typeof HttpStatusCodes];
