@@ -18,6 +18,12 @@ export {
 export { Input, inputBase, inputSizes, type InputProps, type InputSize } from "./Input";
 export { Label, type LabelProps } from "./Label";
 export {
+  Select,
+  type SelectItem,
+  type SelectOption,
+  type SelectProps,
+} from "./Select";
+export {
   List,
   ListItem,
   OrderedList,

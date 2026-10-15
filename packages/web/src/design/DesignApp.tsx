@@ -7,6 +7,7 @@ import { InputDemo } from "./demos/InputDemo";
 import { LabelDemo } from "./demos/LabelDemo";
 import { ListDemo } from "./demos/ListDemo";
 import { OverviewDemo } from "./demos/OverviewDemo";
+import { SelectDemo } from "./demos/SelectDemo";
 import { TableDemo } from "./demos/TableDemo";
 import { ThemeDemo } from "./demos/ThemeDemo";
 import { TypographyDemo } from "./demos/TypographyDemo";
@@ -17,6 +18,7 @@ const NAV = [
   { path: "/buttons", label: "Buttons" },
   { path: "/input", label: "Input" },
   { path: "/label", label: "Label" },
+  { path: "/select", label: "Select" },
   { path: "/list", label: "List" },
   { path: "/table", label: "Table" },
   { path: "/form", label: "Form" },
@@ -36,6 +38,7 @@ export function DesignApp() {
               <Route path="/buttons" component={ButtonDemo} />
               <Route path="/input" component={InputDemo} />
               <Route path="/label" component={LabelDemo} />
+              <Route path="/select" component={SelectDemo} />
               <Route path="/list" component={ListDemo} />
               <Route path="/table" component={TableDemo} />
               <Route path="/form" component={FormDemo} />
