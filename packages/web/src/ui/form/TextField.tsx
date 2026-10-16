@@ -1,8 +1,8 @@
 import type { AnyFieldApi } from "@tanstack/react-form";
 import type { ComponentPropsWithRef, ReactNode } from "react";
 import { Input, Label } from "@/ui";
-import { FieldMessages } from "./FieldMessages";
 import { useFieldStatus } from "./field";
+import { FieldMessages } from "./FieldMessages";
 
 export type TextFieldProps = Omit<
   ComponentPropsWithRef<"input">,

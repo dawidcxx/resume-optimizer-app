@@ -1,6 +1,6 @@
 import { resolve } from "node:path";
-import tailwindcss from "@tailwindcss/vite";
 import { pages } from "@resume-optimzer-app/common";
+import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 

@@ -13,7 +13,7 @@
         "@hono/node-server": "^2.1.5",
         "@needle-di/core": "^1.1.0",
         "@resume-optimzer-app/common": "workspace:*",
-        "date-fns": "^4.1.0",
+        "date-fns": "^4.4.0",
         "drizzle-orm": "^0.45.1",
         "hono": "^4.13.13",
         "postgres": "^3.4.5",
@@ -29,6 +29,7 @@
       "name": "@resume-optimzer-app/common",
       "version": "1.0.0",
       "dependencies": {
+        "date-fns": "^4.4.0",
         "valibot": "^1.2.0",
       },
       "devDependencies": {
@@ -43,6 +44,7 @@
         "@resume-optimzer-app/common": "workspace:*",
         "@tailwindcss/vite": "^4.2.2",
         "@tanstack/react-form": "^1.33.5",
+        "date-fns": "^4.4.0",
         "react": "^19.2.4",
         "react-dom": "^19.2.4",
         "swr": "^2.4.1",

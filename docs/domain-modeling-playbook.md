@@ -16,9 +16,9 @@ packages/common/src/domain/
 │   ├── Uuid.ts            # branded UUID type, valibot schema, helpers
 │   ├── JsDate.ts          # Date-safe valibot schema (survives JSON round-trip)
 │   └── JsonObject.ts      # recursive JSON type (use sparingly)
-└── todo/                  # feature domain
+└── {feature}/             # feature domain
     ├── index.ts           # barrel: re-exports domain root
-    └── Todo.ts            # domain root: Todo entity
+    └── {Entity}.ts        # domain root: feature entity
 ```
 
 ## Core types (`domain/core/`)
@@ -35,32 +35,31 @@ Existing core types:
 
 Each feature gets its own folder: `domain/{feature}/`. The domain root is a valibot object schema — the single source of truth for both runtime validation and compile-time types.
 
-### Example (`domain/todo/Todo.ts`)
+### Example (`domain/example/Example.ts`)
 
 ```ts
-import { boolean, InferOutput, minLength, object, pipe, string } from "valibot";
+import { InferOutput, minLength, object, pipe, string } from "valibot";
 import { Uuid } from "../core";
 import { JsDate } from "../core/JsDate";
 
-export const Todo = object({
+export const Example = object({
   id: Uuid,
-  content: pipe(string(), minLength(1)),
-  completed: boolean(),
+  name: pipe(string(), minLength(1)),
   createdAt: JsDate,
 });
 
-export type Todo = InferOutput<typeof Todo>;
+export type Example = InferOutput<typeof Example>;
 ```
 
 Key patterns to follow:
 
-1. **Schema and type share the same name** — `export const Todo = object(...)` and `export type Todo = InferOutput<typeof Todo>`. This is the idiomatic valibot pattern and avoids naming friction.
+1. **Schema and type share the same name** — `export const Example = object(...)` and `export type Example = InferOutput<typeof Example>`. This is the idiomatic valibot pattern and avoids naming friction.
 
 2. **Use core types** — reach for `Uuid`, `JsDate`, etc. from `domain/core/` before defining new primitives. Only add a new leaf value type to `core/` when the existing ones don't cover the semantics (e.g., an ISO 8601 string type).
 
 3. **Domain roots are trees** — the top-level object should be directly serializable via `JSON.stringify` / `JSON.parse`. No circular references, no class instances (other than `Date` which `JsDate` handles). This ensures seamless transfer between backend and frontend over HTTP.
 
-4. **Utility functions belong to the domain** — add helper functions alongside the domain root when they express domain logic (e.g., `isOverdue(todo)`, `displayName(user)`). These live in the same file or a sibling file in the domain folder.
+4. **Utility functions belong to the domain** — add helper functions alongside the domain root when they express domain logic (e.g., `displayName(user)`, `isExpired(token)`). These live in the same file or a sibling file in the domain folder.
 
 ## How the domain flows
 
@@ -70,7 +69,7 @@ domain/ (common package)
     ├── api/ contracts reference domain types for request/response shapes
     │
     ├── backend features map DB rows → domain roots
-    │       └── See TodosService.mapTodo() for the pattern
+    │       └── See the feature service's mapping function for the pattern
     │
     └── frontend consumes domain types directly via imports
 ```
@@ -80,17 +79,16 @@ domain/ (common package)
 The backend maps its internal DB representation into the domain root. A plain function (not a class method) does the transformation:
 
 ```ts
-function mapTodo(dbTodo: DbTodo): Todo {
+function mapExample(dbExample: DbExample): Example {
   return {
-    id: dbTodo.id,
-    content: dbTodo.content,
-    completed: dbTodo.completed,
-    createdAt: dbTodo.createdAt,
+    id: dbExample.id,
+    name: dbExample.name,
+    createdAt: dbExample.createdAt,
   };
 }
 ```
 
-`DbTodo` is the Drizzle-inferred persistence type. `Todo` is the domain root. The service layer returns domain types, never raw DB rows.
+`DbExample` is the Drizzle-inferred persistence type. `Example` is the domain root. The service layer returns domain types, never raw DB rows.
 
 ## Don't overcook it
 

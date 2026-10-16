@@ -92,16 +92,51 @@ export function SelectDemo() {
 
       <DemoBlock title="Sizes">
         <div className="grid max-w-sm gap-3">
-          <Select value={null} onChange={() => {}} options={roles} size="sm" placeholder="Small" aria-label="Small" />
-          <Select value={null} onChange={() => {}} options={roles} size="md" placeholder="Medium" aria-label="Medium" />
-          <Select value={null} onChange={() => {}} options={roles} size="lg" placeholder="Large" aria-label="Large" />
+          <Select
+            value={null}
+            onChange={() => {}}
+            options={roles}
+            size="sm"
+            placeholder="Small"
+            aria-label="Small"
+          />
+          <Select
+            value={null}
+            onChange={() => {}}
+            options={roles}
+            size="md"
+            placeholder="Medium"
+            aria-label="Medium"
+          />
+          <Select
+            value={null}
+            onChange={() => {}}
+            options={roles}
+            size="lg"
+            placeholder="Large"
+            aria-label="Large"
+          />
         </div>
       </DemoBlock>
 
       <DemoBlock title="States">
         <div className="grid max-w-sm gap-3">
-          <Select value={null} onChange={() => {}} options={roles} disabled placeholder="Disabled" aria-label="Disabled" />
-          <Select value="unknown" onChange={() => {}} options={roles} invalid placeholder="Invalid" aria-label="Invalid" />
+          <Select
+            value={null}
+            onChange={() => {}}
+            options={roles}
+            disabled
+            placeholder="Disabled"
+            aria-label="Disabled"
+          />
+          <Select
+            value="unknown"
+            onChange={() => {}}
+            options={roles}
+            invalid
+            placeholder="Invalid"
+            aria-label="Invalid"
+          />
         </div>
       </DemoBlock>
 
@@ -162,9 +197,7 @@ export function SelectDemo() {
               </Button>
             </div>
 
-            {saved ? (
-              <Text variant="subtle">Saved: {saved}</Text>
-            ) : null}
+            {saved ? <Text variant="subtle">Saved: {saved}</Text> : null}
           </form>
         </div>
       </DemoBlock>

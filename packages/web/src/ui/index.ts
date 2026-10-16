@@ -17,19 +17,8 @@ export {
 } from "./IconButton";
 export { Input, inputBase, inputSizes, type InputProps, type InputSize } from "./Input";
 export { Label, type LabelProps } from "./Label";
-export {
-  Select,
-  type SelectItem,
-  type SelectOption,
-  type SelectProps,
-} from "./Select";
-export {
-  List,
-  ListItem,
-  OrderedList,
-  UnorderedList,
-  type ListProps,
-} from "./List";
+export { Select, type SelectItem, type SelectOption, type SelectProps } from "./Select";
+export { List, ListItem, OrderedList, UnorderedList, type ListProps } from "./List";
 export {
   Table,
   TableBody,
@@ -40,11 +29,7 @@ export {
   TableHeader,
   TableRow,
 } from "./Table";
-export {
-  ThemeProvider,
-  THEME_STORAGE_KEY,
-  type Theme,
-} from "./theme/ThemeProvider";
+export { ThemeProvider, THEME_STORAGE_KEY, type Theme } from "./theme/ThemeProvider";
 export { ThemeSwitcher } from "./theme/ThemeSwitcher";
 export { useTheme } from "./theme/useTheme";
 export {

@@ -33,8 +33,9 @@ export function TypographyDemo() {
 
       <DemoBlock title="Inline">
         <Text>
-          Use <Code>Code</Code> for inline tokens and <Link href="https://tailwindcss.com">links</Link>{" "}
-          for navigation. Paths such as <Code>src/ui/Button.tsx</Code> read cleanly inline.
+          Use <Code>Code</Code> for inline tokens and{" "}
+          <Link href="https://tailwindcss.com">links</Link> for navigation. Paths such as{" "}
+          <Code>src/ui/Button.tsx</Code> read cleanly inline.
         </Text>
       </DemoBlock>
 

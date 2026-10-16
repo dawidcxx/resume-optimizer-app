@@ -48,7 +48,9 @@ export function TableDemo() {
             <TableRow>
               <TableCell colSpan={3}>Average</TableCell>
               <TableCell className="text-right tabular-nums">
-                {Math.round(applications.reduce((sum, row) => sum + row.match, 0) / applications.length)}
+                {Math.round(
+                  applications.reduce((sum, row) => sum + row.match, 0) / applications.length,
+                )}
                 %
               </TableCell>
             </TableRow>

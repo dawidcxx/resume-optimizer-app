@@ -28,8 +28,7 @@ export function Input({ inputSize = "md", invalid = false, className, ...props }
       className={cn(
         inputBase,
         inputSizes[inputSize],
-        invalid &&
-          "border-danger focus-visible:border-danger focus-visible:ring-danger",
+        invalid && "border-danger focus-visible:border-danger focus-visible:ring-danger",
         className,
       )}
       {...props}

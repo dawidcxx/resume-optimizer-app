@@ -14,7 +14,7 @@
     "@hono/node-server": "^2.1.5",
     "@needle-di/core": "^1.1.0",
     "@resume-optimzer-app/common": "workspace:*",
-    "date-fns": "^4.1.0",
+    "date-fns": "^4.4.0",
     "drizzle-orm": "^0.45.1",
     "hono": "^4.13.13",
     "postgres": "^3.4.5",

@@ -1,7 +1,6 @@
 import { Container } from "@needle-di/core";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import { TodosApi } from "./features/todos/TodosApi";
 import { Cache } from "./shared/Cache";
 import { Config } from "./shared/Config";
 import { DB, DB_SQL, type Sql } from "./shared/Db";
@@ -35,9 +34,6 @@ export function createContainer(): Container {
     },
   });
   container.bind(HttpServer);
-
-  // Todos feature
-  container.bind(TodosApi);
 
   // Initables
   container.bind({

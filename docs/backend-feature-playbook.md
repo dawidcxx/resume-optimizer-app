@@ -128,11 +128,11 @@ For a new domain contract:
 Contract shape example:
 
 ```ts
-export const todosContract = {
+export const exampleContract = {
   list: {
     method: "GET",
-    path: "/todos",
-    response: TodoListResponse,
+    path: "/examples",
+    response: ExampleListResponse,
   },
 } as const;
 ```

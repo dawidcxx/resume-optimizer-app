@@ -7,7 +7,6 @@ import { Hono } from "hono";
 import { bodyLimit } from "hono/body-limit";
 import { cors } from "hono/cors";
 import { secureHeaders } from "hono/secure-headers";
-import { TodosApi } from "@/features/todos/TodosApi";
 import { honoJsErrorHandler } from "@/lib/honoJsApiErrorHandler";
 import { Logger } from "@/lib/Logger";
 import { requestObservability } from "@/lib/requestObservability";
@@ -20,10 +19,7 @@ import type { OnInit } from "./OnInit";
 export class HttpServer implements OnDeinit, OnInit {
   private serverRef: ReturnType<typeof serve> | null = null;
 
-  constructor(
-    private readonly config = inject(Config),
-    private readonly todosApi = inject(TodosApi),
-  ) {}
+  constructor(private readonly config = inject(Config)) {}
 
   async init() {
     invariant(this.serverRef === null, "Must not call .init() twice");
@@ -59,7 +55,6 @@ export class HttpServer implements OnDeinit, OnInit {
     const fallBackErrorHandlerLogger = Logger.for("api.onError");
     api.onError(honoJsErrorHandler(fallBackErrorHandlerLogger));
 
-    api.route("/", this.todosApi.build());
     app.route("/api", api);
     app.get("*", serveStaticAssets(frontendDistPath));
 

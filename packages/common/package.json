@@ -22,6 +22,7 @@
     "test": "tsc --noEmit && bun test"
   },
   "dependencies": {
+    "date-fns": "^4.4.0",
     "valibot": "^1.2.0"
   },
   "devDependencies": {

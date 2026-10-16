@@ -44,7 +44,9 @@ export type TextProps = ComponentPropsWithRef<"p"> & {
 };
 
 export function Text({ variant = "body", as: Component = "p", className, ...props }: TextProps) {
-  return <Component className={cn("text-foreground", textClasses[variant], className)} {...props} />;
+  return (
+    <Component className={cn("text-foreground", textClasses[variant], className)} {...props} />
+  );
 }
 
 export function Code({ className, ...props }: ComponentPropsWithRef<"code">) {

@@ -63,7 +63,12 @@ export function InputDemo() {
             <Label htmlFor="company" required>
               Company
             </Label>
-            <Input id="company" name="company" autoComplete="organization" placeholder="Acme Inc." />
+            <Input
+              id="company"
+              name="company"
+              autoComplete="organization"
+              placeholder="Acme Inc."
+            />
           </div>
           <div className="grid flex-1 gap-1.5">
             <Label htmlFor="role">Role</Label>

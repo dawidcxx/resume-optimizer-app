@@ -20,10 +20,7 @@ export function TableBody({ className, ...props }: ComponentPropsWithRef<"tbody"
 export function TableFooter({ className, ...props }: ComponentPropsWithRef<"tfoot">) {
   return (
     <tfoot
-      className={cn(
-        "border-t border-border bg-subtle font-medium [&>tr]:last:border-0",
-        className,
-      )}
+      className={cn("border-t border-border bg-subtle font-medium [&>tr]:last:border-0", className)}
       {...props}
     />
   );

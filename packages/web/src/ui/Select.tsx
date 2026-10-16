@@ -215,13 +215,17 @@ export function Select<TValue extends string = string>({
       case "ArrowDown": {
         if (visibleOptions.length === 0) return;
         event.preventDefault();
-        setFocusedIndexWithScroll((focusedIndex + 1 + visibleOptions.length) % visibleOptions.length);
+        setFocusedIndexWithScroll(
+          (focusedIndex + 1 + visibleOptions.length) % visibleOptions.length,
+        );
         break;
       }
       case "ArrowUp": {
         if (visibleOptions.length === 0) return;
         event.preventDefault();
-        setFocusedIndexWithScroll((focusedIndex - 1 + visibleOptions.length) % visibleOptions.length);
+        setFocusedIndexWithScroll(
+          (focusedIndex - 1 + visibleOptions.length) % visibleOptions.length,
+        );
         break;
       }
       case "Enter": {

@@ -1,1 +1,1 @@
-export * from "./todosContract";
+export {};

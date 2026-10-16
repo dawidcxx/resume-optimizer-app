@@ -11,8 +11,8 @@ export function OverviewDemo() {
         <List>
           <ListItem>No third-party UI libraries — composition over configuration.</ListItem>
           <ListItem>
-            Form-library agnostic. Controls forward refs and spread native attributes, so any
-            form library can drive them.
+            Form-library agnostic. Controls forward refs and spread native attributes, so any form
+            library can drive them.
           </ListItem>
           <ListItem>Desktop-first, dense, document-like defaults.</ListItem>
           <ListItem>
@@ -51,8 +51,8 @@ export function OverviewDemo() {
         <Text>
           Colors, radii and fonts are declared as CSS variables in <Code>:root</Code> and overridden
           under <Code>.dark</Code>. The dark variant is wired through Tailwind with{" "}
-          <Code>@custom-variant dark</Code>, so utilities such as <Code>bg-background</Code>{" "}
-          respond automatically. Use the switcher in the top bar to preview both themes.
+          <Code>@custom-variant dark</Code>, so utilities such as <Code>bg-background</Code> respond
+          automatically. Use the switcher in the top bar to preview both themes.
         </Text>
       </DemoBlock>
     </DemoPage>
