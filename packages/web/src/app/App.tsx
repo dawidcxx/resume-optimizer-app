@@ -1,4 +1,14 @@
-import { ThemeSwitcher } from "@/ui";
+import { type ResumeProject, uuidFromString } from "@resume-optimzer-app/common";
+import { Heading, ThemeSwitcher } from "@/ui";
+import { ResumeProjectTile } from "./ResumeProjectTile";
+
+const demoProject: ResumeProject = {
+  id: uuidFromString("3f1a9c2e-5b7d-4e8f-9a1b-2c3d4e5f6a7b"),
+  version: "v1",
+  name: "Senior Frontend Engineer",
+  createdAt: new Date("2025-01-12T09:30:00Z"),
+  updatedAt: new Date("2025-03-04T16:45:00Z"),
+};
 
 export function App() {
   return (
@@ -13,7 +23,16 @@ export function App() {
         <ThemeSwitcher />
       </header>
 
-      <main className="flex-1" />
+      <main className="flex-1 p-6">
+        <div className="mx-auto max-w-5xl">
+          <Heading level={3} className="mb-4">
+            Your resumes
+          </Heading>
+          <div className="flex flex-wrap gap-4">
+            <ResumeProjectTile project={demoProject} />
+          </div>
+        </div>
+      </main>
     </div>
   );
 }
