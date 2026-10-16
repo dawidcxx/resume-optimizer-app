@@ -1,6 +1,8 @@
 import { array, InferOutput, literal, nullable, object, picklist, string, variant } from "valibot";
 import { Email } from "../core/Email";
+import { KnownIcon } from "../core/KnownIcon";
 import { PlainDate } from "../core/PlainDate";
+import { Rating } from "../core/Rating";
 import { Uuid } from "../core/Uuid";
 
 export const Resume = object({
@@ -39,6 +41,42 @@ export const Resume = object({
         city: string(),
         description: string(),
       }),
+    }),
+  ),
+
+  education: array(
+    object({
+      institute: object({
+        name: string(),
+        type: picklist(["collage", "school", "training"]),
+      }),
+      degree: string(),
+      startDate: PlainDate,
+      endDate: nullable(PlainDate),
+    }),
+  ),
+
+  skills: object({
+    listed: array(
+      object({
+        rating: Rating, // For example 5/5
+        name: string(), // for example: Javascript
+      }),
+    ),
+    categorized: array(
+      object({
+        category: string(), // for example: build tools
+        skill: string(), // for example: gradle
+      }),
+    ),
+  }),
+
+  projects: array(
+    object({
+      icon: nullable(KnownIcon),
+      name: string(),
+      url: string(),
+      description: string(),
     }),
   ),
 });
