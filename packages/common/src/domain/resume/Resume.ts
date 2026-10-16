@@ -1,12 +1,12 @@
 import { array, InferOutput, literal, nullable, object, picklist, string, variant } from "valibot";
+import { Uuid } from "../core";
 import { Email } from "../core/Email";
 import { KnownIcon } from "../core/KnownIcon";
 import { PlainDate } from "../core/PlainDate";
 import { Rating } from "../core/Rating";
-import { Uuid } from "../core/Uuid";
-import { JsDate } from "../core";
 
 export const Resume = object({
+  id: Uuid, // 1:1 with ResumeProject
   fullName: string(),
   careerName: string(),
 
@@ -79,15 +79,4 @@ export const Resume = object({
   ),
 });
 
-
-export const ResumeProject = object({
-  id: Uuid,
-  version: literal('v1'),
-  name: string(),
-  createdAt: JsDate,
-  updatedAt: JsDate,
-  resume: Resume,
-})
-
 export type Resume = InferOutput<typeof Resume>;
-export type ResumeProject = InferOutput<typeof ResumeProject>;
