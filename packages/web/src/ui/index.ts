@@ -9,6 +9,15 @@ export {
 } from "./Button";
 export { ButtonGroup } from "./ButtonGroup";
 export {
+  Dialog,
+  DialogClose,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  type DialogProps,
+} from "./Dialog";
+export {
   IconButton,
   iconButtonSizes,
   type IconButtonProps,
