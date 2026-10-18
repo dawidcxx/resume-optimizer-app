@@ -1,12 +1,17 @@
 import type { ResumeProject } from "@resume-optimzer-app/common";
 import { useState } from "react";
-import { deleteResumeProject, useResumeProjects } from "@/store";
+import {
+  DEFAULT_RESUME_PROJECT_NAME,
+  deleteResumeProject,
+  nextResumeProjectName,
+  useResumeProjects,
+} from "@/store";
 import { Button, ConfirmDialog, Heading, Text, ThemeSwitcher } from "@/ui";
 import { CreateResumeProjectDialog } from "./CreateResumeProjectDialog";
 import { ResumeProjectTile } from "./ResumeProjectTile";
 
 export function App() {
-  const [isCreateOpen, setCreateOpen] = useState(false);
+  const [createName, setCreateName] = useState<string | null>(null);
   const [projectToDelete, setProjectToDelete] = useState<ResumeProject | null>(null);
   const projects = useResumeProjects();
 
@@ -26,7 +31,12 @@ export function App() {
         <div className="mx-auto max-w-5xl">
           <div className="mb-4 flex items-center justify-between gap-4">
             <Heading level={3}>Your resumes</Heading>
-            <Button variant="primary" onClick={() => setCreateOpen(true)}>
+            <Button
+              variant="primary"
+              onClick={() =>
+                setCreateName(nextResumeProjectName(projects.map((project) => project.name)))
+              }
+            >
               New resume
             </Button>
           </div>
@@ -50,7 +60,13 @@ export function App() {
         </div>
       </main>
 
-      <CreateResumeProjectDialog open={isCreateOpen} onOpenChange={setCreateOpen} />
+      <CreateResumeProjectDialog
+        open={createName !== null}
+        defaultName={createName ?? DEFAULT_RESUME_PROJECT_NAME}
+        onOpenChange={(open) => {
+          if (!open) setCreateName(null);
+        }}
+      />
 
       <ConfirmDialog
         open={projectToDelete !== null}

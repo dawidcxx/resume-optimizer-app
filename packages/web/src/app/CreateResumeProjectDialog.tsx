@@ -1,12 +1,13 @@
 import type { ResumeProject } from "@resume-optimzer-app/common";
 import { useForm } from "@tanstack/react-form";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { createResumeProject } from "@/store";
 import { Button, Dialog, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/ui";
 import { TextField } from "@/ui/form";
 
 export type CreateResumeProjectDialogProps = {
   open: boolean;
+  defaultName: string;
   onOpenChange: (open: boolean) => void;
   onCreated?: (project: ResumeProject) => void;
 };
@@ -19,12 +20,15 @@ type CreateResumeProjectValues = {
 
 export function CreateResumeProjectDialog({
   open,
+  defaultName,
   onOpenChange,
   onCreated,
 }: CreateResumeProjectDialogProps) {
+  const nameInputRef = useRef<HTMLInputElement>(null);
+
   const form = useForm({
     defaultValues: {
-      name: "",
+      name: defaultName,
       fullName: "",
       careerName: "",
     } satisfies CreateResumeProjectValues,
@@ -40,8 +44,20 @@ export function CreateResumeProjectDialog({
   });
 
   useEffect(() => {
-    if (!open) form.reset();
-  }, [open, form]);
+    if (!open) return;
+
+    form.reset({ name: defaultName, fullName: "", careerName: "" });
+
+    const frame = requestAnimationFrame(() => {
+      const input = nameInputRef.current;
+      if (!input) return;
+      input.focus();
+      const end = input.value.length;
+      input.setSelectionRange(end, end);
+    });
+
+    return () => cancelAnimationFrame(frame);
+  }, [open, defaultName, form]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -68,12 +84,12 @@ export function CreateResumeProjectDialog({
           }}
           children={(field) => (
             <TextField
+              ref={nameInputRef}
               field={field}
               label="Resume name"
               required
-              autoFocus
               autoComplete="off"
-              placeholder="Senior Frontend Engineer"
+              placeholder="My Resume"
             />
           )}
         />

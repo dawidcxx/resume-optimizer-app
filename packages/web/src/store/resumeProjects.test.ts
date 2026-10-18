@@ -1,7 +1,30 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { createResumeProject, deleteResumeProject } from "./resumeProjects";
+import {
+  createResumeProject,
+  deleteResumeProject,
+  nextResumeProjectName,
+} from "./resumeProjects";
 import { readResume, readResumeProjects } from "./selectors";
 import { store } from "./store";
+
+describe("nextResumeProjectName", () => {
+  it("uses the base name when it is free", () => {
+    expect(nextResumeProjectName([])).toBe("My Resume");
+    expect(nextResumeProjectName(["Other"])).toBe("My Resume");
+  });
+
+  it("appends the first free suffix", () => {
+    expect(nextResumeProjectName(["My Resume"])).toBe("My Resume (1)");
+    expect(nextResumeProjectName(["My Resume", "My Resume (1)"])).toBe("My Resume (2)");
+    expect(nextResumeProjectName(["My Resume", "My Resume (1)", "My Resume (2)"])).toBe(
+      "My Resume (3)",
+    );
+  });
+
+  it("fills gaps in the suffix sequence", () => {
+    expect(nextResumeProjectName(["My Resume", "My Resume (2)"])).toBe("My Resume (1)");
+  });
+});
 
 describe("createResumeProject", () => {
   beforeEach(() => {

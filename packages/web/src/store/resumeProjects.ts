@@ -14,6 +14,22 @@ export type CreateResumeProjectInput = {
   careerName?: string;
 };
 
+export const DEFAULT_RESUME_PROJECT_NAME = "My Resume";
+
+export function nextResumeProjectName(
+  existingNames: Iterable<string>,
+  baseName = DEFAULT_RESUME_PROJECT_NAME,
+): string {
+  const taken = new Set(existingNames);
+  if (!taken.has(baseName)) return baseName;
+
+  let suffix = 1;
+  while (taken.has(`${baseName} (${suffix})`)) {
+    suffix += 1;
+  }
+  return `${baseName} (${suffix})`;
+}
+
 export function createEmptyResume(input: Omit<CreateResumeProjectInput, "name"> = {}): Omit<
   Resume,
   "id"

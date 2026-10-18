@@ -2,7 +2,9 @@ export { useResume, useResumeProject, useResumeProjects } from "./hooks";
 export {
   createEmptyResume,
   createResumeProject,
+  DEFAULT_RESUME_PROJECT_NAME,
   deleteResumeProject,
+  nextResumeProjectName,
   type CreateResumeProjectInput,
 } from "./resumeProjects";
 export { readResume, readResumeProject, readResumeProjects } from "./selectors";
