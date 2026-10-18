@@ -1,38 +1,74 @@
 import type { ResumeProject } from "@resume-optimzer-app/common";
 import { format } from "date-fns";
-import type { ComponentPropsWithRef } from "react";
 import { cn } from "@/lib/cn";
-import { Text } from "@/ui";
+import { Menu, MenuContent, MenuItem, MenuTrigger, Text } from "@/ui";
 
-export type ResumeProjectTileProps = Omit<ComponentPropsWithRef<"button">, "children"> & {
+export type ResumeProjectTileProps = {
   project: ResumeProject;
+  onOpen?: (project: ResumeProject) => void;
+  onDelete?: (project: ResumeProject) => void;
+  className?: string;
 };
 
-export function ResumeProjectTile({ project, className, ...props }: ResumeProjectTileProps) {
+export function ResumeProjectTile({
+  project,
+  onOpen,
+  onDelete,
+  className,
+}: ResumeProjectTileProps) {
   return (
-    <button
-      type="button"
+    <div
       className={cn(
-        "group flex w-44 flex-col gap-3 rounded-ui border border-border bg-surface p-3 text-left",
-        "transition-colors hover:border-border-strong hover:bg-subtle",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background",
+        "group relative w-44 rounded-ui border border-border bg-surface p-2.5 transition-colors hover:border-border-strong",
         className,
       )}
-      {...props}
     >
-      <ResumeDocumentIcon />
-      <div className="min-w-0">
-        <Text className="truncate font-medium" title={project.name}>
-          {project.name}
-        </Text>
-        <Text variant="subtle" className="mt-0.5 truncate">
-          Created {format(project.createdAt, "PP")}
-        </Text>
-        <Text variant="subtle" className="truncate">
-          Updated {format(project.updatedAt, "PP")}
-        </Text>
+      <button
+        type="button"
+        aria-label={`Open ${project.name}`}
+        onClick={() => onOpen?.(project)}
+        className="absolute inset-0 z-0 rounded-ui focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
+      />
+
+      <div className="pointer-events-none relative">
+        <ResumeDocumentIcon />
+
+        <div className="relative mt-2.5">
+          <div className="min-w-0">
+            <Text className="truncate pe-7 font-medium" title={project.name}>
+              {project.name}
+            </Text>
+            <Text variant="subtle" className="mt-0.5 truncate">
+              Created {format(project.createdAt, "PP")}
+            </Text>
+            <Text variant="subtle" className="truncate">
+              Updated {format(project.updatedAt, "PP")}
+            </Text>
+          </div>
+
+          {onDelete ? (
+            <div className="pointer-events-auto absolute right-0 top-0 z-10">
+              <Menu>
+                <MenuTrigger
+                  size="sm"
+                  variant="ghost"
+                  aria-label={`Actions for ${project.name}`}
+                  title="Resume actions"
+                  className="text-foreground/70 hover:text-foreground"
+                >
+                  <MoreVerticalIcon />
+                </MenuTrigger>
+                <MenuContent side="top">
+                  <MenuItem destructive onSelect={() => onDelete(project)}>
+                    Remove resume
+                  </MenuItem>
+                </MenuContent>
+              </Menu>
+            </div>
+          ) : null}
+        </div>
       </div>
-    </button>
+    </div>
   );
 }
 
@@ -60,5 +96,15 @@ function ResumeDocumentIcon({ className }: { className?: string }) {
         <div className="h-1 w-3/4 rounded-full bg-border" />
       </div>
     </div>
+  );
+}
+
+function MoreVerticalIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className="h-4 w-4">
+      <circle cx="12" cy="5" r="2" />
+      <circle cx="12" cy="12" r="2" />
+      <circle cx="12" cy="19" r="2" />
+    </svg>
   );
 }

@@ -53,3 +53,8 @@ export function createResumeProject(input: CreateResumeProjectInput): ResumeProj
 
   return project;
 }
+
+export function deleteResumeProject(id: string): void {
+  store.delRow(RESUME_PROJECTS_TABLE, id);
+  store.delRow(RESUMES_TABLE, id);
+}

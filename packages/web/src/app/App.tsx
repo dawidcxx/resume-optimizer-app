@@ -1,11 +1,13 @@
+import type { ResumeProject } from "@resume-optimzer-app/common";
 import { useState } from "react";
-import { useResumeProjects } from "@/store";
-import { Button, Heading, Text, ThemeSwitcher } from "@/ui";
+import { deleteResumeProject, useResumeProjects } from "@/store";
+import { Button, ConfirmDialog, Heading, Text, ThemeSwitcher } from "@/ui";
 import { CreateResumeProjectDialog } from "./CreateResumeProjectDialog";
 import { ResumeProjectTile } from "./ResumeProjectTile";
 
 export function App() {
   const [isCreateOpen, setCreateOpen] = useState(false);
+  const [projectToDelete, setProjectToDelete] = useState<ResumeProject | null>(null);
   const projects = useResumeProjects();
 
   return (
@@ -34,7 +36,14 @@ export function App() {
           ) : (
             <div className="flex flex-wrap gap-4">
               {projects.map((project) => (
-                <ResumeProjectTile key={project.id} project={project} />
+                <ResumeProjectTile
+                  key={project.id}
+                  project={project}
+                  onOpen={() => {
+                    console.log("Openin");
+                  }}
+                  onDelete={setProjectToDelete}
+                />
               ))}
             </div>
           )}
@@ -42,6 +51,24 @@ export function App() {
       </main>
 
       <CreateResumeProjectDialog open={isCreateOpen} onOpenChange={setCreateOpen} />
+
+      <ConfirmDialog
+        open={projectToDelete !== null}
+        onOpenChange={(open) => {
+          if (!open) setProjectToDelete(null);
+        }}
+        title="Delete resume?"
+        description={
+          projectToDelete
+            ? `“${projectToDelete.name}” will be permanently deleted from this device. This can't be undone.`
+            : undefined
+        }
+        confirmLabel="Delete"
+        destructive
+        onConfirm={() => {
+          if (projectToDelete) deleteResumeProject(projectToDelete.id);
+        }}
+      />
     </div>
   );
 }

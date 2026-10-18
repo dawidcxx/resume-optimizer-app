@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { createResumeProject } from "./resumeProjects";
+import { createResumeProject, deleteResumeProject } from "./resumeProjects";
 import { readResume, readResumeProjects } from "./selectors";
 import { store } from "./store";
 
@@ -26,5 +26,14 @@ describe("createResumeProject", () => {
     expect(resume?.id).toBe(project.id);
     expect(resume?.fullName).toBe("Ada Lovelace");
     expect(resume?.careerName).toBe("Engineer");
+  });
+
+  it("deletes both the project row and its resume row", () => {
+    const project = createResumeProject({ name: "My resume" });
+
+    deleteResumeProject(project.id);
+
+    expect(readResumeProjects(store)).toEqual([]);
+    expect(readResume(store, project.id)).toBeUndefined();
   });
 });

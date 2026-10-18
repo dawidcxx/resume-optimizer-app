@@ -8,6 +8,7 @@ export {
   type ButtonVariant,
 } from "./Button";
 export { ButtonGroup } from "./ButtonGroup";
+export { ConfirmDialog, type ConfirmDialogProps } from "./ConfirmDialog";
 export {
   Dialog,
   DialogClose,
@@ -26,6 +27,16 @@ export {
 } from "./IconButton";
 export { Input, inputBase, inputSizes, type InputProps, type InputSize } from "./Input";
 export { Label, type LabelProps } from "./Label";
+export {
+  Menu,
+  MenuContent,
+  MenuItem,
+  MenuTrigger,
+  type MenuContentProps,
+  type MenuItemProps,
+  type MenuProps,
+  type MenuTriggerProps,
+} from "./Menu";
 export { Select, type SelectItem, type SelectOption, type SelectProps } from "./Select";
 export { List, ListItem, OrderedList, UnorderedList, type ListProps } from "./List";
 export {

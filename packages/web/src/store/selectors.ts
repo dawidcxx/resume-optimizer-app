@@ -10,11 +10,11 @@ export function readResumeProjects(store: Store): ResumeProject[] {
 }
 
 export function readResumeProject(store: Store, id: string): ResumeProject | undefined {
-  const row = store.getRow(RESUME_PROJECTS_TABLE, id);
-  return row ? rowToResumeProject(id, row) : undefined;
+  if (!store.hasRow(RESUME_PROJECTS_TABLE, id)) return undefined;
+  return rowToResumeProject(id, store.getRow(RESUME_PROJECTS_TABLE, id));
 }
 
 export function readResume(store: Store, id: string): Resume | undefined {
-  const row = store.getRow(RESUMES_TABLE, id);
-  return row ? rowToResume(id, row) : undefined;
+  if (!store.hasRow(RESUMES_TABLE, id)) return undefined;
+  return rowToResume(id, store.getRow(RESUMES_TABLE, id));
 }
