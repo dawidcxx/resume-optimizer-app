@@ -46,6 +46,7 @@ export function Dialog({ open, onOpenChange, className, children }: DialogProps)
   }, [open]);
 
   function isInsideDialog(event: MouseEvent<HTMLDialogElement>): boolean {
+    if (event.detail === 0) return true;
     const dialog = ref.current;
     if (!dialog) return false;
     const rect = dialog.getBoundingClientRect();
