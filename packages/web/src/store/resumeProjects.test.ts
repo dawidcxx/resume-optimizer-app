@@ -4,7 +4,7 @@ import {
   deleteResumeProject,
   nextResumeProjectName,
 } from "./resumeProjects";
-import { readResume, readResumeProjects } from "./selectors";
+import { readResume, readResumeBundle, readResumeProjects } from "./selectors";
 import { store } from "./store";
 
 describe("nextResumeProjectName", () => {
@@ -58,5 +58,15 @@ describe("createResumeProject", () => {
 
     expect(readResumeProjects(store)).toEqual([]);
     expect(readResume(store, project.id)).toBeUndefined();
+  });
+
+  it("joins the project and resume by id", () => {
+    const project = createResumeProject({ name: "Bundle", fullName: "Ada" });
+
+    const bundle = readResumeBundle(store, project.id);
+
+    expect(bundle?.project).toEqual(project);
+    expect(bundle?.resume?.fullName).toBe("Ada");
+    expect(readResumeBundle(store, "missing")).toBeUndefined();
   });
 });

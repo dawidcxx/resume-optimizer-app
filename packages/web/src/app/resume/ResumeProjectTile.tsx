@@ -1,21 +1,19 @@
 import type { ResumeProject } from "@resume-optimzer-app/common";
 import { format } from "date-fns";
+import { useId } from "react";
 import { cn } from "@/lib/cn";
 import { Menu, MenuContent, MenuItem, MenuTrigger, Text } from "@/ui";
 
 export type ResumeProjectTileProps = {
   project: ResumeProject;
-  onOpen?: (project: ResumeProject) => void;
+  href: string;
   onDelete?: (project: ResumeProject) => void;
   className?: string;
 };
 
-export function ResumeProjectTile({
-  project,
-  onOpen,
-  onDelete,
-  className,
-}: ResumeProjectTileProps) {
+export function ResumeProjectTile({ project, href, onDelete, className }: ResumeProjectTileProps) {
+  const titleId = useId();
+
   return (
     <div
       className={cn(
@@ -23,10 +21,9 @@ export function ResumeProjectTile({
         className,
       )}
     >
-      <button
-        type="button"
-        aria-label={`Open ${project.name}`}
-        onClick={() => onOpen?.(project)}
+      <a
+        href={href}
+        aria-labelledby={titleId}
         className="absolute inset-0 z-0 rounded-ui focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
       />
 
@@ -35,7 +32,7 @@ export function ResumeProjectTile({
 
         <div className="relative mt-2.5">
           <div className="min-w-0">
-            <Text className="truncate pe-7 font-medium" title={project.name}>
+            <Text id={titleId} className="truncate pe-7 font-medium" title={project.name}>
               {project.name}
             </Text>
             <Text variant="subtle" className="mt-0.5 truncate">

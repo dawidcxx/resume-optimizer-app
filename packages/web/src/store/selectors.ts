@@ -18,3 +18,14 @@ export function readResume(store: Store, id: string): Resume | undefined {
   if (!store.hasRow(RESUMES_TABLE, id)) return undefined;
   return rowToResume(id, store.getRow(RESUMES_TABLE, id));
 }
+
+export type ResumeBundle = {
+  project: ResumeProject;
+  resume: Resume | undefined;
+};
+
+export function readResumeBundle(store: Store, id: string): ResumeBundle | undefined {
+  const project = readResumeProject(store, id);
+  if (!project) return undefined;
+  return { project, resume: readResume(store, id) };
+}

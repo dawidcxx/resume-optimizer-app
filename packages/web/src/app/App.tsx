@@ -1,90 +1,17 @@
-import type { ResumeProject } from "@resume-optimzer-app/common";
-import { useState } from "react";
-import {
-  DEFAULT_RESUME_PROJECT_NAME,
-  deleteResumeProject,
-  nextResumeProjectName,
-  useResumeProjects,
-} from "@/store";
-import { Button, ConfirmDialog, Heading, Text, ThemeSwitcher } from "@/ui";
-import { CreateResumeProjectDialog } from "./CreateResumeProjectDialog";
-import { ResumeProjectTile } from "./ResumeProjectTile";
+import { Route, Switch } from "wouter";
+import { AppLayout } from "./layout/AppLayout";
+import { NotFoundPage } from "./pages/NotFoundPage";
+import { ResumeDetailPage } from "./pages/ResumeDetailPage";
+import { ResumeProjectsPage } from "./pages/ResumeProjectsPage";
 
 export function App() {
-  const [createName, setCreateName] = useState<string | null>(null);
-  const [projectToDelete, setProjectToDelete] = useState<ResumeProject | null>(null);
-  const projects = useResumeProjects();
-
   return (
-    <div className="flex min-h-screen flex-col bg-background text-foreground">
-      <header className="flex h-12 shrink-0 items-center justify-between border-b border-border px-4">
-        <div className="flex items-center gap-2">
-          <span className="flex h-5 w-5 items-center justify-center rounded-ui bg-primary text-[10px] font-semibold text-primary-foreground">
-            R
-          </span>
-          <span className="text-sm font-medium">Resume Optimizer</span>
-        </div>
-        <ThemeSwitcher />
-      </header>
-
-      <main className="flex-1 p-6">
-        <div className="mx-auto max-w-5xl">
-          <div className="mb-4 flex items-center justify-between gap-4">
-            <Heading level={3}>Your resumes</Heading>
-            <Button
-              variant="primary"
-              onClick={() =>
-                setCreateName(nextResumeProjectName(projects.map((project) => project.name)))
-              }
-            >
-              New resume
-            </Button>
-          </div>
-
-          {projects.length === 0 ? (
-            <Text variant="muted">No resumes yet. Create one to get started.</Text>
-          ) : (
-            <div className="flex flex-wrap gap-4">
-              {projects.map((project) => (
-                <ResumeProjectTile
-                  key={project.id}
-                  project={project}
-                  onOpen={() => {
-                    console.log("Openin");
-                  }}
-                  onDelete={setProjectToDelete}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-      </main>
-
-      <CreateResumeProjectDialog
-        open={createName !== null}
-        defaultName={createName ?? DEFAULT_RESUME_PROJECT_NAME}
-        onOpenChange={(open) => {
-          if (!open) setCreateName(null);
-        }}
-      />
-
-      <ConfirmDialog
-        open={projectToDelete !== null}
-        onOpenChange={(open) => {
-          if (!open) setProjectToDelete(null);
-        }}
-        title="Delete resume?"
-        description={
-          projectToDelete
-            ? `“${projectToDelete.name}” will be permanently deleted from this device. This can't be undone.`
-            : undefined
-        }
-        confirmLabel="Delete"
-        destructive
-        onConfirm={() => {
-          if (projectToDelete) deleteResumeProject(projectToDelete.id);
-        }}
-      />
-    </div>
+    <AppLayout>
+      <Switch>
+        <Route path="/resume/:id" component={ResumeDetailPage} />
+        <Route path="/" component={ResumeProjectsPage} />
+        <Route component={NotFoundPage} />
+      </Switch>
+    </AppLayout>
   );
 }
