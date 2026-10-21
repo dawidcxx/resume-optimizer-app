@@ -61,6 +61,17 @@ export class Config {
     );
   }
 
+  public get cronEnabled(): boolean {
+    if (!isNil(this.overridesMap.cronEnabled)) {
+      return this.overridesMap.cronEnabled;
+    }
+    const fromEnv = process.env["CRON_ENABLED"]?.trim().toLowerCase();
+    if (isNil(fromEnv)) {
+      return true;
+    }
+    return !["false", "0", "no", "off"].includes(fromEnv);
+  }
+
   public get deepseekApiKey(): string {
     const key = this.overridesMap.deepseekApiKey ?? process.env["DEEPSEEK_API_KEY"];
     invariant(

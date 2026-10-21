@@ -1,11 +1,12 @@
 import { Container } from "@needle-di/core";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import { filesModule } from "./features/files";
+import { FileService, filesModule } from "./features/files";
 import { llmModule } from "./features/llm";
 import { Cache } from "./shared/Cache";
 import { Config } from "./shared/Config";
-import { DB, DB_SQL, type Sql } from "./shared/Db";
+import { CronService } from "./shared/CronService";
+import { DB, DB_SQL } from "./shared/Db";
 import { HttpServer } from "./shared/HttpServer";
 import { Migrator } from "./shared/migrations/Migrator";
 import { OnDeinit } from "./shared/OnDeinit";
@@ -16,6 +17,7 @@ export function createContainer(): Container {
 
   // Shared
   container.bind(Config);
+  container.bind(CronService);
   container.bind(Migrator);
   container.bind({
     provide: Cache,
@@ -32,12 +34,13 @@ export function createContainer(): Container {
   container.bind({
     provide: DB,
     useFactory(container) {
-      return drizzle(container.get(DB_SQL) as Sql);
+      return drizzle(container.get(DB_SQL));
     },
   });
   container.bind(HttpServer);
 
   // Features
+  container.bind(FileService);
   container.bindAll(filesModule);
   container.bindAll(llmModule);
 
@@ -54,10 +57,20 @@ export function createContainer(): Container {
   container.bind({
     multi: true,
     provide: OnInit,
+    useExisting: FileService,
+  });
+  container.bind({
+    multi: true,
+    provide: OnInit,
     useExisting: HttpServer,
   });
 
   // De-initables
+  container.bind({
+    multi: true,
+    provide: OnDeinit,
+    useExisting: FileService,
+  });
   container.bind({
     multi: true,
     provide: OnDeinit,
