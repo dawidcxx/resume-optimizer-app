@@ -72,16 +72,16 @@ export function EducationSection({ value, onChange }: EducationSectionProps) {
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="grid gap-3">
+      <CardContent className="grid gap-4">
         {value.length === 0 ? <Text variant="muted">No education added yet.</Text> : null}
 
         {value.map((item, index) => (
-          <fieldset key={index} className="grid gap-3 rounded-ui border border-border p-3">
+          <fieldset key={index} className="grid gap-4 rounded-ui border border-border p-4">
             <legend className="px-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               Education {index + 1}
             </legend>
 
-            <div className="grid gap-3 sm:grid-cols-2">
+            <div className="grid gap-4 sm:grid-cols-2">
               <Field id={`education-${index}-institute`} label="Institute">
                 <Input
                   id={`education-${index}-institute`}

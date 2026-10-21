@@ -33,8 +33,8 @@ export function ResumeEditForm({ projectName, resume }: ResumeEditFormProps) {
 
   return (
     <>
-      <div className="pb-24">
-        <div className="mb-5">
+      <div className="pb-28">
+        <div className="mb-8">
           <Link href="/" className="text-sm font-medium text-primary hover:underline">
             ← Back to resumes
           </Link>
@@ -46,7 +46,7 @@ export function ResumeEditForm({ projectName, resume }: ResumeEditFormProps) {
           </Text>
         </div>
 
-        <div className="grid gap-4">
+        <div className="grid gap-6">
           {currentStep === 0 ? (
             <>
               <BasicsSection

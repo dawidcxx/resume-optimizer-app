@@ -17,7 +17,7 @@ export function ResumeProjectTile({ project, href, onDelete, className }: Resume
   return (
     <div
       className={cn(
-        "group relative w-44 rounded-ui border border-border bg-surface p-2.5 transition-colors hover:border-border-strong",
+        "group relative w-48 rounded-ui border border-border bg-surface p-3 transition-colors hover:border-border-strong",
         className,
       )}
     >

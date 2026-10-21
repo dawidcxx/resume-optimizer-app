@@ -12,7 +12,7 @@ export function CardHeader({ className, ...props }: ComponentPropsWithRef<"div">
   return (
     <div
       className={cn(
-        "flex flex-col gap-1 border-b border-border px-4 py-3",
+        "flex flex-col gap-1.5 border-b border-border px-5 py-4",
         className,
       )}
       {...props}
@@ -29,5 +29,5 @@ export function CardDescription({ className, ...props }: ComponentPropsWithRef<"
 }
 
 export function CardContent({ className, ...props }: ComponentPropsWithRef<"div">) {
-  return <div className={cn("p-4", className)} {...props} />;
+  return <div className={cn("p-5", className)} {...props} />;
 }

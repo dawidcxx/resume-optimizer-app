@@ -8,9 +8,9 @@ export const buttonBase = [
 ].join(" ");
 
 export const buttonSizes = {
-  sm: "h-7 px-2.5 text-xs",
-  md: "h-8 px-3 text-sm",
-  lg: "h-9 px-4 text-sm",
+  sm: "h-8 px-3 text-xs",
+  md: "h-9 px-3.5 text-sm",
+  lg: "h-10 px-4 text-sm",
 } as const;
 
 export const buttonVariants = {

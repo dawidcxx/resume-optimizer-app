@@ -18,7 +18,7 @@ export function ContactSection({ value, onChange }: ContactSectionProps) {
         <CardTitle>Contact</CardTitle>
         <CardDescription>Ways for a recruiter to reach you.</CardDescription>
       </CardHeader>
-      <CardContent className="grid gap-3 sm:grid-cols-2">
+      <CardContent className="grid gap-4 sm:grid-cols-2">
         <Field id="email" label="Email">
           <Input
             id="email"

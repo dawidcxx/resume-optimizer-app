@@ -9,9 +9,9 @@ export const inputBase = [
 ].join(" ");
 
 export const inputSizes = {
-  sm: "h-7 text-xs",
-  md: "h-8 text-sm",
-  lg: "h-9 text-sm",
+  sm: "h-8 text-xs",
+  md: "h-9 text-sm",
+  lg: "h-10 text-sm",
 } as const;
 
 export type InputSize = keyof typeof inputSizes;

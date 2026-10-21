@@ -3,9 +3,9 @@ import { cn } from "@/lib/cn";
 import { buttonBase, buttonVariants, type ButtonVariant } from "./Button";
 
 export const iconButtonSizes = {
-  sm: "h-7 w-7",
-  md: "h-8 w-8",
-  lg: "h-9 w-9",
+  sm: "h-8 w-8",
+  md: "h-9 w-9",
+  lg: "h-10 w-10",
 } as const;
 
 export type IconButtonSize = keyof typeof iconButtonSizes;

@@ -22,7 +22,7 @@ export function BasicsSection({ value, onChange }: BasicsSectionProps) {
         <CardTitle>Basics</CardTitle>
         <CardDescription>How you appear at the top of the resume.</CardDescription>
       </CardHeader>
-      <CardContent className="grid gap-3 sm:grid-cols-2">
+      <CardContent className="grid gap-4 sm:grid-cols-2">
         <Field id="fullName" label="Full name">
           <Input
             id="fullName"

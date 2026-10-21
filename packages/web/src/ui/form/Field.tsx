@@ -23,7 +23,7 @@ export function Field({
   children,
 }: FieldProps) {
   return (
-    <div className={cn("grid gap-1.5", className)}>
+    <div className={cn("grid gap-2", className)}>
       <Label htmlFor={id} required={required}>
         {label}
       </Label>

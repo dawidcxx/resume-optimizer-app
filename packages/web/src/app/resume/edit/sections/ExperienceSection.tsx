@@ -98,16 +98,16 @@ export function ExperienceSection({ value, onChange }: ExperienceSectionProps) {
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="grid gap-3">
+      <CardContent className="grid gap-4">
         {value.length === 0 ? <Text variant="muted">No experience added yet.</Text> : null}
 
         {value.map((item, index) => (
-          <fieldset key={index} className="grid gap-3 rounded-ui border border-border p-3">
+          <fieldset key={index} className="grid gap-4 rounded-ui border border-border p-4">
             <legend className="px-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               Experience {index + 1}
             </legend>
 
-            <div className="grid gap-3 sm:grid-cols-2">
+            <div className="grid gap-4 sm:grid-cols-2">
               <Field id={`experience-${index}-company`} label="Company">
                 <Input
                   id={`experience-${index}-company`}
@@ -143,7 +143,7 @@ export function ExperienceSection({ value, onChange }: ExperienceSectionProps) {
                   }}
                 />
               </Field>
-              <div className="grid grid-cols-2 gap-3 sm:col-span-2">
+              <div className="grid grid-cols-2 gap-4 sm:col-span-2">
                 <Field id={`experience-${index}-from`} label="From">
                   <Input
                     id={`experience-${index}-from`}
@@ -181,7 +181,7 @@ export function ExperienceSection({ value, onChange }: ExperienceSectionProps) {
               />
             </Field>
 
-            <section className="grid gap-2">
+            <section className="grid gap-3">
               <div className="flex items-start justify-between gap-3">
                 <div className="grid gap-1">
                   <Heading level={4}>Bullet points</Heading>

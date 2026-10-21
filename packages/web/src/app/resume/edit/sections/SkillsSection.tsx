@@ -76,8 +76,8 @@ export function SkillsSection({ value, onChange }: SkillsSectionProps) {
         <CardTitle>Skills</CardTitle>
         <CardDescription>Standalone skills and grouped categories.</CardDescription>
       </CardHeader>
-      <CardContent className="grid gap-5">
-        <section className="grid gap-3">
+      <CardContent className="grid gap-6">
+        <section className="grid gap-4">
           <div className="flex items-center justify-between gap-3">
             <Heading level={4}>Listed</Heading>
             <Button
@@ -96,7 +96,7 @@ export function SkillsSection({ value, onChange }: SkillsSectionProps) {
           {value.listed.map((item, index) => (
             <div
               key={index}
-              className="grid gap-2 rounded-ui border border-border p-3 sm:grid-cols-[1fr_7rem_auto] sm:items-end"
+              className="grid gap-3 rounded-ui border border-border p-3.5 sm:grid-cols-[1fr_7rem_auto] sm:items-end"
             >
               <Field id={`skill-${index}-name`} label="Skill">
                 <Input
@@ -135,7 +135,7 @@ export function SkillsSection({ value, onChange }: SkillsSectionProps) {
           ))}
         </section>
 
-        <section className="grid gap-3">
+        <section className="grid gap-4">
           <div className="flex items-center justify-between gap-3">
             <Heading level={4}>Categorized</Heading>
             <Button
@@ -159,7 +159,7 @@ export function SkillsSection({ value, onChange }: SkillsSectionProps) {
           {value.categorized.map((item, index) => (
             <div
               key={index}
-              className="grid gap-2 rounded-ui border border-border p-3 sm:grid-cols-[1fr_1fr_auto] sm:items-end"
+              className="grid gap-3 rounded-ui border border-border p-3.5 sm:grid-cols-[1fr_1fr_auto] sm:items-end"
             >
               <Field id={`category-${index}-category`} label="Category">
                 <Select<string>

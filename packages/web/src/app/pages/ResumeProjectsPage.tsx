@@ -24,8 +24,8 @@ export function ResumeProjectsPage() {
 
   return (
     <>
-      <div className="mb-4 flex items-center justify-between gap-4">
-        <Heading level={3}>Your resumes</Heading>
+      <div className="mb-6 flex items-center justify-between gap-4">
+        <Heading level={2}>Your resumes</Heading>
         <div className="flex items-center gap-2">
           <Button variant="outline" onClick={() => setImportOpen(true)}>
             Import
@@ -44,9 +44,11 @@ export function ResumeProjectsPage() {
       {!ready ? (
         <Text variant="muted">Loading resumes…</Text>
       ) : projects.length === 0 ? (
-        <Text variant="muted">No resumes yet. Create one to get started.</Text>
+        <div className="rounded-ui border border-dashed border-border-strong bg-surface px-6 py-10 text-center">
+          <Text variant="muted">No resumes yet. Create one to get started.</Text>
+        </div>
       ) : (
-        <div className="flex flex-wrap gap-4">
+        <div className="flex flex-wrap gap-5">
           {projects.map((project) => (
             <ResumeProjectTile
               key={project.id}
