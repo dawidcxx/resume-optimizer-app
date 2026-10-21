@@ -2,6 +2,7 @@ import { serializeError } from "serialize-error";
 import { createContainer } from "./container";
 import { Logger } from "./lib/Logger";
 import { sleep } from "./lib/sleep";
+import { Config } from "./shared/Config";
 import { Migrator } from "./shared/migrations/Migrator";
 import { OnDeinit } from "./shared/OnDeinit";
 import { OnInit } from "./shared/OnInit";
@@ -10,6 +11,13 @@ const logger = Logger.for("main");
 const container = createContainer();
 
 process.title = "resume-optimzer-app";
+
+try {
+  container.get(Config).checkConfig();
+} catch (e) {
+  logger.error("Invalid configuration", { error: serializeError(e) });
+  process.exit(1);
+}
 
 try {
   await container.get(Migrator).up();

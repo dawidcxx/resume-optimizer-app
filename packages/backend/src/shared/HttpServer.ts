@@ -3,6 +3,7 @@ import { fileURLToPath } from "node:url";
 import { serve } from "@hono/node-server";
 import { inject, injectable } from "@needle-di/core";
 import { HttpStatusCodes, invariant } from "@resume-optimzer-app/common";
+import { ResumeImportApi } from "@/features/resumeImport";
 import { Hono } from "hono";
 import { bodyLimit } from "hono/body-limit";
 import { cors } from "hono/cors";
@@ -19,7 +20,10 @@ import type { OnInit } from "./OnInit";
 export class HttpServer implements OnDeinit, OnInit {
   private serverRef: ReturnType<typeof serve> | null = null;
 
-  constructor(private readonly config = inject(Config)) {}
+  constructor(
+    private readonly config = inject(Config),
+    private readonly resumeImportApi = inject(ResumeImportApi),
+  ) {}
 
   async init() {
     invariant(this.serverRef === null, "Must not call .init() twice");
@@ -54,6 +58,7 @@ export class HttpServer implements OnDeinit, OnInit {
     const frontendDistPath = resolve(dirname(fileURLToPath(import.meta.url)), "public");
     const fallBackErrorHandlerLogger = Logger.for("api.onError");
     api.onError(honoJsErrorHandler(fallBackErrorHandlerLogger));
+    api.route("/", this.resumeImportApi.build());
 
     app.route("/api", api);
     app.get("*", serveStaticAssets(frontendDistPath));
@@ -76,7 +81,7 @@ function applySecurityMiddlewares(app: Hono, config: Config) {
         origin: config.corsOrigins,
         credentials: true,
         allowMethods: ["GET", "HEAD", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
-        allowHeaders: ["Content-Type", "Authorization", "X-Request-Id"],
+        allowHeaders: ["Content-Type", "Authorization", "X-Request-Id", "X-File-Name"],
         maxAge: 600,
       }),
     );

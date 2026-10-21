@@ -72,6 +72,12 @@ export class Config {
     return !["false", "0", "no", "off"].includes(fromEnv);
   }
 
+  public get databaseUrl(): string {
+    const url = this.overridesMap.databaseUrl ?? process.env["DATABASE_URL"];
+    invariant(!isNil(url) && url.trim().length > 0, "DATABASE_URL is required");
+    return url.trim();
+  }
+
   public get deepseekApiKey(): string {
     const key = this.overridesMap.deepseekApiKey ?? process.env["DEEPSEEK_API_KEY"];
     invariant(
@@ -88,4 +94,65 @@ export class Config {
       "deepseek-v4-flash"
     );
   }
+
+  public checkConfig(): void {
+    const issues: string[] = [];
+
+    const databaseUrl = this.overridesMap.databaseUrl ?? process.env["DATABASE_URL"];
+    if (isNil(databaseUrl) || databaseUrl.trim().length === 0) {
+      issues.push("DATABASE_URL is required");
+    }
+
+    const apiKey = this.overridesMap.deepseekApiKey ?? process.env["DEEPSEEK_API_KEY"];
+    if (isNil(apiKey) || apiKey.trim().length === 0) {
+      issues.push("DEEPSEEK_API_KEY is required to use the LLM service");
+    }
+
+    const port = Number.parseInt(this.httpPort, 10);
+    if (!Number.isInteger(port) || port < 1 || port > 65535) {
+      issues.push(`PORT must be an integer between 1 and 65535 (received "${this.httpPort}")`);
+    }
+
+    if (this.httpHost.trim().length === 0) {
+      issues.push("HOST must not be empty");
+    }
+
+    const logLevel = this.overridesMap.logLevel ?? process.env["LOG_LEVEL"];
+    if (!isNil(logLevel) && !LOG_LEVELS.includes(logLevel.toLowerCase() as LogLevel)) {
+      issues.push(`LOG_LEVEL must be one of: ${LOG_LEVELS.join(", ")}`);
+    }
+
+    const maxBodyBytes =
+      this.overridesMap.maxRequestBodyBytes ?? process.env["MAX_REQUEST_BODY_BYTES"];
+    if (!isNil(maxBodyBytes)) {
+      const parsed = Number.parseInt(String(maxBodyBytes), 10);
+      if (!Number.isFinite(parsed) || parsed <= 0) {
+        issues.push("MAX_REQUEST_BODY_BYTES must be a positive integer");
+      }
+    }
+
+    const cronEnabled = this.overridesMap.cronEnabled ?? process.env["CRON_ENABLED"];
+    if (
+      typeof cronEnabled === "string" &&
+      !CRON_ENABLED_VALUES.includes(cronEnabled.trim().toLowerCase())
+    ) {
+      issues.push(`CRON_ENABLED must be one of: ${CRON_ENABLED_VALUES.join(", ")}`);
+    }
+
+    if (this.fsStoragePath.trim().length === 0) {
+      issues.push("FS_STORAGE_PATH must not be empty");
+    }
+
+    if (this.deepseekModel.trim().length === 0) {
+      issues.push("DEEPSEEK_MODEL must not be empty");
+    }
+
+    if (issues.length > 0) {
+      throw new Error(
+        `Invalid configuration:\n${issues.map((issue) => `- ${issue}`).join("\n")}`,
+      );
+    }
+  }
 }
+
+const CRON_ENABLED_VALUES = ["true", "false", "1", "0", "yes", "no", "on", "off"];

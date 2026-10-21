@@ -3,6 +3,7 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import { FileService, filesModule } from "./features/files";
 import { llmModule } from "./features/llm";
+import { ResumeImportApi, ResumeImportService } from "./features/resumeImport";
 import { Cache } from "./shared/Cache";
 import { Config } from "./shared/Config";
 import { CronService } from "./shared/CronService";
@@ -27,8 +28,8 @@ export function createContainer(): Container {
   });
   container.bind({
     provide: DB_SQL,
-    useFactory() {
-      return postgres(process.env.DATABASE_URL!, { onnotice: () => {} });
+    useFactory(container) {
+      return postgres(container.get(Config).databaseUrl, { onnotice: () => {} });
     },
   });
   container.bind({
@@ -43,6 +44,8 @@ export function createContainer(): Container {
   container.bind(FileService);
   container.bindAll(filesModule);
   container.bindAll(llmModule);
+  container.bind(ResumeImportService);
+  container.bind(ResumeImportApi);
 
   // Initables
   container.bind({

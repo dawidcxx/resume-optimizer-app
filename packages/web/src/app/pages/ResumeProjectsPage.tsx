@@ -1,6 +1,8 @@
 import type { ResumeProject } from "@resume-optimzer-app/common";
 import { useState } from "react";
+import { useLocation } from "wouter";
 import {
+  createResumeProjectFromImport,
   DEFAULT_RESUME_PROJECT_NAME,
   deleteResumeProject,
   nextResumeProjectName,
@@ -9,26 +11,34 @@ import {
 } from "@/store";
 import { Button, ConfirmDialog, Heading, Text } from "@/ui";
 import { CreateResumeProjectDialog } from "../resume/CreateResumeProjectDialog";
+import { ImportResumeDialog } from "../resume/ImportResumeDialog";
 import { ResumeProjectTile } from "../resume/ResumeProjectTile";
 
 export function ResumeProjectsPage() {
   const [createName, setCreateName] = useState<string | null>(null);
+  const [importOpen, setImportOpen] = useState(false);
   const [projectToDelete, setProjectToDelete] = useState<ResumeProject | null>(null);
   const projects = useResumeProjects();
   const ready = useStoreReady();
+  const [, navigate] = useLocation();
 
   return (
     <>
       <div className="mb-4 flex items-center justify-between gap-4">
         <Heading level={3}>Your resumes</Heading>
-        <Button
-          variant="primary"
-          onClick={() =>
-            setCreateName(nextResumeProjectName(projects.map((project) => project.name)))
-          }
-        >
-          New resume
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" onClick={() => setImportOpen(true)}>
+            Import
+          </Button>
+          <Button
+            variant="primary"
+            onClick={() =>
+              setCreateName(nextResumeProjectName(projects.map((project) => project.name)))
+            }
+          >
+            New resume
+          </Button>
+        </div>
       </div>
 
       {!ready ? (
@@ -53,6 +63,21 @@ export function ResumeProjectsPage() {
         defaultName={createName ?? DEFAULT_RESUME_PROJECT_NAME}
         onOpenChange={(open) => {
           if (!open) setCreateName(null);
+        }}
+      />
+
+      <ImportResumeDialog
+        open={importOpen}
+        onOpenChange={setImportOpen}
+        onImported={(resume) => {
+          const project = createResumeProjectFromImport({
+            name: nextResumeProjectName(
+              projects.map((project) => project.name),
+              resume.fullName.trim() ? `${resume.fullName.trim()} Resume` : "Imported resume",
+            ),
+            resume,
+          });
+          navigate(`/resume/${project.id}/edit`);
         }}
       />
 

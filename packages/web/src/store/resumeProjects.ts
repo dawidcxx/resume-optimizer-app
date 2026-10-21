@@ -1,6 +1,7 @@
 import {
   generateId,
   type Email,
+  type ImportedResume,
   type Resume,
   type ResumeProject,
 } from "@resume-optimzer-app/common";
@@ -64,6 +65,28 @@ export function createResumeProject(input: CreateResumeProjectInput): ResumeProj
     updatedAt: now,
   };
   const resume: Resume = { id, ...createEmptyResume(input) };
+
+  store.setRow(RESUME_PROJECTS_TABLE, id, resumeProjectToRow(project));
+  store.setRow(RESUMES_TABLE, id, resumeToRow(resume));
+
+  return project;
+}
+
+export function createResumeProjectFromImport(input: {
+  name: string;
+  resume: ImportedResume;
+}): ResumeProject {
+  const id = generateId();
+  const now = new Date();
+
+  const project: ResumeProject = {
+    id,
+    version: "v1",
+    name: input.name.trim(),
+    createdAt: now,
+    updatedAt: now,
+  };
+  const resume: Resume = { id, ...input.resume };
 
   store.setRow(RESUME_PROJECTS_TABLE, id, resumeProjectToRow(project));
   store.setRow(RESUMES_TABLE, id, resumeToRow(resume));

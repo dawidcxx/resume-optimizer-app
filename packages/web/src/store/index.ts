@@ -8,6 +8,7 @@ export {
 export {
   createEmptyResume,
   createResumeProject,
+  createResumeProjectFromImport,
   DEFAULT_RESUME_PROJECT_NAME,
   deleteResumeProject,
   nextResumeProjectName,
