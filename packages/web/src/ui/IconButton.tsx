@@ -26,7 +26,13 @@ export function IconButton({
   return (
     <button
       type={type}
-      className={cn(buttonBase, buttonVariants[variant], "p-0", iconButtonSizes[size], className)}
+      className={cn(
+        buttonBase,
+        buttonVariants[variant],
+        "rounded-ui p-0",
+        iconButtonSizes[size],
+        className,
+      )}
       {...props}
     />
   );

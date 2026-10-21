@@ -30,6 +30,7 @@ export type SelectProps<TValue extends string = string> = {
   onBlur?: () => void;
   localOptions?: readonly SelectItem<TValue>[];
   onLocalOptionsChange?: (options: SelectItem<TValue>[]) => void;
+  clearable?: boolean;
   placeholder?: string;
   disabled?: boolean;
   invalid?: boolean;
@@ -65,6 +66,7 @@ export function Select<TValue extends string = string>({
   onBlur,
   localOptions = [],
   onLocalOptionsChange,
+  clearable = true,
   placeholder = "",
   disabled = false,
   invalid = false,
@@ -339,7 +341,7 @@ export function Select<TValue extends string = string>({
         )}
       />
 
-      {hasSelection && !disabled ? (
+      {hasSelection && !disabled && clearable ? (
         <button
           type="button"
           onMouseDown={(event) => event.preventDefault()}

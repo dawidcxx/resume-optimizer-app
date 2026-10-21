@@ -1,5 +1,5 @@
 import type { Resume, ResumeProject } from "@resume-optimzer-app/common";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import {
   readResume,
   readResumeBundle,
@@ -7,7 +7,11 @@ import {
   readResumeProjects,
   type ResumeBundle,
 } from "./selectors";
-import { store } from "./store";
+import { isStoreReady, store, subscribeStoreReady } from "./store";
+
+export function useStoreReady(): boolean {
+  return useSyncExternalStore(subscribeStoreReady, isStoreReady, isStoreReady);
+}
 
 function useTablesVersion(): number {
   const [version, setVersion] = useState(0);

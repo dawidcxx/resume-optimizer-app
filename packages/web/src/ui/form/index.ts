@@ -1,3 +1,4 @@
+export { Field, type FieldProps } from "./Field";
 export { FieldMessages } from "./FieldMessages";
 export { useFieldStatus } from "./field";
 export { SelectField, type SelectFieldProps } from "./SelectField";

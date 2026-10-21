@@ -1,0 +1,175 @@
+import type { Rating, Resume } from "@resume-optimzer-app/common";
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Heading,
+  Input,
+  Select,
+  Text,
+} from "@/ui";
+import { Field } from "@/ui/form";
+
+type ListedSkill = Resume["skills"]["listed"][number];
+type CategorizedSkill = Resume["skills"]["categorized"][number];
+type RatingValue = "1" | "2" | "3" | "4" | "5";
+
+const RATING_VALUES = ["1", "2", "3", "4", "5"] as const;
+
+export type SkillsSectionProps = {
+  value: Resume["skills"];
+  onChange: (value: Resume["skills"]) => void;
+};
+
+export function SkillsSection({ value, onChange }: SkillsSectionProps) {
+  function updateListed(index: number, patch: Partial<ListedSkill>) {
+    onChange({
+      ...value,
+      listed: value.listed.map((item, itemIndex) =>
+        itemIndex === index ? { ...item, ...patch } : item,
+      ),
+    });
+  }
+
+  function updateCategorized(index: number, patch: Partial<CategorizedSkill>) {
+    onChange({
+      ...value,
+      categorized: value.categorized.map((item, itemIndex) =>
+        itemIndex === index ? { ...item, ...patch } : item,
+      ),
+    });
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Skills</CardTitle>
+        <CardDescription>Standalone skills and grouped categories.</CardDescription>
+      </CardHeader>
+      <CardContent className="grid gap-5">
+        <section className="grid gap-3">
+          <div className="flex items-center justify-between gap-3">
+            <Heading level={4}>Listed</Heading>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => onChange({ ...value, listed: [...value.listed, { name: "", rating: 3 }] })}
+            >
+              Add skill
+            </Button>
+          </div>
+
+          {value.listed.length === 0 ? (
+            <Text variant="muted">No standalone skills yet.</Text>
+          ) : null}
+
+          {value.listed.map((item, index) => (
+            <div
+              key={index}
+              className="grid gap-2 rounded-ui border border-border p-3 sm:grid-cols-[1fr_7rem_auto] sm:items-end"
+            >
+              <Field id={`skill-${index}-name`} label="Skill">
+                <Input
+                  id={`skill-${index}-name`}
+                  value={item.name}
+                  onChange={(event) => updateListed(index, { name: event.target.value })}
+                  placeholder="TypeScript"
+                />
+              </Field>
+              <Field id={`skill-${index}-rating`} label="Rating">
+                <Select<RatingValue>
+                  id={`skill-${index}-rating`}
+                  options={RATING_VALUES}
+                  value={String(item.rating) as RatingValue}
+                  clearable={false}
+                  onChange={(rating) => {
+                    if (rating) updateListed(index, { rating: Number(rating) as Rating });
+                  }}
+                />
+              </Field>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="justify-self-end"
+                onClick={() =>
+                  onChange({
+                    ...value,
+                    listed: value.listed.filter((_, itemIndex) => itemIndex !== index),
+                  })
+                }
+                aria-label={`Remove skill ${index + 1}`}
+              >
+                Remove
+              </Button>
+            </div>
+          ))}
+        </section>
+
+        <section className="grid gap-3">
+          <div className="flex items-center justify-between gap-3">
+            <Heading level={4}>Categorized</Heading>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() =>
+                onChange({
+                  ...value,
+                  categorized: [...value.categorized, { category: "", skill: "" }],
+                })
+              }
+            >
+              Add category
+            </Button>
+          </div>
+
+          {value.categorized.length === 0 ? (
+            <Text variant="muted">No categories yet.</Text>
+          ) : null}
+
+          {value.categorized.map((item, index) => (
+            <div
+              key={index}
+              className="grid gap-2 rounded-ui border border-border p-3 sm:grid-cols-[1fr_1fr_auto] sm:items-end"
+            >
+              <Field id={`category-${index}-category`} label="Category">
+                <Input
+                  id={`category-${index}-category`}
+                  value={item.category}
+                  onChange={(event) => updateCategorized(index, { category: event.target.value })}
+                  placeholder="Build tools"
+                />
+              </Field>
+              <Field id={`category-${index}-skill`} label="Skill">
+                <Input
+                  id={`category-${index}-skill`}
+                  value={item.skill}
+                  onChange={(event) => updateCategorized(index, { skill: event.target.value })}
+                  placeholder="Gradle"
+                />
+              </Field>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="justify-self-end"
+                onClick={() =>
+                  onChange({
+                    ...value,
+                    categorized: value.categorized.filter(
+                      (_, itemIndex) => itemIndex !== index,
+                    ),
+                  })
+                }
+                aria-label={`Remove category ${index + 1}`}
+              >
+                Remove
+              </Button>
+            </div>
+          ))}
+        </section>
+      </CardContent>
+    </Card>
+  );
+}

@@ -5,6 +5,7 @@ import {
   deleteResumeProject,
   nextResumeProjectName,
   useResumeProjects,
+  useStoreReady,
 } from "@/store";
 import { Button, ConfirmDialog, Heading, Text } from "@/ui";
 import { CreateResumeProjectDialog } from "../resume/CreateResumeProjectDialog";
@@ -14,6 +15,7 @@ export function ResumeProjectsPage() {
   const [createName, setCreateName] = useState<string | null>(null);
   const [projectToDelete, setProjectToDelete] = useState<ResumeProject | null>(null);
   const projects = useResumeProjects();
+  const ready = useStoreReady();
 
   return (
     <>
@@ -29,7 +31,9 @@ export function ResumeProjectsPage() {
         </Button>
       </div>
 
-      {projects.length === 0 ? (
+      {!ready ? (
+        <Text variant="muted">Loading resumes…</Text>
+      ) : projects.length === 0 ? (
         <Text variant="muted">No resumes yet. Create one to get started.</Text>
       ) : (
         <div className="flex flex-wrap gap-4">
@@ -37,7 +41,7 @@ export function ResumeProjectsPage() {
             <ResumeProjectTile
               key={project.id}
               project={project}
-              href={`/resume/${project.id}`}
+              href={`/resume/${project.id}/edit`}
               onDelete={setProjectToDelete}
             />
           ))}

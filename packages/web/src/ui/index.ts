@@ -4,9 +4,17 @@ export {
   buttonSizes,
   buttonVariants,
   type ButtonProps,
+  type ButtonShape,
   type ButtonSize,
   type ButtonVariant,
 } from "./Button";
+export {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./Card";
 export { ButtonGroup } from "./ButtonGroup";
 export { ConfirmDialog, type ConfirmDialogProps } from "./ConfirmDialog";
 export {
@@ -39,6 +47,7 @@ export {
 } from "./Menu";
 export { Select, type SelectItem, type SelectOption, type SelectProps } from "./Select";
 export { List, ListItem, OrderedList, UnorderedList, type ListProps } from "./List";
+export { Textarea, textareaBase, type TextareaProps } from "./Textarea";
 export {
   Table,
   TableBody,
