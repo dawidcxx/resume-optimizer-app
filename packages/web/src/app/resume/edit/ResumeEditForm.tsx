@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { Heading, Text } from "@/ui";
 import { FloatingStepIndicator } from "./FloatingStepIndicator";
+import { RenderStep, type RenderStepValue } from "./RenderStep";
 import { StepPlaceholder } from "./StepPlaceholder";
 import { BasicsSection } from "./sections/BasicsSection";
 import { ContactSection } from "./sections/ContactSection";
@@ -11,7 +12,7 @@ import { ExperienceSection } from "./sections/ExperienceSection";
 import { ProjectsSection } from "./sections/ProjectsSection";
 import { SkillsSection } from "./sections/SkillsSection";
 
-const STEPS = ["Details", "Target role", "Preview"] as const;
+const STEPS = ["Details", "Render", "Preview"] as const;
 
 export type ResumeEditFormProps = {
   projectName: string;
@@ -20,6 +21,10 @@ export type ResumeEditFormProps = {
 
 export function ResumeEditForm({ projectName, resume }: ResumeEditFormProps) {
   const [draft, setDraft] = useState<Resume>(() => structuredClone(resume));
+  const [renderDraft, setRenderDraft] = useState<RenderStepValue>({
+    aiInstructions: "",
+    targetJobDescription: "",
+  });
   const [currentStep, setCurrentStep] = useState(0);
 
   useEffect(() => {
@@ -70,12 +75,12 @@ export function ResumeEditForm({ projectName, resume }: ResumeEditFormProps) {
               />
             </>
           ) : currentStep === 1 ? (
-            <StepPlaceholder
-              title="Target role"
-              description="Shape this resume for a specific position."
-            >
-              Paste a job description and tune how strongly your experience is re-framed.
-            </StepPlaceholder>
+            <RenderStep
+              value={renderDraft}
+              onChange={(patch) =>
+                setRenderDraft((current) => ({ ...current, ...patch }))
+              }
+            />
           ) : (
             <StepPlaceholder
               title="Preview"
