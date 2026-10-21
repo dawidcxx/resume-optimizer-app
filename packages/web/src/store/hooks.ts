@@ -5,8 +5,10 @@ import {
   readResumeBundle,
   readResumeProject,
   readResumeProjects,
+  readResumeRenders,
   type ResumeBundle,
 } from "./selectors";
+import type { ResumeRender } from "./mappers";
 import { isStoreReady, store, subscribeStoreReady } from "./store";
 
 export function useStoreReady(): boolean {
@@ -44,4 +46,9 @@ export function useResume(id: string): Resume | undefined {
 export function useResumeBundle(id: string): ResumeBundle | undefined {
   const version = useTablesVersion();
   return useMemo(() => readResumeBundle(store, id), [version, id]);
+}
+
+export function useResumeRenders(projectId: string): ResumeRender[] {
+  const version = useTablesVersion();
+  return useMemo(() => readResumeRenders(store, projectId), [version, projectId]);
 }

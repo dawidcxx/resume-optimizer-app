@@ -3,8 +3,10 @@ import { valibotSchema } from "@ai-sdk/valibot";
 import { inject, injectable } from "@needle-di/core";
 import {
   ImportedResumeSchema,
+  RenderDocument,
   toImportedResume,
   type ImportedResume,
+  type RenderResumeRequest,
 } from "@resume-optimzer-app/common";
 import { generateText, Output } from "ai";
 import { Config } from "@/shared/Config";
@@ -33,6 +35,24 @@ export class DeepseekLlmService implements LlmServiceContract {
       }),
     });
     return toImportedResume(output);
+  }
+
+  async renderResume(input: RenderResumeRequest): Promise<RenderDocument> {
+    const { output } = await generateText({
+      model: this.model,
+      system: RENDER_RESUME_SYSTEM_PROMPT,
+      prompt: buildRenderPrompt(input),
+      temperature: 0.5,
+      maxOutputTokens: 8192,
+      providerOptions: {
+        deepseek: { thinking: { type: "disabled" } },
+      },
+      output: Output.object({
+        schema: valibotSchema(RenderDocument),
+        name: "resume_render",
+      }),
+    });
+    return output;
   }
 
   private get model(): ReturnType<DeepSeekProvider> {
@@ -65,3 +85,32 @@ Rules:
 - Include responsibilities, achievements, and technologies listed under a role in that experience entry's company.description.
 - Project icon may be github or linkedin only when the project URL matches; otherwise use null.
 - aboutMe should use an explicit summary or objective section. Otherwise use an empty string.`;
+
+const RENDER_RESUME_SYSTEM_PROMPT = `You design a resume as a structured component document.
+
+Rules:
+- Use only facts from the resume data
+- You may reorder, summarize, rephrase, and re-emphasize existing facts to match the target job description and AI instructions, but preserve their meaning.
+- Do not include the target job description in the resume.
+- Start with exactly one header block.
+- Build sections with entries for experience, education, and projects. Use text, bullet-list, tag-list, and divider blocks where useful.
+- Do not create empty sections.
+- Keep the result suitable for one page.
+- Use only the block types defined by the response schema.
+- Theme colors must be 6-digit hex values. Make the theme reflect the AI instructions while keeping text readable against the background.
+- If AI instructions or the target job description are empty, use a clean, professional default.
+- Do not use markdown syntax inside text fields; they render as plain text.
+- Prefix bare URLs with https://.`;
+
+function buildRenderPrompt(input: RenderResumeRequest): string {
+  return [
+    "Resume data:",
+    JSON.stringify(input.resume, null, 2),
+    "",
+    "AI instructions:",
+    input.aiInstructions.trim() || "(none)",
+    "",
+    "Target job description:",
+    input.targetJobDescription.trim() || "(none)",
+  ].join("\n");
+}

@@ -7,7 +7,12 @@ import {
 } from "@resume-optimzer-app/common";
 import { resumeProjectToRow, resumeToRow } from "./mappers";
 import { store } from "./store";
-import { RESUMES_TABLE, RESUME_PROJECTS_TABLE } from "./tables";
+import {
+  RESUMES_TABLE,
+  RESUME_PROJECTS_TABLE,
+  RESUME_RENDERS_TABLE,
+  RESUME_RENDER_CELLS,
+} from "./tables";
 
 export type CreateResumeProjectInput = {
   name: string;
@@ -97,4 +102,15 @@ export function createResumeProjectFromImport(input: {
 export function deleteResumeProject(id: string): void {
   store.delRow(RESUME_PROJECTS_TABLE, id);
   store.delRow(RESUMES_TABLE, id);
+
+  for (const renderId of store.getRowIds(RESUME_RENDERS_TABLE)) {
+    const projectId = store.getCell(
+      RESUME_RENDERS_TABLE,
+      renderId,
+      RESUME_RENDER_CELLS.projectId,
+    );
+    if (projectId === id) {
+      store.delRow(RESUME_RENDERS_TABLE, renderId);
+    }
+  }
 }

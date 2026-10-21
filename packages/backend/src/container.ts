@@ -3,6 +3,7 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import { FileService, filesModule } from "./features/files";
 import { llmModule } from "./features/llm";
+import { RenderApi, RenderService } from "./features/render";
 import { ResumeImportApi, ResumeImportService } from "./features/resumeImport";
 import { Cache } from "./shared/Cache";
 import { Config } from "./shared/Config";
@@ -46,6 +47,8 @@ export function createContainer(): Container {
   container.bindAll(llmModule);
   container.bind(ResumeImportService);
   container.bind(ResumeImportApi);
+  container.bind(RenderService);
+  container.bind(RenderApi);
 
   // Initables
   container.bind({

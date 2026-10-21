@@ -3,6 +3,7 @@ import { fileURLToPath } from "node:url";
 import { serve } from "@hono/node-server";
 import { inject, injectable } from "@needle-di/core";
 import { HttpStatusCodes, invariant } from "@resume-optimzer-app/common";
+import { RenderApi } from "@/features/render";
 import { ResumeImportApi } from "@/features/resumeImport";
 import { Hono } from "hono";
 import { bodyLimit } from "hono/body-limit";
@@ -23,6 +24,7 @@ export class HttpServer implements OnDeinit, OnInit {
   constructor(
     private readonly config = inject(Config),
     private readonly resumeImportApi = inject(ResumeImportApi),
+    private readonly renderApi = inject(RenderApi),
   ) {}
 
   async init() {
@@ -59,6 +61,7 @@ export class HttpServer implements OnDeinit, OnInit {
     const fallBackErrorHandlerLogger = Logger.for("api.onError");
     api.onError(honoJsErrorHandler(fallBackErrorHandlerLogger));
     api.route("/", this.resumeImportApi.build());
+    api.route("/", this.renderApi.build());
 
     app.route("/api", api);
     app.get("*", serveStaticAssets(frontendDistPath));

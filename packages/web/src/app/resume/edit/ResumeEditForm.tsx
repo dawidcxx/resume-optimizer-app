@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { Heading, Text } from "@/ui";
 import { FloatingStepIndicator } from "./FloatingStepIndicator";
+import { PreviewStep } from "./PreviewStep";
 import { RenderStep, type RenderStepValue } from "./RenderStep";
-import { StepPlaceholder } from "./StepPlaceholder";
 import { BasicsSection } from "./sections/BasicsSection";
 import { ContactSection } from "./sections/ContactSection";
 import { EducationSection } from "./sections/EducationSection";
@@ -82,12 +82,12 @@ export function ResumeEditForm({ projectName, resume }: ResumeEditFormProps) {
               }
             />
           ) : (
-            <StepPlaceholder
-              title="Preview"
-              description="Review the rendered result before exporting."
-            >
-              Your rendered resume will appear here.
-            </StepPlaceholder>
+            <PreviewStep
+              projectId={resume.id}
+              resume={draft}
+              aiInstructions={renderDraft.aiInstructions}
+              targetJobDescription={renderDraft.targetJobDescription}
+            />
           )}
         </div>
       </div>

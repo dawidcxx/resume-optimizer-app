@@ -1,6 +1,16 @@
-import type { Email, Resume, ResumeProject, Uuid } from "@resume-optimzer-app/common";
+import type {
+  Email,
+  RenderDocument,
+  Resume,
+  ResumeProject,
+  Uuid,
+} from "@resume-optimzer-app/common";
 import type { Cell, Row } from "tinybase";
-import { RESUME_CELLS, RESUME_PROJECT_CELLS } from "./tables";
+import {
+  RESUME_CELLS,
+  RESUME_PROJECT_CELLS,
+  RESUME_RENDER_CELLS,
+} from "./tables";
 
 function asString(value: Cell | undefined, fallback = ""): string {
   return typeof value === "string" ? value : fallback;
@@ -66,5 +76,29 @@ export function resumeToRow(resume: Resume): Row {
     [RESUME_CELLS.education]: resume.education,
     [RESUME_CELLS.skills]: resume.skills,
     [RESUME_CELLS.projects]: resume.projects,
+  };
+}
+
+export type ResumeRender = {
+  id: Uuid;
+  projectId: Uuid;
+  createdAt: Date;
+  spec: RenderDocument;
+};
+
+export function rowToResumeRender(id: string, row: Row): ResumeRender {
+  return {
+    id: id as Uuid,
+    projectId: asString(row[RESUME_RENDER_CELLS.projectId]) as Uuid,
+    createdAt: new Date(asNumber(row[RESUME_RENDER_CELLS.createdAt])),
+    spec: row[RESUME_RENDER_CELLS.spec] as RenderDocument,
+  };
+}
+
+export function resumeRenderToRow(render: ResumeRender): Row {
+  return {
+    [RESUME_RENDER_CELLS.projectId]: render.projectId,
+    [RESUME_RENDER_CELLS.createdAt]: render.createdAt.getTime(),
+    [RESUME_RENDER_CELLS.spec]: render.spec,
   };
 }

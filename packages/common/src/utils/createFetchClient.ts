@@ -152,5 +152,16 @@ async function ensureOk(response: Response): Promise<void> {
   }
 
   const errorBody = await response.text();
-  throw new Error(`Request failed with ${response.status}: ${errorBody}`);
+  let message = `Request failed with ${response.status}`;
+
+  try {
+    const parsed = JSON.parse(errorBody) as { message?: unknown };
+    if (typeof parsed.message === "string" && parsed.message.length > 0) {
+      message = parsed.message;
+    }
+  } catch {
+    if (errorBody.length > 0) message = errorBody;
+  }
+
+  throw new Error(message);
 }
