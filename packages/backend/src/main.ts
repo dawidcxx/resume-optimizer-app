@@ -10,7 +10,7 @@ import { OnInit } from "./shared/OnInit";
 const logger = Logger.for("main");
 const container = createContainer();
 
-process.title = "resume-optimzer-app";
+process.title = "ResumeFixer";
 
 try {
   container.get(Config).checkConfig();

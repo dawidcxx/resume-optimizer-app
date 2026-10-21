@@ -63,7 +63,7 @@ export function ProjectsSection({ value, onChange }: ProjectsSectionProps) {
                   id={`project-${index}-name`}
                   value={item.name}
                   onChange={(event) => update(index, { name: event.target.value })}
-                  placeholder="Resume Optimizer"
+                  placeholder="ResumeFixer"
                 />
               </Field>
               <Field id={`project-${index}-icon`} label="Icon">

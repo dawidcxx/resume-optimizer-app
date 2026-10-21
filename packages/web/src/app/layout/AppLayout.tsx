@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { Link } from "wouter";
-import { ThemeSwitcher } from "@/ui";
+import { BrandMark, ThemeSwitcher } from "@/ui";
 
 export function AppLayout({ children }: { children: ReactNode }) {
   return (
@@ -8,10 +8,8 @@ export function AppLayout({ children }: { children: ReactNode }) {
       <header className="shrink-0 border-b border-border bg-surface px-6">
         <div className="mx-auto flex h-14 w-full max-w-5xl items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5">
-            <span className="flex h-6 w-6 items-center justify-center rounded-ui bg-primary text-[11px] font-semibold text-primary-foreground">
-              R
-            </span>
-            <span className="text-sm font-medium">Resume Optimizer</span>
+            <BrandMark className="h-7 w-7 shrink-0" />
+            <span className="text-sm font-semibold tracking-tight">ResumeFixer</span>
           </Link>
           <ThemeSwitcher />
         </div>

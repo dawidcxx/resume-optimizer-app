@@ -15,6 +15,7 @@ export {
   CardHeader,
   CardTitle,
 } from "./Card";
+export { BrandMark, type BrandMarkProps } from "./BrandMark";
 export { ButtonGroup } from "./ButtonGroup";
 export { ConfirmDialog, type ConfirmDialogProps } from "./ConfirmDialog";
 export {
