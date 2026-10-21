@@ -10,7 +10,7 @@ export function TimelineItem({ title, meta, accent, children }: TimelineItemProp
   const theme = useResumeTheme();
 
   return (
-    <section className="relative grid min-w-0 gap-1">
+    <section className="relative grid min-w-0 gap-1 print:break-inside-avoid">
       <span
         aria-hidden="true"
         className="absolute -left-[1.32rem] top-1.5 h-2 w-2 rounded-full"

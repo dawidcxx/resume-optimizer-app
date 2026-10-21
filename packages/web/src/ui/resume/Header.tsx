@@ -19,7 +19,7 @@ export function Header({
   const contacts = [email, phone, location, website].filter((value) => value.length > 0);
 
   return (
-    <header className="grid min-w-0 gap-1.5">
+    <header className="grid min-w-0 gap-1.5 print:break-after-avoid">
       <h1
         className="min-w-0 text-2xl font-semibold tracking-tight [overflow-wrap:anywhere]"
         style={{ fontFamily: "var(--resume-heading-font)" }}

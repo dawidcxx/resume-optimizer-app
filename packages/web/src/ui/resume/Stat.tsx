@@ -9,7 +9,7 @@ export function Stat({ value, label, accent, background }: StatProps) {
 
   return (
     <div
-      className="grid min-w-0 flex-1 basis-24 content-start gap-0.5 rounded border px-2 py-1.5"
+      className="grid min-w-0 flex-1 basis-24 content-start gap-0.5 rounded border px-2 py-1.5 print:break-inside-avoid"
       style={{
         borderColor: `color-mix(in srgb, ${color} 35%, transparent)`,
         backgroundColor:

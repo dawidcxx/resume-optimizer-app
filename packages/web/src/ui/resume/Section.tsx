@@ -27,7 +27,10 @@ export function Section({ title, accent, background, children }: SectionProps) {
   return (
     <section className="grid min-w-0 content-start gap-2.5" style={style}>
       {title ? (
-        <div className="min-w-0 border-b pb-1" style={{ borderColor: color }}>
+        <div
+          className="min-w-0 border-b pb-1 print:break-after-avoid"
+          style={{ borderColor: color }}
+        >
           <h2
             className="text-[11px] font-semibold uppercase tracking-[0.18em] [overflow-wrap:anywhere]"
             style={{ color, fontFamily: "var(--resume-heading-font)" }}

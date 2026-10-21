@@ -30,6 +30,7 @@ export function Resume({ children, ...props }: ResumeProps) {
         style={style}
         className={cn(
           "@container mx-auto w-full min-w-0 max-w-[210mm] rounded-sm border border-border shadow-sm",
+          "print:max-w-none print:rounded-none print:border-0 print:p-0 print:shadow-none",
           theme.density === "compact" && "px-8 py-7",
           theme.density === "comfortable" && "px-10 py-9",
           theme.density === "airy" && "px-12 py-11",

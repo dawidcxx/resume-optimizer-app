@@ -117,3 +117,37 @@
     @apply bg-accent text-accent-foreground;
   }
 }
+
+@page {
+  size: A4;
+  margin: 12mm 14mm;
+}
+
+@media print {
+  html,
+  body {
+    background: #fff !important;
+  }
+
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  body.print-mode #root {
+    display: none !important;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    break-after: avoid;
+  }
+
+  p,
+  li {
+    orphans: 3;
+    widows: 3;
+  }
+}

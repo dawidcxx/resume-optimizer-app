@@ -48,7 +48,7 @@ export function Stars({ value, max, color, label, size, format }: StarsProps) {
   const rating = Math.min(Math.max(Number.isFinite(numericValue) ? numericValue : 0, 0), total);
 
   return (
-    <div className="flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[11px]">
+    <div className="flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[11px] print:break-inside-avoid">
       {label ? (
         <span className="min-w-0 [overflow-wrap:anywhere]" style={{ color: theme.text }}>
           {label}

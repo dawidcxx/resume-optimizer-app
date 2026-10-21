@@ -84,6 +84,7 @@ export function ResumeEditForm({ projectName, resume }: ResumeEditFormProps) {
           ) : (
             <PreviewStep
               projectId={resume.id}
+              projectName={projectName}
               resume={draft}
               aiInstructions={renderDraft.aiInstructions}
               targetJobDescription={renderDraft.targetJobDescription}

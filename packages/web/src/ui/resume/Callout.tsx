@@ -12,7 +12,7 @@ export function Callout({ title, accent, background, children }: CalloutProps) {
 
   return (
     <aside
-      className="grid min-w-0 gap-1 border-l-2 py-2 pl-3 [overflow-wrap:anywhere]"
+      className="grid min-w-0 gap-1 border-l-2 py-2 pl-3 [overflow-wrap:anywhere] print:break-inside-avoid"
       style={{
         borderColor: color,
         backgroundColor: background ?? `color-mix(in srgb, ${color} 8%, transparent)`,

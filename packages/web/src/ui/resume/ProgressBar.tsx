@@ -14,7 +14,7 @@ export function ProgressBar({ label, value, max, color }: ProgressBarProps) {
   const percent = Math.round((numericValue / numericMax) * 100);
 
   return (
-    <div className="grid min-w-0 gap-1 text-[10px]">
+    <div className="grid min-w-0 gap-1 text-[10px] print:break-inside-avoid">
       <div className="flex min-w-0 items-center justify-between gap-3">
         <span className="min-w-0 [overflow-wrap:anywhere]" style={{ color: theme.text }}>
           {label}

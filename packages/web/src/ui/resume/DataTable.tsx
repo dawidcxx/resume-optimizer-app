@@ -37,8 +37,8 @@ export function DataTable({ headers, rows, caption, accent }: DataTableProps) {
           {caption}
         </figcaption>
       ) : null}
-      <div className="max-w-full overflow-x-auto">
-        <table className="w-full table-fixed border-collapse text-[10px]">
+      <div className="max-w-full overflow-x-auto print:overflow-visible">
+        <table className="w-full table-fixed border-collapse text-[10px] print:[&_thead]:table-header-group print:[&_tr]:break-inside-avoid">
           {headerCells.length > 0 ? (
             <thead>
               <tr>

@@ -74,7 +74,7 @@ export function Columns({ ratio, gap, children }: ColumnsProps) {
     <div
       style={style}
       className={cn(
-        "grid grid-cols-1 items-start [&>*]:min-w-0",
+        "grid grid-cols-1 items-start [&>*]:min-w-0 print:break-inside-avoid",
         "@xl:grid-cols-[var(--resume-columns)]",
         GAP_CLASSES[gap],
       )}

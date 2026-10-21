@@ -10,7 +10,7 @@ export function Entry({ title, subtitle, meta, accent, children }: EntryProps) {
   const theme = useResumeTheme();
 
   return (
-    <article className="grid min-w-0 gap-1">
+    <article className="grid min-w-0 gap-1 print:break-inside-avoid">
       <div className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-3">
         <h3
           className="min-w-0 text-[13px] font-semibold [overflow-wrap:anywhere]"

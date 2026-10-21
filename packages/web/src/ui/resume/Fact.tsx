@@ -8,7 +8,7 @@ export function Fact({ label, value, accent }: FactProps) {
 
   return (
     <div
-      className="grid min-w-0 grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] items-baseline gap-x-3 border-b py-0.5 text-[10px]"
+      className="grid min-w-0 grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] items-baseline gap-x-3 border-b py-0.5 text-[10px] print:break-inside-avoid"
       style={{
         borderColor: `color-mix(in srgb, ${theme.muted} 25%, transparent)`,
       }}

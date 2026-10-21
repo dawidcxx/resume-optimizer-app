@@ -12,7 +12,7 @@ export function Tag({ accent, background, children }: TagProps) {
 
   return (
     <span
-      className="inline-block max-w-full rounded-full border px-2 py-0.5 align-top text-[10px] font-medium leading-snug [overflow-wrap:anywhere]"
+      className="inline-block max-w-full rounded-full border px-2 py-0.5 align-top text-[10px] font-medium leading-snug [overflow-wrap:anywhere] print:break-inside-avoid"
       style={{ borderColor: color, color, backgroundColor: background }}
     >
       {children}
