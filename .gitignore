@@ -6,7 +6,10 @@ node_modules
 dist
 dist-ssr
 *.local
-!.env.local
+.env
+.env.*
+!.env.example
+!.env.defaults
 .objects
 .objects/
 .storage

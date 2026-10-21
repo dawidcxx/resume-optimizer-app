@@ -1,6 +1,8 @@
 import { Container } from "@needle-di/core";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
+import { filesModule } from "./features/files";
+import { llmModule } from "./features/llm";
 import { Cache } from "./shared/Cache";
 import { Config } from "./shared/Config";
 import { DB, DB_SQL, type Sql } from "./shared/Db";
@@ -34,6 +36,10 @@ export function createContainer(): Container {
     },
   });
   container.bind(HttpServer);
+
+  // Features
+  container.bindAll(filesModule);
+  container.bindAll(llmModule);
 
   // Initables
   container.bind({

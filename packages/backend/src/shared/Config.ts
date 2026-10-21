@@ -1,5 +1,5 @@
 import { injectable } from "@needle-di/core";
-import { isNil } from "@resume-optimzer-app/common";
+import { invariant, isNil } from "@resume-optimzer-app/common";
 import { LOG_LEVELS, type LogLevel } from "@/lib/Logger";
 
 @injectable()
@@ -51,5 +51,30 @@ export class Config {
       .split(",")
       .map((origin) => origin.trim())
       .filter((origin) => origin.length > 0);
+  }
+
+  public get fsStoragePath(): string {
+    return (
+      this.overridesMap.fsStoragePath ??
+      process.env["FS_STORAGE_PATH"] ??
+      ".storage"
+    );
+  }
+
+  public get deepseekApiKey(): string {
+    const key = this.overridesMap.deepseekApiKey ?? process.env["DEEPSEEK_API_KEY"];
+    invariant(
+      !isNil(key) && key.trim().length > 0,
+      "DEEPSEEK_API_KEY is required to use the LLM service",
+    );
+    return key.trim();
+  }
+
+  public get deepseekModel(): string {
+    return (
+      this.overridesMap.deepseekModel ??
+      process.env["DEEPSEEK_MODEL"] ??
+      "deepseek-v4-flash"
+    );
   }
 }

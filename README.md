@@ -20,6 +20,21 @@ Opinionated template on how to start a Vite + Bun backend project. Optimized for
 
 - (Recommended) Have [nix](https://nixos.org/download/) and [direnv](https://github.com/direnv/direnv) set up.
 
+## Environment setup
+
+The backend loads two env files during development:
+
+- `packages/backend/.env.defaults` — tracked, non-secret defaults such as `DATABASE_URL`
+- `packages/backend/.env.local` — untracked local overrides and secrets
+
+Create the local file once, then fill in your DeepSeek API key:
+
+```sh
+cp packages/backend/.env.example packages/backend/.env.local
+```
+
+Set `DEEPSEEK_API_KEY` in `packages/backend/.env.local` to use LLM-backed features such as resume import. The offline-first app and its non-LLM features run without it, but LLM calls will fail until the key is provided.
+
 ## Key commands
 
 - **Set up DB** `cd docker && docker compose up`
