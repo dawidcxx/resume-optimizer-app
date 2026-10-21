@@ -1,10 +1,18 @@
 import type { Resume } from "@resume-optimzer-app/common";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, Input } from "@/ui";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Input,
+  Textarea,
+} from "@/ui";
 import { Field } from "@/ui/form";
 
 export type BasicsSectionProps = {
-  value: Pick<Resume, "fullName" | "careerName">;
-  onChange: (patch: Partial<Pick<Resume, "fullName" | "careerName">>) => void;
+  value: Pick<Resume, "fullName" | "careerName" | "aboutMe">;
+  onChange: (patch: Partial<Pick<Resume, "fullName" | "careerName" | "aboutMe">>) => void;
 };
 
 export function BasicsSection({ value, onChange }: BasicsSectionProps) {
@@ -31,6 +39,15 @@ export function BasicsSection({ value, onChange }: BasicsSectionProps) {
             value={value.careerName}
             onChange={(event) => onChange({ careerName: event.target.value })}
             placeholder="Senior Frontend Engineer"
+          />
+        </Field>
+        <Field id="aboutMe" label="About me" className="sm:col-span-2">
+          <Textarea
+            id="aboutMe"
+            rows={4}
+            value={value.aboutMe}
+            onChange={(event) => onChange({ aboutMe: event.target.value })}
+            placeholder="A short summary of who you are, what you do, and what you're looking for."
           />
         </Field>
       </CardContent>

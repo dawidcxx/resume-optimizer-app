@@ -37,6 +37,7 @@ export function createEmptyResume(input: Omit<CreateResumeProjectInput, "name"> 
   return {
     fullName: input.fullName ?? "",
     careerName: input.careerName ?? "",
+    aboutMe: "",
     contact: {
       email: "" as Email,
       phone: "",

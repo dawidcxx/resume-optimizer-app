@@ -49,6 +49,7 @@ describe("createResumeProject", () => {
     expect(resume?.id).toBe(project.id);
     expect(resume?.fullName).toBe("Ada Lovelace");
     expect(resume?.careerName).toBe("Engineer");
+    expect(resume?.aboutMe).toBe("");
   });
 
   it("deletes both the project row and its resume row", () => {

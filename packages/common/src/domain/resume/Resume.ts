@@ -9,6 +9,7 @@ export const Resume = object({
   id: Uuid, // 1:1 with ResumeProject
   fullName: string(),
   careerName: string(),
+  aboutMe: string(),
 
   contact: object({
     email: Email,

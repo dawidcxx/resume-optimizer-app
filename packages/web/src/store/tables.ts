@@ -11,6 +11,7 @@ export const RESUME_PROJECT_CELLS = {
 export const RESUME_CELLS = {
   fullName: "fullName",
   careerName: "careerName",
+  aboutMe: "aboutMe",
   contact: "contact",
   experience: "experience",
   education: "education",

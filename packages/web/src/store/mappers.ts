@@ -29,6 +29,7 @@ export function rowToResume(id: string, row: Row): Resume {
     id: id as Uuid,
     fullName: asString(row[RESUME_CELLS.fullName]),
     careerName: asString(row[RESUME_CELLS.careerName]),
+    aboutMe: asString(row[RESUME_CELLS.aboutMe]),
     contact: asObject<Resume["contact"]>(row[RESUME_CELLS.contact], {
       email: "" as Email,
       phone: "",
@@ -59,6 +60,7 @@ export function resumeToRow(resume: Resume): Row {
   return {
     [RESUME_CELLS.fullName]: resume.fullName,
     [RESUME_CELLS.careerName]: resume.careerName,
+    [RESUME_CELLS.aboutMe]: resume.aboutMe,
     [RESUME_CELLS.contact]: resume.contact,
     [RESUME_CELLS.experience]: resume.experience,
     [RESUME_CELLS.education]: resume.education,
