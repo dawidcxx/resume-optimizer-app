@@ -1,4 +1,5 @@
 import type { Rating, Resume } from "@resume-optimzer-app/common";
+import { useMemo, useState } from "react";
 import {
   Button,
   Card,
@@ -9,6 +10,7 @@ import {
   Heading,
   Input,
   Select,
+  type SelectItem,
   Text,
 } from "@/ui";
 import { Field } from "@/ui/form";
@@ -25,6 +27,31 @@ export type SkillsSectionProps = {
 };
 
 export function SkillsSection({ value, onChange }: SkillsSectionProps) {
+  const [localCategories, setLocalCategories] = useState<SelectItem[]>([]);
+
+  const categoryOptions = useMemo(() => {
+    const names = new Set(
+      value.categorized
+        .map((item) => item.category.trim())
+        .filter((category) => category.length > 0),
+    );
+    return Array.from(names, (category) => ({ label: category, value: category }));
+  }, [value.categorized]);
+
+  const availableLocalCategories = localCategories.filter(
+    (option) => !categoryOptions.some((category) => category.value === option.value),
+  );
+
+  function addLocalCategories(options: SelectItem[]) {
+    setLocalCategories((current) => {
+      const byValue = new Map(current.map((option) => [option.value, option]));
+      for (const option of options) {
+        byValue.set(option.value, option);
+      }
+      return Array.from(byValue.values());
+    });
+  }
+
   function updateListed(index: number, patch: Partial<ListedSkill>) {
     onChange({
       ...value,
@@ -135,11 +162,18 @@ export function SkillsSection({ value, onChange }: SkillsSectionProps) {
               className="grid gap-2 rounded-ui border border-border p-3 sm:grid-cols-[1fr_1fr_auto] sm:items-end"
             >
               <Field id={`category-${index}-category`} label="Category">
-                <Input
+                <Select<string>
                   id={`category-${index}-category`}
-                  value={item.category}
-                  onChange={(event) => updateCategorized(index, { category: event.target.value })}
-                  placeholder="Build tools"
+                  value={item.category || null}
+                  options={categoryOptions}
+                  localOptions={availableLocalCategories}
+                  onLocalOptionsChange={addLocalCategories}
+                  onChange={(category) =>
+                    updateCategorized(index, { category: category ?? "" })
+                  }
+                  placeholder="Select or create a category"
+                  emptyMessage="No categories yet"
+                  createMessage={(input) => `Create "${input}"`}
                 />
               </Field>
               <Field id={`category-${index}-skill`} label="Skill">

@@ -38,8 +38,10 @@ export const Resume = object({
       company: object({
         name: string(),
         city: string(),
-        description: string(),
+        description: string(), // company description like Fintech startup etc
       }),
+      role: string(), // like Full Stack software engineer etc
+      bulletPoints: array(string()),
     }),
   ),
 

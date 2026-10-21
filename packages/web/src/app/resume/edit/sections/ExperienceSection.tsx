@@ -10,12 +10,15 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  Heading,
   Input,
+  MoveButtons,
   Select,
   Text,
   Textarea,
 } from "@/ui";
 import { Field } from "@/ui/form";
+import { moveItem } from "@/lib/moveItem";
 
 type Experience = Resume["experience"][number];
 type WorkType = Experience["workType"];
@@ -37,6 +40,8 @@ function emptyExperience(): Experience {
     to: null,
     workType: "onsite",
     company: { name: "", city: "", description: "" },
+    role: "",
+    bulletPoints: [],
   };
 }
 
@@ -54,6 +59,26 @@ export function ExperienceSection({ value, onChange }: ExperienceSectionProps) {
     const item = value[index];
     if (!item) return;
     update(index, { company: { ...item.company, ...patch } });
+  }
+
+  function updateBullet(index: number, bulletIndex: number, bullet: string) {
+    const item = value[index];
+    if (!item) return;
+    update(index, {
+      bulletPoints: (item.bulletPoints ?? []).map((current, currentIndex) =>
+        currentIndex === bulletIndex ? bullet : current,
+      ),
+    });
+  }
+
+  function removeBullet(index: number, bulletIndex: number) {
+    const item = value[index];
+    if (!item) return;
+    update(index, {
+      bulletPoints: (item.bulletPoints ?? []).filter(
+        (_, currentIndex) => currentIndex !== bulletIndex,
+      ),
+    });
   }
 
   function toPlainDate(input: string): PlainDate {
@@ -89,6 +114,14 @@ export function ExperienceSection({ value, onChange }: ExperienceSectionProps) {
                   value={item.company.name}
                   onChange={(event) => updateCompany(index, { name: event.target.value })}
                   placeholder="Analytical Engines Ltd."
+                />
+              </Field>
+              <Field id={`experience-${index}-role`} label="Role">
+                <Input
+                  id={`experience-${index}-role`}
+                  value={item.role ?? ""}
+                  onChange={(event) => update(index, { role: event.target.value })}
+                  placeholder="Senior Frontend Engineer"
                 />
               </Field>
               <Field id={`experience-${index}-city`} label="City">
@@ -135,14 +168,74 @@ export function ExperienceSection({ value, onChange }: ExperienceSectionProps) {
               <Text variant="subtle">Leave the end date empty if this is your current role.</Text>
             </div>
 
-            <Field id={`experience-${index}-description`} label="Description">
+            <Field
+              id={`experience-${index}-description`}
+              label="Company description"
+              description="A short description of the company, not your responsibilities."
+            >
               <Textarea
                 id={`experience-${index}-description`}
                 value={item.company.description}
                 onChange={(event) => updateCompany(index, { description: event.target.value })}
-                placeholder="What you worked on and the impact it had."
+                placeholder="Fintech startup building payment infrastructure."
               />
             </Field>
+
+            <section className="grid gap-2">
+              <div className="flex items-start justify-between gap-3">
+                <div className="grid gap-1">
+                  <Heading level={4}>Bullet points</Heading>
+                  <Text variant="subtle">One responsibility or achievement per bullet.</Text>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    update(index, { bulletPoints: [...(item.bulletPoints ?? []), ""] })
+                  }
+                >
+                  Add bullet
+                </Button>
+              </div>
+
+              {(item.bulletPoints ?? []).length === 0 ? (
+                <Text variant="muted">No bullet points yet.</Text>
+              ) : null}
+
+              {(item.bulletPoints ?? []).map((bullet, bulletIndex) => (
+                <div key={bulletIndex} className="flex items-start gap-2">
+                  <Textarea
+                    aria-label={`Experience ${index + 1} bullet ${bulletIndex + 1}`}
+                    className="min-w-0 flex-1"
+                    rows={2}
+                    value={bullet}
+                    onChange={(event) =>
+                      updateBullet(index, bulletIndex, event.target.value)
+                    }
+                    placeholder="Shipped a design system used by every product team."
+                  />
+                  <MoveButtons
+                    index={bulletIndex}
+                    count={(item.bulletPoints ?? []).length}
+                    onMove={(from, to) =>
+                      update(index, {
+                        bulletPoints: moveItem(item.bulletPoints ?? [], from, to),
+                      })
+                    }
+                    label={`experience ${index + 1} bullet ${bulletIndex + 1}`}
+                  />
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="shrink-0"
+                    onClick={() => removeBullet(index, bulletIndex)}
+                    aria-label={`Remove bullet ${bulletIndex + 1}`}
+                  >
+                    Remove
+                  </Button>
+                </div>
+              ))}
+            </section>
 
             <div className="flex justify-end">
               <Button

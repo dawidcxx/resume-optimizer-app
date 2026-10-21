@@ -81,7 +81,7 @@ Rules:
 - workType must be onsite, hybrid, or remote. If unclear, use onsite.
 - Education institute type must be collage, school, or training. If unclear, use school.
 - Only include skills explicitly mentioned. Use rating 3 unless the source clearly rates proficiency.
-- Include responsibilities, achievements, and technologies listed under a role in that experience entry's company.description.
+- For each experience entry, use role for the job title and bulletPoints for responsibilities, achievements, and technologies. Use company.description only for a short description of the company itself.
 - Project icon may be github or linkedin only when the project URL matches; otherwise use null.
 - aboutMe should use an explicit summary or objective section. Otherwise use an empty string.`;
 
@@ -97,6 +97,7 @@ Rules:
 - Start with one <Resume> root and put all content inside it.
 - Markdown is supported inside component children: headings, paragraphs, bold, italic, links, lists, and tables.
 - Write bullet lists directly as markdown (one "- item" per line) inside Entry, Section, or Column. Reserve BulletList for a standalone list.
+- In experience entries, use role as the job title and company.name as the employer. Render bulletPoints as the role bullets; keep company.description as separate company context.
 - Put a blank line before a component tag when it follows paragraph text.
 - Use Column inside Columns when a column contains more than one block. Keep one child per column otherwise.
 - Use only the components listed below. Unknown components, unknown props, raw HTML, JSX expressions, imports, event handlers, style, className, and script tags are rejected.

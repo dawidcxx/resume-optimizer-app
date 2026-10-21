@@ -48,6 +48,8 @@ export const ImportedResumeSchema = object({
         city: string(),
         description: string(),
       }),
+      role: string(),
+      bulletPoints: array(string()),
     }),
   ),
 

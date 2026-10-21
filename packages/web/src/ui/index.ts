@@ -45,6 +45,7 @@ export {
   type MenuProps,
   type MenuTriggerProps,
 } from "./Menu";
+export { MoveButtons, type MoveButtonsProps } from "./MoveButtons";
 export { Select, type SelectItem, type SelectOption, type SelectProps } from "./Select";
 export { List, ListItem, OrderedList, UnorderedList, type ListProps } from "./List";
 export { Textarea, textareaBase, type TextareaProps } from "./Textarea";
