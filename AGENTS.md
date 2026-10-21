@@ -1,5 +1,13 @@
 # AGENTS.md
 
+## Product & domain
+
+Turns structured resume data into a rendered resume. The resume data is the canonical source of truth, owned by the user and stored locally; rendering is a derived layer.
+
+- **Offline-first baseline**: the user fills in data, then renders locally without AI (Markdown + React templates). Ship this path first; it must always work.
+- **Optimization**: the same data can be re-presented for a target role/job description (re-emphasize relevant experience, keep facts intact). Keep base data separate from render configuration and output.
+- **AI is a presentation layer**, not a source of truth: it reshapes existing data rather than adding new experience or credentials. Future versions may let users control how aggressively facts are re-framed; canonical data stays untouched. Prefer small increments over speculative pipeline work.
+
 ## Dev server
 
 Assume a dev server is already running at `http://localhost:5173` (Vite HMR) and the backend at `http://localhost:8080`. Prompt the user to run `bun run dev` if not.
