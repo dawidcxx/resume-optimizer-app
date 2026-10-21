@@ -20,6 +20,15 @@ describe("validateResumeMarkup", () => {
     expect(validateResumeMarkup(markup)).toBeNull();
   });
 
+  it("accepts decimal star ratings and data tables", () => {
+    const markup = `<Section title="Skills">
+      <Stars label="React" value="3.5" max="5" format="stars-value" />
+      <DataTable headers="Skill|Years" rows="React|6;TypeScript|5" />
+    </Section>`;
+
+    expect(validateResumeMarkup(markup)).toBeNull();
+  });
+
   it("rejects script tags", () => {
     expect(validateResumeMarkup(`<script>alert("nope")</script>`)).toContain(
       "Unsupported component",

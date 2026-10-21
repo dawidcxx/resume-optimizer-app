@@ -35,6 +35,28 @@ Frontend engineer.
     expect(container.textContent).toContain("Frontend engineer.");
   });
 
+  it("renders ratings, stats, facts, and compact tables", () => {
+    const markup = `<Resume>
+<Section title="Highlights">
+<Stats>
+<Stat value="6+" label="years" />
+<Stat value="40%" label="growth" />
+</Stats>
+<Fact label="Availability" value="Remote" />
+<Stars label="React" value="3.5" max="5" format="stars-value" />
+<DataTable caption="Skills" headers="Skill|Years" rows="React|6;TypeScript|5" />
+</Section>
+</Resume>`;
+
+    const { container } = render(<RenderedResume markup={markup} />);
+
+    expect(container.textContent).toContain("6+");
+    expect(container.textContent).toContain("Remote");
+    expect(container.textContent).toContain("3.5/5");
+    expect(container.querySelectorAll("th")).toHaveLength(2);
+    expect(container.querySelectorAll("[data-star-fill]")).toHaveLength(5);
+  });
+
   it("renders wrapped bullet lists as separate items", () => {
     const markup = `<Resume>
 <Section title="Experience">

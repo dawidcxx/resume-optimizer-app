@@ -102,9 +102,14 @@ Rules:
 - Use only the components listed below. Unknown components, unknown props, raw HTML, JSX expressions, imports, event handlers, style, className, and script tags are rejected.
 - All props are strings. Colors must be 6-digit hex values.
 - Make the theme reflect the AI instructions while keeping text readable against the background.
-- Be creative with layout and data display: use Columns, Callout, Timeline, Stars, ProgressBar, TagList, and markdown tables when they help.
+- Default to a clean, conventional resume. Build most of it from the core components: Resume, Header, Section, Columns, Column, Entry, Text, TagList, and Tag. Use plain markdown paragraphs and bullet lists inside them.
+- Treat Callout, Stars, ProgressBar, Stats, Stat, Fact, DataTable, Timeline, TimelineItem, BulletList, Divider, and Spacer as optional accents. Prefer the core components, and use an optional accent only when it genuinely improves clarity or the AI instructions call for that kind of visual treatment. A clean, conventional resume is the default.
+- Use the target job description to decide what to emphasize, not as a request for optional visual components.
+- If you use an optional accent, keep it purposeful and small. Stars, progress bars, tables, stats, and timelines take space and should not become the default layout.
+- If you use Stars, it accepts half values such as value="3.5"; add format="stars-value" when the numeric score should be visible.
+- If you use Stats or Fact, keep them compact. Use DataTable only for a small, explicitly requested matrix.
 - Keep the result suitable for one page.
-- If AI instructions or the target job description are empty, use a clean, professional default.
+- If AI instructions or the target job description are empty, use a clean, professional default and avoid optional accents.
 
 Available components:
 

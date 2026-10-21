@@ -5,8 +5,12 @@ export type ProgressBarProps = ResumeComponentProps<"ProgressBar">;
 
 export function ProgressBar({ label, value, max, color }: ProgressBarProps) {
   const theme = useResumeTheme();
-  const numericMax = Math.max(Number.parseInt(max, 10), 1);
-  const numericValue = Math.min(Math.max(Number.parseInt(value, 10), 0), numericMax);
+  const parsedMax = Number.parseFloat(max);
+  const parsedValue = Number.parseFloat(value);
+  const numericMax = Number.isFinite(parsedMax) ? Math.max(parsedMax, 1) : 1;
+  const numericValue = Number.isFinite(parsedValue)
+    ? Math.min(Math.max(parsedValue, 0), numericMax)
+    : 0;
   const percent = Math.round((numericValue / numericMax) * 100);
 
   return (

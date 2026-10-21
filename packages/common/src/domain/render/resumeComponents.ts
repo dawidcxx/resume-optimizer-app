@@ -10,6 +10,7 @@ import {
 
 const HexColor = pipe(string(), regex(/^#[0-9a-fA-F]{6}$/));
 const NumericString = pipe(string(), regex(/^\d+$/));
+const DecimalString = pipe(string(), regex(/^\d+(\.\d+)?$/));
 const Ratio = pipe(string(), regex(/^[1-9]\d*:[1-9]\d*(:[1-9]\d*)?$/));
 const Size = picklist(["xs", "sm", "md", "lg", "xl"]);
 const Font = picklist(["sans", "serif", "mono"]);
@@ -74,6 +75,16 @@ export const RESUME_COMPONENT_SPEC = {
       accent: optional(HexColor),
     }),
   },
+  Fact: {
+    description:
+      "Optional compact label/value row for quick facts such as availability, clearance, or languages. Stack several in a Column.",
+    children: false,
+    props: strictObject({
+      label: optional(string(), ""),
+      value: optional(string(), ""),
+      accent: optional(HexColor),
+    }),
+  },
   Text: {
     description: "A paragraph or short block of markdown text.",
     children: true,
@@ -87,7 +98,7 @@ export const RESUME_COMPONENT_SPEC = {
   },
   BulletList: {
     description:
-      "A standalone markdown bullet list. Prefer writing plain `- item` bullets directly inside Entry, Section, or Column.",
+      "Optional compatibility component for a standalone markdown bullet list. Prefer writing plain `- item` bullets directly inside Entry, Section, or Column.",
     children: true,
     props: strictObject({}),
   },
@@ -105,7 +116,7 @@ export const RESUME_COMPONENT_SPEC = {
     }),
   },
   Divider: {
-    description: "A horizontal rule.",
+    description: "Optional horizontal rule.",
     children: false,
     props: strictObject({
       color: optional(HexColor),
@@ -113,7 +124,7 @@ export const RESUME_COMPONENT_SPEC = {
     }),
   },
   Callout: {
-    description: "A highlighted note, summary, or quote block.",
+    description: "Optional highlighted note, summary, or quote block.",
     children: true,
     props: strictObject({
       title: optional(string(), ""),
@@ -122,27 +133,59 @@ export const RESUME_COMPONENT_SPEC = {
     }),
   },
   Stars: {
-    description: "A star rating. Value and max are digit strings.",
+    description:
+      "Optional accent. A compact star rating. value may be a decimal such as 3.5; max is an integer. Use sparingly because each star takes horizontal space.",
     children: false,
     props: strictObject({
-      value: optional(NumericString, "3"),
+      value: optional(DecimalString, "3"),
       max: optional(NumericString, "5"),
       color: optional(HexColor),
       label: optional(string(), ""),
+      size: optional(Size, "sm"),
+      format: optional(picklist(["stars", "stars-value"]), "stars"),
     }),
   },
   ProgressBar: {
-    description: "A labelled progress bar. Value and max are digit strings.",
+    description:
+      "Optional accent. A labelled progress bar. value and max may be decimals. Use for proficiency, completion, or allocation; each bar takes vertical space.",
     children: false,
     props: strictObject({
       label: optional(string(), ""),
-      value: optional(NumericString, "0"),
-      max: optional(NumericString, "100"),
+      value: optional(DecimalString, "0"),
+      max: optional(DecimalString, "100"),
       color: optional(HexColor),
     }),
   },
+  Stats: {
+    description:
+      "Optional compact row of Stat highlights. Use two to four stats; each one takes horizontal space.",
+    children: true,
+    props: strictObject({}),
+  },
+  Stat: {
+    description:
+      "Optional single highlight metric, such as 6+ years, 40% growth, or 12 releases. Use inside Stats.",
+    children: false,
+    props: strictObject({
+      value: optional(string(), ""),
+      label: optional(string(), ""),
+      accent: optional(HexColor),
+      background: optional(HexColor),
+    }),
+  },
+  DataTable: {
+    description:
+      "Optional compact table for a comparison or matrix. headers and rows are pipe-separated; separate rows with a semicolon. Example: headers='Skill|Years|Level' rows='React|6|Expert;TypeScript|5|Advanced'. Tables use a lot of space, so keep them small and only use one when the AI instructions explicitly request a table or matrix.",
+    children: false,
+    props: strictObject({
+      headers: optional(string(), ""),
+      rows: optional(string(), ""),
+      caption: optional(string(), ""),
+      accent: optional(HexColor),
+    }),
+  },
   Timeline: {
-    description: "A vertical timeline wrapper for TimelineItem children.",
+    description: "Optional vertical timeline wrapper for TimelineItem children.",
     children: true,
     props: strictObject({}),
   },
@@ -156,7 +199,7 @@ export const RESUME_COMPONENT_SPEC = {
     }),
   },
   Spacer: {
-    description: "Vertical space between blocks.",
+    description: "Optional vertical space between blocks.",
     children: false,
     props: strictObject({
       size: optional(Size, "md"),
