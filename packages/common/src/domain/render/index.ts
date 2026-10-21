@@ -1,1 +1,1 @@
-export * from "./RenderDocument";
+export * from "./resumeComponents";

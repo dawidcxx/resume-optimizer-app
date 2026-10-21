@@ -20,8 +20,8 @@ export class RenderApi {
         throw new RenderInvalidRequestError();
       }
 
-      const render = await this.service.render(input);
-      return c.json({ render });
+      const markup = await this.service.render(input);
+      return c.json({ markup });
     });
 
     return api;

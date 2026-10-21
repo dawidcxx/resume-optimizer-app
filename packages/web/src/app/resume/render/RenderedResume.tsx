@@ -1,232 +1,187 @@
-import type {
-  RenderBlock,
-  RenderDocument,
-  RenderSectionItem,
-} from "@resume-optimzer-app/common";
-import type { CSSProperties } from "react";
-import { cn } from "@/lib/cn";
+import { RESUME_COMPONENT_SPEC } from "@resume-optimzer-app/common";
+import { Markdown, parser, RuleType, type MarkdownToJSX } from "markdown-to-jsx";
+import type { ReactNode } from "react";
+import { parse } from "valibot";
+import {
+  DEFAULT_RESUME_THEME,
+  Resume,
+  resumeComponentOverrides,
+  validateResumeMarkup,
+} from "@/ui/resume";
+import { normalizeMarkup } from "./normalizeMarkup";
 
-const FONT_FAMILIES = {
-  sans: "ui-sans-serif, system-ui, sans-serif",
-  serif: "ui-serif, Georgia, serif",
-  mono: "ui-monospace, monospace",
-} as const;
+type MarkdownProps = {
+  children?: ReactNode;
+} & Record<string, unknown>;
 
-const TEXT_VARIANTS = {
-  body: "text-[11px] leading-relaxed",
-  lead: "text-[13px] leading-relaxed",
-  muted: "text-[11px] leading-relaxed text-[var(--resume-muted)]",
-} as const;
+function MarkdownWrapper({ children }: { children?: ReactNode }) {
+  return <div className="grid min-w-0 gap-4">{children}</div>;
+}
 
-type HeaderBlock = Extract<RenderBlock, { type: "header" }>;
-type SectionBlock = Extract<RenderBlock, { type: "section" }>;
-type TextBlock = Extract<RenderBlock, { type: "text" }>;
-type EntryBlock = Extract<RenderSectionItem, { type: "entry" }>;
+function getResumeRoot(markup: string): {
+  attrs: Record<string, unknown>;
+  innerMarkup: string;
+} | null {
+  const nodes = parser(markup);
+  const root = nodes.find(
+    (
+      node,
+    ): node is MarkdownToJSX.HTMLNode | MarkdownToJSX.HTMLSelfClosingNode =>
+      (node.type === RuleType.htmlBlock || node.type === RuleType.htmlSelfClosing) &&
+      node.tag === "Resume",
+  );
 
-export function RenderedResume({ document }: { document: RenderDocument }) {
-  const { theme } = document;
-  const style = {
-    backgroundColor: theme.background,
-    color: theme.text,
-    fontFamily: FONT_FAMILIES[theme.font],
-    "--resume-accent": theme.accent,
-    "--resume-muted": theme.muted,
-    "--resume-heading-font": FONT_FAMILIES[theme.headingFont],
-  } as CSSProperties;
+  if (!root) return null;
 
-  return (
-    <article
-      aria-label="Rendered resume"
-      style={style}
-      className={cn(
-        "mx-auto w-full max-w-[210mm] rounded-sm border border-border shadow-sm",
-        theme.density === "compact" ? "px-8 py-7" : "px-10 py-9",
-      )}
+  const openTag = /<Resume\b[^>]*>/.exec(markup);
+  if (!openTag) return null;
+
+  const openEnd = openTag.index + openTag[0].length;
+  const closeStart = markup.lastIndexOf("</Resume>");
+  const innerMarkup =
+    closeStart >= openEnd ? markup.slice(openEnd, closeStart) : "";
+
+  return {
+    attrs: root.attrs ?? {},
+    innerMarkup,
+  };
+}
+
+const safeHref = (value: unknown): string | undefined => {
+  return typeof value === "string" && /^https?:\/\//i.test(value) ? value : undefined;
+};
+
+const markdownOverrides: MarkdownToJSX.Overrides = {
+  h1: ({ children }: MarkdownProps) => (
+    <h1
+      className="min-w-0 text-xl font-semibold tracking-tight [overflow-wrap:anywhere]"
+      style={{ fontFamily: "var(--resume-heading-font)" }}
     >
-      <div className={cn("grid", theme.density === "compact" ? "gap-4" : "gap-5")}>
-        {document.blocks.map((block, index) => (
-          <RenderedBlock key={index} block={block} />
-        ))}
-      </div>
-    </article>
-  );
-}
-
-function RenderedBlock({ block }: { block: RenderBlock }) {
-  switch (block.type) {
-    case "header":
-      return <Header block={block} />;
-    case "section":
-      return <Section block={block} />;
-    case "text":
-      return <TextContent block={block} />;
-    case "bullet-list":
-      return <BulletList items={block.items} />;
-    case "tag-list":
-      return <TagList tags={block.tags} />;
-    case "divider":
-      return <Divider />;
-    default:
-      return null;
-  }
-}
-
-function RenderedSectionItem({ item }: { item: RenderSectionItem }) {
-  switch (item.type) {
-    case "entry":
-      return <Entry item={item} />;
-    case "text":
-      return <TextContent block={item} />;
-    case "bullet-list":
-      return <BulletList items={item.items} />;
-    case "tag-list":
-      return <TagList tags={item.tags} />;
-    case "divider":
-      return <Divider />;
-    default:
-      return null;
-  }
-}
-
-function Header({ block }: { block: HeaderBlock }) {
-  const contacts = [block.email, block.phone, block.location, block.website].filter(
-    (value) => value.length > 0,
-  );
-
-  return (
-    <header className="grid gap-1.5">
-      <h1
-        className="text-2xl font-semibold tracking-tight"
-        style={{ fontFamily: "var(--resume-heading-font)" }}
+      {children}
+    </h1>
+  ),
+  h2: ({ children }: MarkdownProps) => (
+    <h2
+      className="min-w-0 text-[13px] font-semibold uppercase tracking-[0.16em] [overflow-wrap:anywhere]"
+      style={{ color: "var(--resume-accent)", fontFamily: "var(--resume-heading-font)" }}
+    >
+      {children}
+    </h2>
+  ),
+  h3: ({ children }: MarkdownProps) => (
+    <h3
+      className="min-w-0 text-xs font-semibold [overflow-wrap:anywhere]"
+      style={{ fontFamily: "var(--resume-heading-font)" }}
+    >
+      {children}
+    </h3>
+  ),
+  p: ({ children }: MarkdownProps) => (
+    <p className="min-w-0 text-[11px] leading-relaxed [overflow-wrap:anywhere]">{children}</p>
+  ),
+  a: ({ href, children }: MarkdownProps) => {
+    const safe = safeHref(href);
+    return safe ? (
+      <a
+        href={safe}
+        target="_blank"
+        rel="noreferrer"
+        className="[overflow-wrap:anywhere] underline decoration-[var(--resume-accent)] underline-offset-2"
       >
-        {block.name}
-      </h1>
-      {block.title ? (
-        <p className="text-xs font-medium text-[var(--resume-accent)]">{block.title}</p>
-      ) : null}
-      {contacts.length > 0 || block.links.length > 0 ? (
-        <div className="flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-[var(--resume-muted)]">
-          {contacts.map((value, index) => (
-            <span key={`${value}-${index}`}>{value}</span>
-          ))}
-          {block.links.map((link, index) => {
-            const href = safeHref(link.url);
-            return href ? (
-              <a
-                key={`${link.label}-${index}`}
-                href={href}
-                target="_blank"
-                rel="noreferrer"
-                className="underline decoration-[var(--resume-accent)] underline-offset-2"
-              >
-                {link.label}
-              </a>
-            ) : (
-              <span key={`${link.label}-${index}`}>{link.label}</span>
-            );
-          })}
-        </div>
-      ) : null}
-    </header>
-  );
-}
-
-function Section({ block }: { block: SectionBlock }) {
-  return (
-    <section className="grid gap-2.5">
-      {block.title ? (
-        <div className="border-b border-[var(--resume-accent)] pb-1">
-          <h2
-            className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--resume-accent)]"
-            style={{ fontFamily: "var(--resume-heading-font)" }}
-          >
-            {block.title}
-          </h2>
-        </div>
-      ) : null}
-      <div
-        className={
-          block.columns === "two"
-            ? "grid gap-x-6 gap-y-3 sm:grid-cols-2"
-            : "grid gap-3"
-        }
-      >
-        {block.items.map((item, index) => (
-          <RenderedSectionItem key={index} item={item} />
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function Entry({ item }: { item: EntryBlock }) {
-  const bullets = item.bullets.filter((bullet) => bullet.length > 0);
-
-  return (
-    <article className="grid gap-1">
-      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
-        <h3
-          className="text-[13px] font-semibold"
-          style={{ fontFamily: "var(--resume-heading-font)" }}
-        >
-          {item.title}
-        </h3>
-        {item.meta ? (
-          <span className="text-[10px] uppercase tracking-wide text-[var(--resume-muted)]">
-            {item.meta}
-          </span>
-        ) : null}
-      </div>
-      {item.subtitle ? (
-        <p className="text-[11px] font-medium text-[var(--resume-accent)]">{item.subtitle}</p>
-      ) : null}
-      {item.description ? (
-        <p className="whitespace-pre-line text-[11px] leading-relaxed">{item.description}</p>
-      ) : null}
-      {bullets.length > 0 ? <BulletList items={bullets} /> : null}
-    </article>
-  );
-}
-
-function TextContent({ block }: { block: TextBlock }) {
-  return <p className={TEXT_VARIANTS[block.variant]}>{block.content}</p>;
-}
-
-function BulletList({ items }: { items: string[] }) {
-  const visibleItems = items.filter((item) => item.length > 0);
-  if (visibleItems.length === 0) return null;
-
-  return (
-    <ul className="list-disc space-y-0.5 pl-4 text-[11px] leading-relaxed">
-      {visibleItems.map((item, index) => (
-        <li key={index}>{item}</li>
-      ))}
+        {children}
+      </a>
+    ) : (
+      <span>{children}</span>
+    );
+  },
+  ul: ({ children }: MarkdownProps) => (
+    <ul className="min-w-0 list-disc space-y-0.5 pl-4 text-[11px] leading-relaxed [overflow-wrap:anywhere]">
+      {children}
     </ul>
-  );
-}
+  ),
+  ol: ({ children }: MarkdownProps) => (
+    <ol className="min-w-0 list-decimal space-y-0.5 pl-4 text-[11px] leading-relaxed [overflow-wrap:anywhere]">
+      {children}
+    </ol>
+  ),
+  li: ({ children }: MarkdownProps) => <li className="min-w-0">{children}</li>,
+  strong: ({ children }: MarkdownProps) => (
+    <strong className="font-semibold">{children}</strong>
+  ),
+  em: ({ children }: MarkdownProps) => <em className="italic">{children}</em>,
+  blockquote: ({ children }: MarkdownProps) => (
+    <blockquote
+      className="min-w-0 border-l-2 pl-3 text-[11px] italic [overflow-wrap:anywhere]"
+      style={{ borderColor: "var(--resume-accent)", color: "var(--resume-muted)" }}
+    >
+      {children}
+    </blockquote>
+  ),
+  hr: () => (
+    <hr
+      className="border-0 border-t"
+      style={{ borderColor: "var(--resume-accent)", opacity: 0.4 }}
+    />
+  ),
+  table: ({ children }: MarkdownProps) => (
+    <div className="max-w-full overflow-x-auto">
+      <table className="w-full table-fixed border-collapse text-[10px]">{children}</table>
+    </div>
+  ),
+  th: ({ children }: MarkdownProps) => (
+    <th
+      className="border-b px-2 py-1 text-left font-semibold [overflow-wrap:anywhere]"
+      style={{ borderColor: "var(--resume-accent)" }}
+    >
+      {children}
+    </th>
+  ),
+  td: ({ children }: MarkdownProps) => (
+    <td
+      className="border-b px-2 py-1 align-top [overflow-wrap:anywhere]"
+      style={{ borderColor: "var(--resume-muted)" }}
+    >
+      {children}
+    </td>
+  ),
+  code: ({ children }: MarkdownProps) => (
+    <code className="rounded bg-black/5 px-1 py-0.5 font-mono text-[0.9em]">{children}</code>
+  ),
+  pre: ({ children }: MarkdownProps) => (
+    <pre className="max-w-full overflow-x-auto rounded bg-black/5 p-2 font-mono text-[10px]">
+      {children}
+    </pre>
+  ),
+  img: () => null,
+};
 
-function TagList({ tags }: { tags: string[] }) {
-  const visibleTags = tags.filter((tag) => tag.length > 0);
-  if (visibleTags.length === 0) return null;
+export function RenderedResume({ markup }: { markup: string }) {
+  const normalizedMarkup = normalizeMarkup(markup);
+  const error = validateResumeMarkup(normalizedMarkup);
+  if (error) {
+    return (
+      <div className="grid min-h-52 place-items-center rounded-ui border border-dashed border-danger/40 bg-danger/5 p-6 text-center">
+        <p className="max-w-md text-sm text-danger">{error}</p>
+      </div>
+    );
+  }
+
+  const root = getResumeRoot(normalizedMarkup);
+  const theme = root
+    ? parse(RESUME_COMPONENT_SPEC.Resume.props, root.attrs)
+    : DEFAULT_RESUME_THEME;
 
   return (
-    <div className="flex flex-wrap gap-1.5">
-      {visibleTags.map((tag, index) => (
-        <span
-          key={`${tag}-${index}`}
-          className="rounded-full border border-[var(--resume-accent)] px-2 py-0.5 text-[10px] font-medium text-[var(--resume-accent)]"
-        >
-          {tag}
-        </span>
-      ))}
-    </div>
+    <Resume {...theme}>
+      <Markdown
+        options={{
+          overrides: { ...resumeComponentOverrides, ...markdownOverrides },
+          forceBlock: true,
+          wrapper: MarkdownWrapper,
+        }}
+      >
+        {root?.innerMarkup ?? normalizedMarkup}
+      </Markdown>
+    </Resume>
   );
-}
-
-function Divider() {
-  return <hr className="border-0 border-t border-[var(--resume-accent)] opacity-40" />;
-}
-
-function safeHref(value: string): string | undefined {
-  return /^https?:\/\//i.test(value) ? value : undefined;
 }

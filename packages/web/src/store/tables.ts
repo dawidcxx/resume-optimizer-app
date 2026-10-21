@@ -22,6 +22,6 @@ export const RESUME_CELLS = {
 
 export const RESUME_RENDER_CELLS = {
   projectId: "projectId",
-  spec: "spec",
+  markup: "markup",
   createdAt: "createdAt",
 } as const;

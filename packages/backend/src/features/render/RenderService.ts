@@ -1,5 +1,5 @@
 import { inject, injectable } from "@needle-di/core";
-import type { RenderDocument, RenderResumeRequest } from "@resume-optimzer-app/common";
+import type { RenderResumeRequest } from "@resume-optimzer-app/common";
 import { serializeError } from "serialize-error";
 import { LlmService } from "@/features/llm/LlmService";
 import { Logger } from "@/lib/Logger";
@@ -9,7 +9,7 @@ import { RenderGenerationError } from "./error/RenderGenerationError";
 export class RenderService {
   constructor(private readonly llm = inject(LlmService)) {}
 
-  async render(input: RenderResumeRequest): Promise<RenderDocument> {
+  async render(input: RenderResumeRequest): Promise<string> {
     try {
       return await this.llm.renderResume(input);
     } catch (error) {

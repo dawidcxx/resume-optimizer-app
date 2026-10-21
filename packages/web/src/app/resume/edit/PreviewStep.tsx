@@ -11,6 +11,7 @@ import {
   CardTitle,
   Text,
 } from "@/ui";
+import { validateResumeMarkup } from "@/ui/resume";
 import { RenderedResume } from "../render/RenderedResume";
 
 export type PreviewStepProps = {
@@ -38,8 +39,17 @@ export function PreviewStep({
     setError(null);
 
     try {
-      const spec = await renderResume({ resume, aiInstructions, targetJobDescription });
-      saveResumeRender({ projectId: resume.id, spec });
+      const markup = await renderResume({
+        resume,
+        aiInstructions,
+        targetJobDescription,
+      });
+      const validationError = validateResumeMarkup(markup);
+      if (validationError) {
+        setError(validationError);
+        return;
+      }
+      saveResumeRender({ projectId: resume.id, markup });
     } catch (renderError) {
       setError(
         renderError instanceof Error
@@ -83,7 +93,7 @@ export function PreviewStep({
         {latest ? (
           <>
             <Text variant="subtle">Rendered {latest.createdAt.toLocaleString()}</Text>
-            <RenderedResume document={latest.spec} />
+            <RenderedResume markup={latest.markup} />
           </>
         ) : (
           <div className="grid min-h-52 place-items-center rounded-ui border border-dashed border-border-strong bg-subtle p-6 text-center">

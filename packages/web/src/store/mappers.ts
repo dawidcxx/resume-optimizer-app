@@ -1,10 +1,4 @@
-import type {
-  Email,
-  RenderDocument,
-  Resume,
-  ResumeProject,
-  Uuid,
-} from "@resume-optimzer-app/common";
+import type { Email, Resume, ResumeProject, Uuid } from "@resume-optimzer-app/common";
 import type { Cell, Row } from "tinybase";
 import {
   RESUME_CELLS,
@@ -83,7 +77,7 @@ export type ResumeRender = {
   id: Uuid;
   projectId: Uuid;
   createdAt: Date;
-  spec: RenderDocument;
+  markup: string;
 };
 
 export function rowToResumeRender(id: string, row: Row): ResumeRender {
@@ -91,7 +85,7 @@ export function rowToResumeRender(id: string, row: Row): ResumeRender {
     id: id as Uuid,
     projectId: asString(row[RESUME_RENDER_CELLS.projectId]) as Uuid,
     createdAt: new Date(asNumber(row[RESUME_RENDER_CELLS.createdAt])),
-    spec: row[RESUME_RENDER_CELLS.spec] as RenderDocument,
+    markup: asString(row[RESUME_RENDER_CELLS.markup]),
   };
 }
 
@@ -99,6 +93,6 @@ export function resumeRenderToRow(render: ResumeRender): Row {
   return {
     [RESUME_RENDER_CELLS.projectId]: render.projectId,
     [RESUME_RENDER_CELLS.createdAt]: render.createdAt.getTime(),
-    [RESUME_RENDER_CELLS.spec]: render.spec,
+    [RESUME_RENDER_CELLS.markup]: render.markup,
   };
 }

@@ -2,12 +2,15 @@ import { createDeepSeek, type DeepSeekProvider } from "@ai-sdk/deepseek";
 import { valibotSchema } from "@ai-sdk/valibot";
 import { inject, injectable } from "@needle-di/core";
 import {
+  RESUME_COMPONENT_SPEC,
   ImportedResumeSchema,
-  RenderDocument,
   toImportedResume,
   type ImportedResume,
   type RenderResumeRequest,
+  type ResumeComponentName,
+  type ResumeComponentSpec,
 } from "@resume-optimzer-app/common";
+import { toJsonSchema } from "@valibot/to-json-schema";
 import { generateText, Output } from "ai";
 import { Config } from "@/shared/Config";
 import type { ImportResumeInput, LlmService as LlmServiceContract } from "./LlmService";
@@ -37,22 +40,18 @@ export class DeepseekLlmService implements LlmServiceContract {
     return toImportedResume(output);
   }
 
-  async renderResume(input: RenderResumeRequest): Promise<RenderDocument> {
-    const { output } = await generateText({
+  async renderResume(input: RenderResumeRequest): Promise<string> {
+    const { text } = await generateText({
       model: this.model,
       system: RENDER_RESUME_SYSTEM_PROMPT,
       prompt: buildRenderPrompt(input),
-      temperature: 0.5,
+      temperature: 0.7,
       maxOutputTokens: 8192,
       providerOptions: {
         deepseek: { thinking: { type: "disabled" } },
       },
-      output: Output.object({
-        schema: valibotSchema(RenderDocument),
-        name: "resume_render",
-      }),
     });
-    return output;
+    return normalizeMarkup(text);
   }
 
   private get model(): ReturnType<DeepSeekProvider> {
@@ -86,21 +85,30 @@ Rules:
 - Project icon may be github or linkedin only when the project URL matches; otherwise use null.
 - aboutMe should use an explicit summary or objective section. Otherwise use an empty string.`;
 
-const RENDER_RESUME_SYSTEM_PROMPT = `You design a resume as a structured component document.
+const RENDER_RESUME_SYSTEM_PROMPT = `You design a resume as MDX-lite markup using only the components below.
+
+Output only the markup. Do not wrap it in code fences and do not add explanations.
 
 Rules:
-- Use only facts from the resume data
+- Use only facts from the resume data. Never invent experience, dates, skills, education, projects, links, or contact details.
+- Do not add personality traits, interests, or claims that are not present in the resume data.
 - You may reorder, summarize, rephrase, and re-emphasize existing facts to match the target job description and AI instructions, but preserve their meaning.
 - Do not include the target job description in the resume.
-- Start with exactly one header block.
-- Build sections with entries for experience, education, and projects. Use text, bullet-list, tag-list, and divider blocks where useful.
-- Do not create empty sections.
+- Start with one <Resume> root and put all content inside it.
+- Markdown is supported inside component children: headings, paragraphs, bold, italic, links, lists, and tables.
+- Write bullet lists directly as markdown (one "- item" per line) inside Entry, Section, or Column. Reserve BulletList for a standalone list.
+- Put a blank line before a component tag when it follows paragraph text.
+- Use Column inside Columns when a column contains more than one block. Keep one child per column otherwise.
+- Use only the components listed below. Unknown components, unknown props, raw HTML, JSX expressions, imports, event handlers, style, className, and script tags are rejected.
+- All props are strings. Colors must be 6-digit hex values.
+- Make the theme reflect the AI instructions while keeping text readable against the background.
+- Be creative with layout and data display: use Columns, Callout, Timeline, Stars, ProgressBar, TagList, and markdown tables when they help.
 - Keep the result suitable for one page.
-- Use only the block types defined by the response schema.
-- Theme colors must be 6-digit hex values. Make the theme reflect the AI instructions while keeping text readable against the background.
 - If AI instructions or the target job description are empty, use a clean, professional default.
-- Do not use markdown syntax inside text fields; they render as plain text.
-- Prefix bare URLs with https://.`;
+
+Available components:
+
+${buildComponentSpecPrompt()}`;
 
 function buildRenderPrompt(input: RenderResumeRequest): string {
   return [
@@ -113,4 +121,35 @@ function buildRenderPrompt(input: RenderResumeRequest): string {
     "Target job description:",
     input.targetJobDescription.trim() || "(none)",
   ].join("\n");
+}
+
+function buildComponentSpecPrompt(): string {
+  return (
+    Object.entries(RESUME_COMPONENT_SPEC) as Array<
+      [ResumeComponentName, ResumeComponentSpec]
+    >
+  )
+    .map(([name, spec]) => {
+      return [
+        `### ${name}`,
+        spec.description,
+        `Children: ${spec.children ? "allowed" : "not allowed"}`,
+        `Props: ${JSON.stringify(toJsonSchema(spec.props))}`,
+      ].join("\n");
+    })
+    .join("\n\n");
+}
+
+function normalizeMarkup(text: string): string {
+  const trimmed = text.trim();
+  const fenced = /^```(?:mdx|md|jsx)?\n?([\s\S]*?)\n?```$/i.exec(trimmed);
+  const markup = (fenced?.[1] ?? trimmed).trim();
+
+  const start = markup.indexOf("<Resume");
+  const end = markup.lastIndexOf("</Resume>");
+  if (start >= 0 && end > start) {
+    return markup.slice(start, end + "</Resume>".length);
+  }
+
+  return markup;
 }

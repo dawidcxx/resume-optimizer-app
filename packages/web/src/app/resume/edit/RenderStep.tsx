@@ -21,7 +21,7 @@ export function RenderStep({ value, onChange }: RenderStepProps) {
       <CardHeader>
         <CardTitle>Render</CardTitle>
         <CardDescription>
-          Describe the feel you want and, optionally, the role to target.
+          Describe the feel you want and, optionally, the job to target.
         </CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4">

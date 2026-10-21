@@ -3,7 +3,6 @@ import {
   RENDER_AI_INSTRUCTIONS_MAX_LENGTH,
   RENDER_TARGET_JOB_DESCRIPTION_MAX_LENGTH,
 } from "../consts/render";
-import { RenderDocument } from "../domain/render/RenderDocument";
 import { ImportedResumeSchema } from "../domain/resume/ImportedResume";
 
 export const RenderResumeRequest = object({
@@ -22,6 +21,6 @@ export const renderContract = {
     method: "POST",
     path: "/renders",
     request: RenderResumeRequest,
-    response: object({ render: RenderDocument }),
+    response: object({ markup: string() }),
   },
 } as const;

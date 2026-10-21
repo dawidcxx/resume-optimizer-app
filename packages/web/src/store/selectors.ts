@@ -31,7 +31,7 @@ export function readResume(store: Store, id: string): Resume | undefined {
 export function readResumeRenders(store: Store, projectId: string): ResumeRender[] {
   return Object.entries(store.getTable(RESUME_RENDERS_TABLE))
     .map(([id, row]) => rowToResumeRender(id, row))
-    .filter((render) => render.projectId === projectId)
+    .filter((render) => render.projectId === projectId && render.markup.length > 0)
     .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 }
 
