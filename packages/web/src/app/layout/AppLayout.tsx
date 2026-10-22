@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Link } from "wouter";
 import { BrandMark, ThemeSwitcher } from "@/ui";
+import { HistoryButtons } from "../history";
 import { AnnotationToolbarButton } from "../resume/annotations";
 
 export function AppLayout({ children }: { children: ReactNode }) {
@@ -13,6 +14,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
             <span className="text-sm font-semibold tracking-tight">ResumeFixer</span>
           </Link>
           <div className="flex items-center gap-2">
+            <HistoryButtons />
             <AnnotationToolbarButton />
             <ThemeSwitcher />
           </div>

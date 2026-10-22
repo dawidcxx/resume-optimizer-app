@@ -1,6 +1,8 @@
 import type { Resume, ResumeAnnotations } from "@resume-optimzer-app/common";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "wouter";
+import type { EditorSnapshot } from "@/app/history";
+import { useEditorHistory, useRegisterHistory } from "@/app/history";
 import { Heading, Text } from "@/ui";
 import { useDebouncedSave } from "@/lib/useDebouncedSave";
 import {
@@ -44,9 +46,22 @@ export function ResumeEditForm({ projectName, resume }: ResumeEditFormProps) {
         .length,
     [annotations],
   );
+  const snapshot = useMemo(
+    () => ({ resume: draft, annotations }),
+    [draft, annotations],
+  );
+  const restoreSnapshot = useCallback((next: EditorSnapshot) => {
+    setDraft(next.resume);
+    setAnnotations(next.annotations);
+  }, []);
+  const history = useEditorHistory({
+    snapshot,
+    onRestore: restoreSnapshot,
+  });
 
   useDebouncedSave(draft, saveResumeDraft);
   useDebouncedSave(annotations, (next) => saveResumeAnnotations(resume.id, next));
+  useRegisterHistory(history);
 
   useEffect(() => {
     setAnnotationCount(annotationCount);

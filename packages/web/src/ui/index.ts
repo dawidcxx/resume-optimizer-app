@@ -16,6 +16,7 @@ export {
   CardTitle,
 } from "./Card";
 export { BrandMark, type BrandMarkProps } from "./BrandMark";
+export { RedoIcon, UndoIcon } from "./Icons";
 export { ButtonGroup } from "./ButtonGroup";
 export { ConfirmDialog, type ConfirmDialogProps } from "./ConfirmDialog";
 export {
