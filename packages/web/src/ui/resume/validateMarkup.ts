@@ -10,13 +10,15 @@ type ASTNode = MarkdownToJSX.ASTNode;
 
 export function validateResumeMarkup(markup: string): string | null {
   if (markup.trim().length === 0) {
+    console.error("[Resume validation] The render markup is empty.");
     return "The render markup is empty.";
   }
 
   let nodes: ASTNode[];
   try {
     nodes = parser(markup);
-  } catch {
+  } catch (error) {
+    console.error("[Resume validation] The render markup could not be read.", error);
     return "The render markup could not be read.";
   }
 
@@ -33,13 +35,24 @@ function validateNodes(nodes: ASTNode[]): string[] {
         | undefined;
 
       if (!spec) {
-        errors.push(`Unsupported component <${node.tag}>.`);
+        const message = `Unsupported component <${node.tag}>.`;
+        errors.push(message);
+        console.error(`[Resume validation] ${message}`);
         continue;
       }
 
       const result = safeParse(spec.props, node.attrs ?? {});
       if (!result.success) {
-        errors.push(`Invalid props for <${node.tag}>.`);
+        const message = `Invalid props for <${node.tag}>.`;
+        errors.push(message);
+        const details = result.issues.map((issue) => {
+          const path = issue.path
+            ?.map((segment) => String(segment.key))
+            .filter(Boolean)
+            .join(".");
+          return path ? `${path}: ${issue.message}` : issue.message;
+        });
+        console.error(`[Resume validation] ${message}`, details);
       }
 
       if (
@@ -48,7 +61,9 @@ function validateNodes(nodes: ASTNode[]): string[] {
         node.children &&
         node.children.length > 0
       ) {
-        errors.push(`<${node.tag}> does not accept children.`);
+        const message = `<${node.tag}> does not accept children.`;
+        errors.push(message);
+        console.error(`[Resume validation] ${message}`);
       }
     }
 

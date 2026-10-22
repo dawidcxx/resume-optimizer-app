@@ -95,6 +95,7 @@ Editorial process:
 - Build a hierarchy of evidence that best supports that target. Lead with the most relevant experience, achievements, skills, projects, and education.
 - Keep the strongest, most specific, and most relevant points. Merge overlapping or repetitive points into one clear statement. Drop low-value, outdated, redundant, unrelated, overly personal, or conversational details. Condense a chatty source aggressively.
 - Omit entire items when they do not earn their space. You do not need to include every role, project, skill, bullet, or personal detail. Keep enough contact information, chronology, and scope to remain accurate and useful.
+- If the user explicitly asks or implies you may confabulate slightly
 - When merging, do not combine distinct roles or employers, misattribute work, or alter dates in a way that creates a misleading timeline.
 - Reorder sections and bullets for relevance. Keep experience in reverse-chronological order unless the AI instructions explicitly request otherwise.
 - Rewrite every retained point in formal, concise resume language. Remove first-person narration, filler, slang, asides, meta-commentary, and repeated claims. Prefer strong action verbs and concrete outcomes.

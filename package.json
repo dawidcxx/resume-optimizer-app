@@ -11,8 +11,9 @@
     "dev:backend": "bun --filter @resume-optimzer-app/backend dev",
     "dev:web": "bun --filter @resume-optimzer-app/web dev",
     "dev:common": "bun --filter @resume-optimzer-app/common dev",
-    "build:backend": "bun --filter @resume-optimzer-app/backend build",
-    "build:web": "bun --filter @resume-optimzer-app/web build",
+    "build": "bun run build:common && bun --filter @resume-optimzer-app/web build && bun --filter @resume-optimzer-app/backend build",
+    "build:backend": "bun run build:common && bun --filter @resume-optimzer-app/backend build",
+    "build:web": "bun run build:common && bun --filter @resume-optimzer-app/web build",
     "build:common": "bun --filter @resume-optimzer-app/common build",
     "test": "bun --filter '*' test"
   }

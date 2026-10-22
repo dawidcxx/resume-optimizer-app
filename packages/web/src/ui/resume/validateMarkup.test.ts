@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { validateResumeMarkup } from "./validateMarkup";
 
 describe("validateResumeMarkup", () => {
@@ -39,6 +39,18 @@ describe("validateResumeMarkup", () => {
     expect(validateResumeMarkup(`<Resume font="fraunces"></Resume>`)).toContain(
       "Invalid props",
     );
+  });
+
+  it("logs invalid prop details to the console", () => {
+    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    validateResumeMarkup(`<Resume font="fraunces"></Resume>`);
+
+    expect(spy).toHaveBeenCalledWith(
+      "[Resume validation] Invalid props for <Resume>.",
+      expect.arrayContaining([expect.stringContaining("font:")]),
+    );
+    spy.mockRestore();
   });
 
   it("rejects script tags", () => {
