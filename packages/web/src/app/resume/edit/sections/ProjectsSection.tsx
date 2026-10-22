@@ -108,7 +108,7 @@ export function ProjectsSection({ value, onChange }: ProjectsSectionProps) {
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-muted-foreground hover:bg-danger/10 hover:text-danger"
+                className="ml-auto text-muted-foreground hover:bg-danger/10 hover:text-danger"
                 onClick={() => {
                   removeAnnotationsAt("projects", index);
                   onChange(value.filter((_, itemIndex) => itemIndex !== index));

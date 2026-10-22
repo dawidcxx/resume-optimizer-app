@@ -15,7 +15,11 @@ export function AnnotatedField({
   return (
     <Field
       {...fieldProps}
-      action={<AnnotationPopover path={annotationPath} label={label} />}
+      action={
+        <div className="flex h-6 items-center">
+          <AnnotationPopover path={annotationPath} label={label} />
+        </div>
+      }
     />
   );
 }

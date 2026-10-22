@@ -88,6 +88,20 @@ describe("createResumeProject", () => {
     });
   });
 
+  it("does not recreate a deleted project on a delayed draft save", () => {
+    const project = createResumeProject({ name: "Deleted" });
+    const resume = readResume(store, project.id);
+    if (!resume) throw new Error("Expected resume");
+
+    deleteResumeProject(project.id);
+    saveResumeDraft({ ...resume, fullName: "Late save" });
+    saveResumeAnnotations(project.id, { aboutMe: "Late note" });
+
+    expect(readResumeProjects(store)).toEqual([]);
+    expect(readResume(store, project.id)).toBeUndefined();
+    expect(readResumeAnnotations(store, project.id)).toEqual({});
+  });
+
   it("joins the project and resume by id", () => {
     const project = createResumeProject({ name: "Bundle", fullName: "Ada" });
 

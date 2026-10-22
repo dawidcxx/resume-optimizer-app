@@ -2,7 +2,6 @@ import type { Resume } from "@resume-optimzer-app/common";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
   Input,
@@ -20,7 +19,6 @@ export function BasicsSection({ value, onChange }: BasicsSectionProps) {
     <Card>
       <CardHeader>
         <CardTitle>Basics</CardTitle>
-        <CardDescription>How you appear at the top of the resume.</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4 sm:grid-cols-2">
         <AnnotatedField id="fullName" label="Full name" annotationPath="fullName">

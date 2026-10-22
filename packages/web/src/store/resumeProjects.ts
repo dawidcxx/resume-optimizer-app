@@ -102,6 +102,8 @@ export function createResumeProjectFromImport(input: {
 }
 
 export function saveResumeDraft(resume: Resume): void {
+  if (!store.hasRow(RESUME_PROJECTS_TABLE, resume.id)) return;
+
   store.setRow(RESUMES_TABLE, resume.id, resumeToRow(resume));
   store.setCell(
     RESUME_PROJECTS_TABLE,

@@ -2,25 +2,9 @@ import { RESUME_ANNOTATION_MAX_LENGTH } from "@resume-optimzer-app/common";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 import { Button, IconButton, Textarea } from "@/ui";
+import { AnnotationIcon } from "./AnnotationIcon";
 import { useAnnotations } from "./AnnotationContext";
-
-function AnnotationIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 20 20"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <path d="M4.25 4.75h11.5v8.5H8.5l-3.25 2.5v-2.5h-1z" />
-      <path d="M7 7.75h6M7 10.25h4" />
-    </svg>
-  );
-}
+import { useAnnotationToolbar } from "./AnnotationToolbar";
 
 export type AnnotationPopoverProps = {
   path: string;
@@ -38,10 +22,15 @@ export function AnnotationPopover({
   className,
 }: AnnotationPopoverProps) {
   const { annotations, setAnnotation } = useAnnotations();
+  const { annotationsVisible } = useAnnotationToolbar();
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const value = annotations[path] ?? "";
   const hasValue = value.trim().length > 0;
+
+  useEffect(() => {
+    if (!annotationsVisible) setOpen(false);
+  }, [annotationsVisible]);
 
   useEffect(() => {
     if (!open) return;
@@ -68,6 +57,8 @@ export function AnnotationPopover({
     setAnnotation(path, "");
     setOpen(false);
   }
+
+  if (!annotationsVisible) return null;
 
   const triggerProps = {
     "aria-expanded": open,

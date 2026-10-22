@@ -1,5 +1,5 @@
 import type { Resume, ResumeAnnotations } from "@resume-optimzer-app/common";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "wouter";
 import { Heading, Text } from "@/ui";
 import { useDebouncedSave } from "@/lib/useDebouncedSave";
@@ -8,7 +8,7 @@ import {
   saveResumeDraft,
   useResumeAnnotations,
 } from "@/store";
-import { AnnotationProvider } from "../annotations";
+import { AnnotationProvider, useAnnotationToolbar } from "../annotations";
 import { FloatingStepIndicator } from "./FloatingStepIndicator";
 import { PreviewStep } from "./PreviewStep";
 import { RenderStep, type RenderStepValue } from "./RenderStep";
@@ -37,9 +37,24 @@ export function ResumeEditForm({ projectName, resume }: ResumeEditFormProps) {
     targetJobDescription: "",
   });
   const [currentStep, setCurrentStep] = useState(0);
+  const { setAnnotationCount } = useAnnotationToolbar();
+  const annotationCount = useMemo(
+    () =>
+      Object.values(annotations).filter((value) => value.trim().length > 0)
+        .length,
+    [annotations],
+  );
 
   useDebouncedSave(draft, saveResumeDraft);
   useDebouncedSave(annotations, (next) => saveResumeAnnotations(resume.id, next));
+
+  useEffect(() => {
+    setAnnotationCount(annotationCount);
+  }, [annotationCount, setAnnotationCount]);
+
+  useEffect(() => {
+    return () => setAnnotationCount(null);
+  }, [setAnnotationCount]);
 
   useEffect(() => {
     window.scrollTo({ top: 0 });
@@ -56,8 +71,7 @@ export function ResumeEditForm({ projectName, resume }: ResumeEditFormProps) {
             {projectName}
           </Heading>
           <Text variant="muted" className="mt-1">
-            These details are the source for every version of this resume. Notes just
-            guide the AI.
+            These details are the source for every version of this resume
           </Text>
         </div>
 

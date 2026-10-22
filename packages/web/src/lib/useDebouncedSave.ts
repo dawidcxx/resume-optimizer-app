@@ -27,8 +27,23 @@ export function useDebouncedSave<T>(
   }, [value, delay]);
 
   useEffect(() => {
+    const flush = () => {
+      if (!pendingRef.current) return;
+      pendingRef.current = false;
+      savedValueRef.current = valueRef.current;
+      saveRef.current(valueRef.current);
+    };
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "hidden") flush();
+    };
+
+    window.addEventListener("pagehide", flush);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
     return () => {
-      if (pendingRef.current) saveRef.current(valueRef.current);
+      window.removeEventListener("pagehide", flush);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      flush();
     };
   }, []);
 }

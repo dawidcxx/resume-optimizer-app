@@ -156,7 +156,7 @@ function buildAnnotationsPrompt(
   if (entries.length === 0) return "(none)";
 
   return entries
-    .map(([path, value]) => `- ${path}: ${value.trim()}`)
+    .map(([path, value]) => `- ${path}: ${JSON.stringify(value.trim())}`)
     .join("\n");
 }
 

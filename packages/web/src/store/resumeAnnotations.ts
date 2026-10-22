@@ -11,6 +11,8 @@ export function saveResumeAnnotations(
   projectId: string,
   annotations: ResumeAnnotations,
 ): void {
+  if (!store.hasRow(RESUME_PROJECTS_TABLE, projectId)) return;
+
   if (Object.keys(annotations).length === 0) {
     store.delRow(RESUME_ANNOTATIONS_TABLE, projectId);
   } else {
