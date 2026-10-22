@@ -12,6 +12,7 @@ import {
   Textarea,
 } from "@/ui";
 import { Field } from "@/ui/form";
+import { AnnotationPopover, useAnnotations } from "../../annotations";
 
 type Project = Resume["projects"][number];
 type ProjectIcon = NonNullable<Project["icon"]>;
@@ -31,6 +32,8 @@ export type ProjectsSectionProps = {
 };
 
 export function ProjectsSection({ value, onChange }: ProjectsSectionProps) {
+  const { removeAnnotationsAt } = useAnnotations();
+
   function update(index: number, patch: Partial<Project>) {
     onChange(value.map((item, itemIndex) => (itemIndex === index ? { ...item, ...patch } : item)));
   }
@@ -95,11 +98,21 @@ export function ProjectsSection({ value, onChange }: ProjectsSectionProps) {
               />
             </Field>
 
-            <div className="flex justify-end">
+            <div className="flex items-center justify-between gap-3 border-t border-border pt-3">
+              <AnnotationPopover
+                path={`projects[${index}]`}
+                label={`project ${index + 1}`}
+                trigger="text"
+                align="start"
+              />
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => onChange(value.filter((_, itemIndex) => itemIndex !== index))}
+                className="text-muted-foreground hover:bg-danger/10 hover:text-danger"
+                onClick={() => {
+                  removeAnnotationsAt("projects", index);
+                  onChange(value.filter((_, itemIndex) => itemIndex !== index));
+                }}
                 aria-label={`Remove project ${index + 1}`}
               >
                 Remove

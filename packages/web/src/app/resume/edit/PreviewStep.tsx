@@ -1,4 +1,4 @@
-import type { Resume } from "@resume-optimzer-app/common";
+import type { Resume, ResumeAnnotations } from "@resume-optimzer-app/common";
 import { useState } from "react";
 import { renderResume } from "@/api/render";
 import { saveResumeRender, useResumeRenders } from "@/store";
@@ -20,6 +20,7 @@ export type PreviewStepProps = {
   projectId: string;
   projectName: string;
   resume: Resume;
+  annotations: ResumeAnnotations;
   aiInstructions: string;
   targetJobDescription: string;
 };
@@ -28,6 +29,7 @@ export function PreviewStep({
   projectId,
   projectName,
   resume,
+  annotations,
   aiInstructions,
   targetJobDescription,
 }: PreviewStepProps) {
@@ -46,6 +48,7 @@ export function PreviewStep({
     try {
       const markup = await renderResume({
         resume,
+        annotations,
         aiInstructions,
         targetJobDescription,
       });

@@ -8,12 +8,14 @@ import {
   CardHeader,
   CardTitle,
   Heading,
+  IconButton,
   Input,
   Select,
   type SelectItem,
   Text,
 } from "@/ui";
 import { Field } from "@/ui/form";
+import { AnnotationPopover, useAnnotations } from "../../annotations";
 
 type ListedSkill = Resume["skills"]["listed"][number];
 type CategorizedSkill = Resume["skills"]["categorized"][number];
@@ -27,6 +29,7 @@ export type SkillsSectionProps = {
 };
 
 export function SkillsSection({ value, onChange }: SkillsSectionProps) {
+  const { removeAnnotationsAt } = useAnnotations();
   const [localCategories, setLocalCategories] = useState<SelectItem[]>([]);
 
   const categoryOptions = useMemo(() => {
@@ -78,16 +81,7 @@ export function SkillsSection({ value, onChange }: SkillsSectionProps) {
       </CardHeader>
       <CardContent className="grid gap-6">
         <section className="grid gap-4">
-          <div className="flex items-center justify-between gap-3">
-            <Heading level={4}>Listed</Heading>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => onChange({ ...value, listed: [...value.listed, { name: "", rating: 3 }] })}
-            >
-              Add skill
-            </Button>
-          </div>
+          <Heading level={4}>Listed</Heading>
 
           {value.listed.length === 0 ? (
             <Text variant="muted">No standalone skills yet.</Text>
@@ -117,40 +111,48 @@ export function SkillsSection({ value, onChange }: SkillsSectionProps) {
                   }}
                 />
               </Field>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="justify-self-end"
-                onClick={() =>
-                  onChange({
-                    ...value,
-                    listed: value.listed.filter((_, itemIndex) => itemIndex !== index),
-                  })
-                }
-                aria-label={`Remove skill ${index + 1}`}
-              >
-                Remove
-              </Button>
+              <div className="flex items-center justify-self-end">
+                <AnnotationPopover
+                  path={`skills.listed[${index}]`}
+                  label={`skill ${index + 1}`}
+                />
+                <IconButton
+                  size="sm"
+                  className="text-muted-foreground hover:bg-danger/10 hover:text-danger focus-visible:bg-danger/10 focus-visible:text-danger"
+                  onClick={() => {
+                    removeAnnotationsAt("skills.listed", index);
+                    onChange({
+                      ...value,
+                      listed: value.listed.filter((_, itemIndex) => itemIndex !== index),
+                    });
+                  }}
+                  aria-label={`Remove skill ${index + 1}`}
+                  title="Remove skill"
+                >
+                  <TrashIcon />
+                </IconButton>
+              </div>
             </div>
           ))}
-        </section>
 
-        <section className="grid gap-4">
-          <div className="flex items-center justify-between gap-3">
-            <Heading level={4}>Categorized</Heading>
+          <div>
             <Button
               variant="outline"
               size="sm"
               onClick={() =>
                 onChange({
                   ...value,
-                  categorized: [...value.categorized, { category: "", skill: "" }],
+                  listed: [...value.listed, { name: "", rating: 3 }],
                 })
               }
             >
-              Add category
+              Add skill
             </Button>
           </div>
+        </section>
+
+        <section className="grid gap-4">
+          <Heading level={4}>Categorized</Heading>
 
           {value.categorized.length === 0 ? (
             <Text variant="muted">No categories yet.</Text>
@@ -184,26 +186,68 @@ export function SkillsSection({ value, onChange }: SkillsSectionProps) {
                   placeholder="Gradle"
                 />
               </Field>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="justify-self-end"
-                onClick={() =>
-                  onChange({
-                    ...value,
-                    categorized: value.categorized.filter(
-                      (_, itemIndex) => itemIndex !== index,
-                    ),
-                  })
-                }
-                aria-label={`Remove category ${index + 1}`}
-              >
-                Remove
-              </Button>
+              <div className="flex items-center justify-self-end">
+                <AnnotationPopover
+                  path={`skills.categorized[${index}]`}
+                  label={`skill category ${index + 1}`}
+                />
+                <IconButton
+                  size="sm"
+                  className="text-muted-foreground hover:bg-danger/10 hover:text-danger focus-visible:bg-danger/10 focus-visible:text-danger"
+                  onClick={() => {
+                    removeAnnotationsAt("skills.categorized", index);
+                    onChange({
+                      ...value,
+                      categorized: value.categorized.filter(
+                        (_, itemIndex) => itemIndex !== index,
+                      ),
+                    });
+                  }}
+                  aria-label={`Remove category ${index + 1}`}
+                  title="Remove category"
+                >
+                  <TrashIcon />
+                </IconButton>
+              </div>
             </div>
           ))}
+
+          <div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() =>
+                onChange({
+                  ...value,
+                  categorized: [
+                    ...value.categorized,
+                    { category: "", skill: "" },
+                  ],
+                })
+              }
+            >
+              Add category
+            </Button>
+          </div>
         </section>
       </CardContent>
     </Card>
+  );
+}
+
+function TrashIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-4 w-4"
+    >
+      <path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13" />
+    </svg>
   );
 }

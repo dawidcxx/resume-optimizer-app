@@ -10,6 +10,7 @@ export type FieldProps = {
   error?: string;
   required?: boolean;
   className?: string;
+  action?: ReactNode;
   children: ReactNode;
 };
 
@@ -20,13 +21,17 @@ export function Field({
   error,
   required = false,
   className,
+  action,
   children,
 }: FieldProps) {
   return (
     <div className={cn("grid gap-2", className)}>
-      <Label htmlFor={id} required={required}>
-        {label}
-      </Label>
+      <div className="flex items-center justify-between gap-2">
+        <Label htmlFor={id} required={required}>
+          {label}
+        </Label>
+        {action}
+      </div>
       {children}
       {error ? (
         <Text variant="subtle" className="text-danger">

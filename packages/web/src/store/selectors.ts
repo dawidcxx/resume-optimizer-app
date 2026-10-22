@@ -1,13 +1,19 @@
-import type { Resume, ResumeProject } from "@resume-optimzer-app/common";
+import type {
+  Resume,
+  ResumeAnnotations,
+  ResumeProject,
+} from "@resume-optimzer-app/common";
 import type { Store } from "tinybase";
 import {
   rowToResume,
+  rowToResumeAnnotations,
   rowToResumeProject,
   rowToResumeRender,
   type ResumeRender,
 } from "./mappers";
 import {
   RESUMES_TABLE,
+  RESUME_ANNOTATIONS_TABLE,
   RESUME_PROJECTS_TABLE,
   RESUME_RENDERS_TABLE,
 } from "./tables";
@@ -26,6 +32,11 @@ export function readResumeProject(store: Store, id: string): ResumeProject | und
 export function readResume(store: Store, id: string): Resume | undefined {
   if (!store.hasRow(RESUMES_TABLE, id)) return undefined;
   return rowToResume(id, store.getRow(RESUMES_TABLE, id));
+}
+
+export function readResumeAnnotations(store: Store, projectId: string): ResumeAnnotations {
+  if (!store.hasRow(RESUME_ANNOTATIONS_TABLE, projectId)) return {};
+  return rowToResumeAnnotations(store.getRow(RESUME_ANNOTATIONS_TABLE, projectId));
 }
 
 export function readResumeRenders(store: Store, projectId: string): ResumeRender[] {

@@ -1,6 +1,13 @@
-import type { Email, Resume, ResumeProject, Uuid } from "@resume-optimzer-app/common";
+import type {
+  Email,
+  Resume,
+  ResumeAnnotations,
+  ResumeProject,
+  Uuid,
+} from "@resume-optimzer-app/common";
 import type { Cell, Row } from "tinybase";
 import {
+  RESUME_ANNOTATION_CELLS,
   RESUME_CELLS,
   RESUME_PROJECT_CELLS,
   RESUME_RENDER_CELLS,
@@ -70,6 +77,20 @@ export function resumeToRow(resume: Resume): Row {
     [RESUME_CELLS.education]: resume.education,
     [RESUME_CELLS.skills]: resume.skills,
     [RESUME_CELLS.projects]: resume.projects,
+  };
+}
+
+export function rowToResumeAnnotations(row: Row): ResumeAnnotations {
+  return asObject<ResumeAnnotations>(row[RESUME_ANNOTATION_CELLS.annotations], {});
+}
+
+export function resumeAnnotationsToRow(
+  projectId: string,
+  annotations: ResumeAnnotations,
+): Row {
+  return {
+    [RESUME_ANNOTATION_CELLS.projectId]: projectId,
+    [RESUME_ANNOTATION_CELLS.annotations]: annotations,
   };
 }
 

@@ -3,8 +3,15 @@ import {
   createResumeProject,
   deleteResumeProject,
   nextResumeProjectName,
+  saveResumeDraft,
 } from "./resumeProjects";
-import { readResume, readResumeBundle, readResumeProjects } from "./selectors";
+import { saveResumeAnnotations } from "./resumeAnnotations";
+import {
+  readResume,
+  readResumeAnnotations,
+  readResumeBundle,
+  readResumeProjects,
+} from "./selectors";
 import { store } from "./store";
 
 describe("nextResumeProjectName", () => {
@@ -52,13 +59,33 @@ describe("createResumeProject", () => {
     expect(resume?.aboutMe).toBe("");
   });
 
-  it("deletes both the project row and its resume row", () => {
+  it("deletes the project, resume, and annotations", () => {
     const project = createResumeProject({ name: "My resume" });
+    saveResumeAnnotations(project.id, {
+      "experience[0]": "Main role",
+    });
 
     deleteResumeProject(project.id);
 
     expect(readResumeProjects(store)).toEqual([]);
     expect(readResume(store, project.id)).toBeUndefined();
+    expect(readResumeAnnotations(store, project.id)).toEqual({});
+  });
+
+  it("saves resume and annotation drafts", () => {
+    const project = createResumeProject({ name: "Draft" });
+    const resume = readResume(store, project.id);
+    if (!resume) throw new Error("Expected resume");
+
+    saveResumeDraft({ ...resume, fullName: "Grace Hopper" });
+    saveResumeAnnotations(project.id, {
+      "aboutMe": "I prefer a concise summary.",
+    });
+
+    expect(readResume(store, project.id)?.fullName).toBe("Grace Hopper");
+    expect(readResumeAnnotations(store, project.id)).toEqual({
+      "aboutMe": "I prefer a concise summary.",
+    });
   });
 
   it("joins the project and resume by id", () => {

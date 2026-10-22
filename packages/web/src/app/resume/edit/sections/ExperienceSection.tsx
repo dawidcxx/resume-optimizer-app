@@ -11,6 +11,7 @@ import {
   CardHeader,
   CardTitle,
   Heading,
+  IconButton,
   Input,
   MoveButtons,
   Select,
@@ -19,6 +20,11 @@ import {
 } from "@/ui";
 import { Field } from "@/ui/form";
 import { moveItem } from "@/lib/moveItem";
+import {
+  AnnotatedField,
+  AnnotationPopover,
+  useAnnotations,
+} from "../../annotations";
 
 type Experience = Resume["experience"][number];
 type WorkType = Experience["workType"];
@@ -51,6 +57,8 @@ export type ExperienceSectionProps = {
 };
 
 export function ExperienceSection({ value, onChange }: ExperienceSectionProps) {
+  const { moveAnnotationsAt, removeAnnotationsAt } = useAnnotations();
+
   function update(index: number, patch: Partial<Experience>) {
     onChange(value.map((item, itemIndex) => (itemIndex === index ? { ...item, ...patch } : item)));
   }
@@ -74,6 +82,7 @@ export function ExperienceSection({ value, onChange }: ExperienceSectionProps) {
   function removeBullet(index: number, bulletIndex: number) {
     const item = value[index];
     if (!item) return;
+    removeAnnotationsAt(`experience[${index}].bulletPoints`, bulletIndex);
     update(index, {
       bulletPoints: (item.bulletPoints ?? []).filter(
         (_, currentIndex) => currentIndex !== bulletIndex,
@@ -116,14 +125,18 @@ export function ExperienceSection({ value, onChange }: ExperienceSectionProps) {
                   placeholder="Analytical Engines Ltd."
                 />
               </Field>
-              <Field id={`experience-${index}-role`} label="Role">
+              <AnnotatedField
+                id={`experience-${index}-role`}
+                label="Role"
+                annotationPath={`experience[${index}].role`}
+              >
                 <Input
                   id={`experience-${index}-role`}
                   value={item.role ?? ""}
                   onChange={(event) => update(index, { role: event.target.value })}
                   placeholder="Senior Frontend Engineer"
                 />
-              </Field>
+              </AnnotatedField>
               <Field id={`experience-${index}-city`} label="City">
                 <Input
                   id={`experience-${index}-city`}
@@ -132,7 +145,11 @@ export function ExperienceSection({ value, onChange }: ExperienceSectionProps) {
                   placeholder="London"
                 />
               </Field>
-              <Field id={`experience-${index}-work-type`} label="Work type">
+              <AnnotatedField
+                id={`experience-${index}-work-type`}
+                label="Work type"
+                annotationPath={`experience[${index}].workType`}
+              >
                 <Select<WorkType>
                   id={`experience-${index}-work-type`}
                   options={WORK_TYPE_OPTIONS}
@@ -142,17 +159,25 @@ export function ExperienceSection({ value, onChange }: ExperienceSectionProps) {
                     if (workType) update(index, { workType });
                   }}
                 />
-              </Field>
+              </AnnotatedField>
               <div className="grid grid-cols-2 gap-4 sm:col-span-2">
-                <Field id={`experience-${index}-from`} label="From">
+                <AnnotatedField
+                  id={`experience-${index}-from`}
+                  label="From"
+                  annotationPath={`experience[${index}].from`}
+                >
                   <Input
                     id={`experience-${index}-from`}
                     type="date"
                     value={item.from}
                     onChange={(event) => update(index, { from: toPlainDate(event.target.value) })}
                   />
-                </Field>
-                <Field id={`experience-${index}-to`} label="To">
+                </AnnotatedField>
+                <AnnotatedField
+                  id={`experience-${index}-to`}
+                  label="To"
+                  annotationPath={`experience[${index}].to`}
+                >
                   <Input
                     id={`experience-${index}-to`}
                     type="date"
@@ -163,15 +188,16 @@ export function ExperienceSection({ value, onChange }: ExperienceSectionProps) {
                       })
                     }
                   />
-                </Field>
+                </AnnotatedField>
               </div>
               <Text variant="subtle">Leave the end date empty if this is your current role.</Text>
             </div>
 
-            <Field
+            <AnnotatedField
               id={`experience-${index}-description`}
               label="Company description"
               description="A short description of the company, not your responsibilities."
+              annotationPath={`experience[${index}].company.description`}
             >
               <Textarea
                 id={`experience-${index}-description`}
@@ -179,23 +205,12 @@ export function ExperienceSection({ value, onChange }: ExperienceSectionProps) {
                 onChange={(event) => updateCompany(index, { description: event.target.value })}
                 placeholder="Fintech startup building payment infrastructure."
               />
-            </Field>
+            </AnnotatedField>
 
             <section className="grid gap-3">
-              <div className="flex items-start justify-between gap-3">
-                <div className="grid gap-1">
-                  <Heading level={4}>Bullet points</Heading>
-                  <Text variant="subtle">One responsibility or achievement per bullet.</Text>
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() =>
-                    update(index, { bulletPoints: [...(item.bulletPoints ?? []), ""] })
-                  }
-                >
-                  Add bullet
-                </Button>
+              <div className="grid gap-1">
+                <Heading level={4}>Bullet points</Heading>
+                <Text variant="subtle">One responsibility or achievement per bullet.</Text>
               </div>
 
               {(item.bulletPoints ?? []).length === 0 ? (
@@ -214,34 +229,72 @@ export function ExperienceSection({ value, onChange }: ExperienceSectionProps) {
                     }
                     placeholder="Shipped a design system used by every product team."
                   />
+                  <AnnotationPopover
+                    path={`experience[${index}].bulletPoints[${bulletIndex}]`}
+                    label={`experience ${index + 1} bullet ${bulletIndex + 1}`}
+                  />
                   <MoveButtons
                     index={bulletIndex}
                     count={(item.bulletPoints ?? []).length}
-                    onMove={(from, to) =>
+                    onMove={(from, to) => {
+                      moveAnnotationsAt(
+                        `experience[${index}].bulletPoints`,
+                        from,
+                        to,
+                      );
                       update(index, {
                         bulletPoints: moveItem(item.bulletPoints ?? [], from, to),
-                      })
-                    }
+                      });
+                    }}
                     label={`experience ${index + 1} bullet ${bulletIndex + 1}`}
                   />
-                  <Button
-                    variant="ghost"
+                  <IconButton
                     size="sm"
-                    className="shrink-0"
+                    className="shrink-0 text-muted-foreground hover:bg-danger/10 hover:text-danger focus-visible:bg-danger/10 focus-visible:text-danger"
                     onClick={() => removeBullet(index, bulletIndex)}
                     aria-label={`Remove bullet ${bulletIndex + 1}`}
+                    title="Remove bullet"
                   >
-                    Remove
-                  </Button>
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="h-4 w-4"
+                    >
+                      <path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13" />
+                    </svg>
+                  </IconButton>
                 </div>
               ))}
+
+              <div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    update(index, {
+                      bulletPoints: [...(item.bulletPoints ?? []), ""],
+                    })
+                  }
+                >
+                  Add bullet
+                </Button>
+              </div>
             </section>
 
-            <div className="flex justify-end">
+            <div className="flex justify-end border-t border-border pt-3">
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => onChange(value.filter((_, itemIndex) => itemIndex !== index))}
+                className="text-muted-foreground hover:bg-danger/10 hover:text-danger"
+                onClick={() => {
+                  removeAnnotationsAt("experience", index);
+                  onChange(value.filter((_, itemIndex) => itemIndex !== index));
+                }}
                 aria-label={`Remove experience ${index + 1}`}
               >
                 Remove

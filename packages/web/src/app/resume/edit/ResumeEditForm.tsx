@@ -1,7 +1,14 @@
-import type { Resume } from "@resume-optimzer-app/common";
+import type { Resume, ResumeAnnotations } from "@resume-optimzer-app/common";
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { Heading, Text } from "@/ui";
+import { useDebouncedSave } from "@/lib/useDebouncedSave";
+import {
+  saveResumeAnnotations,
+  saveResumeDraft,
+  useResumeAnnotations,
+} from "@/store";
+import { AnnotationProvider } from "../annotations";
 import { FloatingStepIndicator } from "./FloatingStepIndicator";
 import { PreviewStep } from "./PreviewStep";
 import { RenderStep, type RenderStepValue } from "./RenderStep";
@@ -20,12 +27,19 @@ export type ResumeEditFormProps = {
 };
 
 export function ResumeEditForm({ projectName, resume }: ResumeEditFormProps) {
+  const storedAnnotations = useResumeAnnotations(resume.id);
   const [draft, setDraft] = useState<Resume>(() => structuredClone(resume));
+  const [annotations, setAnnotations] = useState<ResumeAnnotations>(() =>
+    structuredClone(storedAnnotations),
+  );
   const [renderDraft, setRenderDraft] = useState<RenderStepValue>({
     aiInstructions: "",
     targetJobDescription: "",
   });
   const [currentStep, setCurrentStep] = useState(0);
+
+  useDebouncedSave(draft, saveResumeDraft);
+  useDebouncedSave(annotations, (next) => saveResumeAnnotations(resume.id, next));
 
   useEffect(() => {
     window.scrollTo({ top: 0 });
@@ -42,55 +56,71 @@ export function ResumeEditForm({ projectName, resume }: ResumeEditFormProps) {
             {projectName}
           </Heading>
           <Text variant="muted" className="mt-1">
-            These details are the source for every version of this resume.
+            These details are the source for every version of this resume. Notes just
+            guide the AI.
           </Text>
         </div>
 
-        <div className="grid gap-6">
-          {currentStep === 0 ? (
-            <>
-              <BasicsSection
-                value={draft}
-                onChange={(patch) => setDraft((current) => ({ ...current, ...patch }))}
+        <AnnotationProvider annotations={annotations} onChange={setAnnotations}>
+          <div className="grid gap-6">
+            {currentStep === 0 ? (
+              <>
+                <BasicsSection
+                  value={draft}
+                  onChange={(patch) =>
+                    setDraft((current) => ({ ...current, ...patch }))
+                  }
+                />
+                <ContactSection
+                  value={draft.contact}
+                  onChange={(contact) =>
+                    setDraft((current) => ({ ...current, contact }))
+                  }
+                />
+                <ExperienceSection
+                  value={draft.experience}
+                  onChange={(experience) =>
+                    setDraft((current) => ({ ...current, experience }))
+                  }
+                />
+                <EducationSection
+                  value={draft.education}
+                  onChange={(education) =>
+                    setDraft((current) => ({ ...current, education }))
+                  }
+                />
+                <SkillsSection
+                  value={draft.skills}
+                  onChange={(skills) =>
+                    setDraft((current) => ({ ...current, skills }))
+                  }
+                />
+                <ProjectsSection
+                  value={draft.projects}
+                  onChange={(projects) =>
+                    setDraft((current) => ({ ...current, projects }))
+                  }
+                />
+              </>
+            ) : currentStep === 1 ? (
+              <RenderStep
+                value={renderDraft}
+                onChange={(patch) =>
+                  setRenderDraft((current) => ({ ...current, ...patch }))
+                }
               />
-              <ContactSection
-                value={draft.contact}
-                onChange={(contact) => setDraft((current) => ({ ...current, contact }))}
+            ) : (
+              <PreviewStep
+                projectId={resume.id}
+                projectName={projectName}
+                resume={draft}
+                annotations={annotations}
+                aiInstructions={renderDraft.aiInstructions}
+                targetJobDescription={renderDraft.targetJobDescription}
               />
-              <ExperienceSection
-                value={draft.experience}
-                onChange={(experience) => setDraft((current) => ({ ...current, experience }))}
-              />
-              <EducationSection
-                value={draft.education}
-                onChange={(education) => setDraft((current) => ({ ...current, education }))}
-              />
-              <SkillsSection
-                value={draft.skills}
-                onChange={(skills) => setDraft((current) => ({ ...current, skills }))}
-              />
-              <ProjectsSection
-                value={draft.projects}
-                onChange={(projects) => setDraft((current) => ({ ...current, projects }))}
-              />
-            </>
-          ) : currentStep === 1 ? (
-            <RenderStep
-              value={renderDraft}
-              onChange={(patch) =>
-                setRenderDraft((current) => ({ ...current, ...patch }))
-              }
-            />
-          ) : (
-            <PreviewStep
-              projectId={resume.id}
-              projectName={projectName}
-              resume={draft}
-              aiInstructions={renderDraft.aiInstructions}
-              targetJobDescription={renderDraft.targetJobDescription}
-            />
-          )}
-        </div>
+            )}
+          </div>
+        </AnnotationProvider>
       </div>
 
       <FloatingStepIndicator

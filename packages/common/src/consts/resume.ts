@@ -1,0 +1,1 @@
+export const RESUME_ANNOTATION_MAX_LENGTH = 1000;

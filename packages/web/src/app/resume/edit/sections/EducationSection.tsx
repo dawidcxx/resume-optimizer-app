@@ -14,7 +14,7 @@ import {
   Select,
   Text,
 } from "@/ui";
-import { Field } from "@/ui/form";
+import { AnnotatedField, useAnnotations } from "../../annotations";
 
 type Education = Resume["education"][number];
 type InstituteType = Education["institute"]["type"];
@@ -45,6 +45,8 @@ export type EducationSectionProps = {
 };
 
 export function EducationSection({ value, onChange }: EducationSectionProps) {
+  const { removeAnnotationsAt } = useAnnotations();
+
   function update(index: number, patch: Partial<Education>) {
     onChange(value.map((item, itemIndex) => (itemIndex === index ? { ...item, ...patch } : item)));
   }
@@ -82,15 +84,23 @@ export function EducationSection({ value, onChange }: EducationSectionProps) {
             </legend>
 
             <div className="grid gap-4 sm:grid-cols-2">
-              <Field id={`education-${index}-institute`} label="Institute">
+              <AnnotatedField
+                id={`education-${index}-institute`}
+                label="Institute"
+                annotationPath={`education[${index}].institute.name`}
+              >
                 <Input
                   id={`education-${index}-institute`}
                   value={item.institute.name}
                   onChange={(event) => updateInstitute(index, { name: event.target.value })}
                   placeholder="University of London"
                 />
-              </Field>
-              <Field id={`education-${index}-type`} label="Type">
+              </AnnotatedField>
+              <AnnotatedField
+                id={`education-${index}-type`}
+                label="Type"
+                annotationPath={`education[${index}].institute.type`}
+              >
                 <Select<InstituteType>
                   id={`education-${index}-type`}
                   options={INSTITUTE_TYPE_OPTIONS}
@@ -100,16 +110,25 @@ export function EducationSection({ value, onChange }: EducationSectionProps) {
                     if (type) updateInstitute(index, { type });
                   }}
                 />
-              </Field>
-              <Field id={`education-${index}-degree`} label="Degree" className="sm:col-span-2">
+              </AnnotatedField>
+              <AnnotatedField
+                id={`education-${index}-degree`}
+                label="Degree"
+                className="sm:col-span-2"
+                annotationPath={`education[${index}].degree`}
+              >
                 <Input
                   id={`education-${index}-degree`}
                   value={item.degree}
                   onChange={(event) => update(index, { degree: event.target.value })}
                   placeholder="BSc Computer Science"
                 />
-              </Field>
-              <Field id={`education-${index}-start`} label="Start date">
+              </AnnotatedField>
+              <AnnotatedField
+                id={`education-${index}-start`}
+                label="Start date"
+                annotationPath={`education[${index}].startDate`}
+              >
                 <Input
                   id={`education-${index}-start`}
                   type="date"
@@ -118,8 +137,12 @@ export function EducationSection({ value, onChange }: EducationSectionProps) {
                     update(index, { startDate: toPlainDate(event.target.value) })
                   }
                 />
-              </Field>
-              <Field id={`education-${index}-end`} label="End date">
+              </AnnotatedField>
+              <AnnotatedField
+                id={`education-${index}-end`}
+                label="End date"
+                annotationPath={`education[${index}].endDate`}
+              >
                 <Input
                   id={`education-${index}-end`}
                   type="date"
@@ -130,14 +153,18 @@ export function EducationSection({ value, onChange }: EducationSectionProps) {
                     })
                   }
                 />
-              </Field>
+              </AnnotatedField>
             </div>
 
-            <div className="flex justify-end">
+            <div className="flex justify-end border-t border-border pt-3">
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => onChange(value.filter((_, itemIndex) => itemIndex !== index))}
+                className="text-muted-foreground hover:bg-danger/10 hover:text-danger"
+                onClick={() => {
+                  removeAnnotationsAt("education", index);
+                  onChange(value.filter((_, itemIndex) => itemIndex !== index));
+                }}
                 aria-label={`Remove education ${index + 1}`}
               >
                 Remove

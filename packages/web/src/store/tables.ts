@@ -1,5 +1,6 @@
 export const RESUME_PROJECTS_TABLE = "resume_projects";
 export const RESUMES_TABLE = "resumes";
+export const RESUME_ANNOTATIONS_TABLE = "resume_annotations";
 export const RESUME_RENDERS_TABLE = "resume_renders";
 
 export const RESUME_PROJECT_CELLS = {
@@ -18,6 +19,11 @@ export const RESUME_CELLS = {
   education: "education",
   skills: "skills",
   projects: "projects",
+} as const;
+
+export const RESUME_ANNOTATION_CELLS = {
+  projectId: "projectId",
+  annotations: "annotations",
 } as const;
 
 export const RESUME_RENDER_CELLS = {

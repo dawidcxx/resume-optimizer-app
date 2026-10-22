@@ -9,7 +9,9 @@ import { resumeProjectToRow, resumeToRow } from "./mappers";
 import { store } from "./store";
 import {
   RESUMES_TABLE,
+  RESUME_ANNOTATIONS_TABLE,
   RESUME_PROJECTS_TABLE,
+  RESUME_PROJECT_CELLS,
   RESUME_RENDERS_TABLE,
   RESUME_RENDER_CELLS,
 } from "./tables";
@@ -99,9 +101,20 @@ export function createResumeProjectFromImport(input: {
   return project;
 }
 
+export function saveResumeDraft(resume: Resume): void {
+  store.setRow(RESUMES_TABLE, resume.id, resumeToRow(resume));
+  store.setCell(
+    RESUME_PROJECTS_TABLE,
+    resume.id,
+    RESUME_PROJECT_CELLS.updatedAt,
+    Date.now(),
+  );
+}
+
 export function deleteResumeProject(id: string): void {
   store.delRow(RESUME_PROJECTS_TABLE, id);
   store.delRow(RESUMES_TABLE, id);
+  store.delRow(RESUME_ANNOTATIONS_TABLE, id);
 
   for (const renderId of store.getRowIds(RESUME_RENDERS_TABLE)) {
     const projectId = store.getCell(

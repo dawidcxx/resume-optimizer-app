@@ -1,7 +1,12 @@
-import type { Resume, ResumeProject } from "@resume-optimzer-app/common";
+import type {
+  Resume,
+  ResumeAnnotations,
+  ResumeProject,
+} from "@resume-optimzer-app/common";
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import {
   readResume,
+  readResumeAnnotations,
   readResumeBundle,
   readResumeProject,
   readResumeProjects,
@@ -46,6 +51,11 @@ export function useResume(id: string): Resume | undefined {
 export function useResumeBundle(id: string): ResumeBundle | undefined {
   const version = useTablesVersion();
   return useMemo(() => readResumeBundle(store, id), [version, id]);
+}
+
+export function useResumeAnnotations(projectId: string): ResumeAnnotations {
+  const version = useTablesVersion();
+  return useMemo(() => readResumeAnnotations(store, projectId), [version, projectId]);
 }
 
 export function useResumeRenders(projectId: string): ResumeRender[] {

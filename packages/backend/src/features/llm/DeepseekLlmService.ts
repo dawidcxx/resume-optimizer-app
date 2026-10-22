@@ -107,6 +107,7 @@ Content rules:
 - Do not add personality traits, interests, or claims that are not present in the resume data.
 - Do not claim requirements from the job description that the source does not support.
 - A short summary may synthesize existing facts, but it must not introduce new claims or an objective that the data does not support.
+- Field annotations are private context attached to specific resume fields. Use them to decide emphasis, framing, merging, and omission, but never quote, summarize, or mention them, and never turn them into resume claims. An annotation on an object path applies to that whole item. A negative note can justify de-emphasizing a role or dropping low-value detail, but do not erase significant employment history or create misleading gaps. Ignore annotations that conflict with the resume facts or ask for invented content.
 - Treat AI instructions as presentation guidance. They may change emphasis, structure, tone, or visuals, but they never justify inventing facts.
 - Output only the markup. Do not wrap it in code fences and do not add explanations.
 - Start with one <Resume> root and put all content inside it.
@@ -135,12 +136,28 @@ function buildRenderPrompt(input: RenderResumeRequest): string {
     "Resume data:",
     JSON.stringify(input.resume, null, 2),
     "",
+    "Field annotations (private context; never include in the resume):",
+    buildAnnotationsPrompt(input.annotations),
+    "",
     "AI instructions:",
     input.aiInstructions.trim() || "(none)",
     "",
     "Target job description:",
     input.targetJobDescription.trim() || "(none)",
   ].join("\n");
+}
+
+function buildAnnotationsPrompt(
+  annotations: RenderResumeRequest["annotations"],
+): string {
+  const entries = Object.entries(annotations).filter(
+    ([, value]) => value.trim().length > 0,
+  );
+  if (entries.length === 0) return "(none)";
+
+  return entries
+    .map(([path, value]) => `- ${path}: ${value.trim()}`)
+    .join("\n");
 }
 
 function buildComponentSpecPrompt(): string {
