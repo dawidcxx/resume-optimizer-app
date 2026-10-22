@@ -3,6 +3,7 @@ import { valibotSchema } from "@ai-sdk/valibot";
 import { inject, injectable } from "@needle-di/core";
 import {
   RESUME_COMPONENT_SPEC,
+  RESUME_FONT_CATALOG,
   ImportedResumeSchema,
   toImportedResume,
   type ImportedResume,
@@ -119,6 +120,7 @@ Content rules:
 - Use only the components listed below. Unknown components, unknown props, raw HTML, JSX expressions, imports, event handlers, style, className, and script tags are rejected.
 - All props are strings. Colors must be 6-digit hex values.
 - Make the theme reflect the AI instructions while keeping text readable against the background.
+- Typography is a primary way to give the resume character. Choose font and headingFont deliberately from the font catalog. font controls body copy and must be body-safe; headingFont controls names and headings and can use any listed font. Prefer one body font and one heading font, and use different families when it improves character.
 - Default to a clean, conventional resume. Build most of it from the core components: Resume, Header, Section, Columns, Column, Entry, Text, TagList, and Tag. Use plain markdown paragraphs and bullet lists inside them.
 - Treat Callout, Stars, ProgressBar, Stats, Stat, Fact, DataTable, Timeline, TimelineItem, BulletList, Divider, and Spacer as optional accents. Prefer the core components, and use an optional accent only when it genuinely improves clarity or the AI instructions call for that kind of visual treatment. A clean, conventional resume is the default.
 - Use the target job description to decide what to emphasize, not as a request for optional visual components.
@@ -133,6 +135,9 @@ ${buildComponentSpecPrompt()}`;
 
 function buildRenderPrompt(input: RenderResumeRequest): string {
   return [
+    "Font catalog (use the id exactly; font must be body-safe, headingFont may use any font):",
+    buildFontCatalogPrompt(),
+    "",
     "Resume data:",
     JSON.stringify(input.resume, null, 2),
     "",
@@ -144,6 +149,16 @@ function buildRenderPrompt(input: RenderResumeRequest): string {
     "",
     "Target job description:",
     input.targetJobDescription.trim() || "(none)",
+  ].join("\n");
+}
+
+function buildFontCatalogPrompt(): string {
+  return [
+    "Generic system fallbacks: sans, serif, mono.",
+    ...Object.entries(RESUME_FONT_CATALOG).map(([id, font]) => {
+      const usage = font.bodySafe ? "body-safe" : "heading only";
+      return `- ${id} (${font.family}, ${font.category}, ${usage}): ${font.description}`;
+    }),
   ].join("\n");
 }
 

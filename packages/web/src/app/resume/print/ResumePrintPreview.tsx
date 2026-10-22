@@ -11,6 +11,11 @@ export type ResumePrintPreviewProps = {
 };
 
 export function ResumePrintPreview({ title, markup, onClose }: ResumePrintPreviewProps) {
+  async function handlePrint() {
+    await document.fonts.ready;
+    window.print();
+  }
+
   useEffect(() => {
     const previousTitle = document.title;
     document.title = `${title} — ResumeFixer`;
@@ -54,7 +59,13 @@ export function ResumePrintPreview({ title, markup, onClose }: ResumePrintPrevie
             <span className="hidden h-4 w-px bg-border sm:block" />
             <span className="truncate text-sm font-medium">{title}</span>
           </div>
-          <Button variant="primary" size="sm" onClick={() => window.print()}>
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={() => {
+              void handlePrint();
+            }}
+          >
             <PrintIcon className="h-4 w-4" />
             Print
           </Button>

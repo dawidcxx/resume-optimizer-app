@@ -29,6 +29,18 @@ describe("validateResumeMarkup", () => {
     expect(validateResumeMarkup(markup)).toBeNull();
   });
 
+  it("accepts custom body and heading fonts", () => {
+    const markup = `<Resume font="source-serif-4" headingFont="fraunces"></Resume>`;
+
+    expect(validateResumeMarkup(markup)).toBeNull();
+  });
+
+  it("rejects display fonts as the body font", () => {
+    expect(validateResumeMarkup(`<Resume font="fraunces"></Resume>`)).toContain(
+      "Invalid props",
+    );
+  });
+
   it("rejects script tags", () => {
     expect(validateResumeMarkup(`<script>alert("nope")</script>`)).toContain(
       "Unsupported component",

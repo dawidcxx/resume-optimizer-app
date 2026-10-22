@@ -1,4 +1,7 @@
-import type { ResumeComponentProps } from "@resume-optimzer-app/common";
+import {
+  RESUME_FONT_CATALOG,
+  type ResumeComponentProps,
+} from "@resume-optimzer-app/common";
 import { createContext, useContext } from "react";
 
 export type ResumeTheme = ResumeComponentProps<"Resume">;
@@ -13,11 +16,21 @@ export const DEFAULT_RESUME_THEME: ResumeTheme = {
   density: "comfortable",
 };
 
-export const FONT_FAMILIES = {
+const GENERIC_FONT_FAMILIES = {
   sans: "ui-sans-serif, system-ui, sans-serif",
   serif: "ui-serif, Georgia, serif",
   mono: "ui-monospace, monospace",
 } as const;
+
+export const FONT_FAMILIES = {
+  ...GENERIC_FONT_FAMILIES,
+  ...Object.fromEntries(
+    Object.entries(RESUME_FONT_CATALOG).map(([id, font]) => [
+      id,
+      `"${font.cssFamily}", ${GENERIC_FONT_FAMILIES[font.fallback]}`,
+    ]),
+  ),
+} as Record<ResumeTheme["font"] | ResumeTheme["headingFont"], string>;
 
 export const DENSITY_GAPS = {
   compact: "gap-2",

@@ -7,25 +7,28 @@ import {
   strictObject,
   string,
 } from "valibot";
+import { RESUME_BODY_FONT_IDS, RESUME_HEADING_FONT_IDS } from "./resumeFonts";
 
 const HexColor = pipe(string(), regex(/^#[0-9a-fA-F]{6}$/));
 const NumericString = pipe(string(), regex(/^\d+$/));
 const DecimalString = pipe(string(), regex(/^\d+(\.\d+)?$/));
 const Ratio = pipe(string(), regex(/^[1-9]\d*:[1-9]\d*(:[1-9]\d*)?$/));
 const Size = picklist(["xs", "sm", "md", "lg", "xl"]);
-const Font = picklist(["sans", "serif", "mono"]);
+const BodyFont = picklist(RESUME_BODY_FONT_IDS);
+const HeadingFont = picklist(RESUME_HEADING_FONT_IDS);
 
 export const RESUME_COMPONENT_SPEC = {
   Resume: {
-    description: "Root container. Sets page colors, fonts, and spacing.",
+    description:
+      "Root container. Sets page colors, the body font, the heading font, and spacing.",
     children: true,
     props: strictObject({
       accent: optional(HexColor, "#2563eb"),
       background: optional(HexColor, "#ffffff"),
       text: optional(HexColor, "#111827"),
       muted: optional(HexColor, "#6b7280"),
-      font: optional(Font, "sans"),
-      headingFont: optional(Font, "serif"),
+      font: optional(BodyFont, "sans"),
+      headingFont: optional(HeadingFont, "serif"),
       density: optional(picklist(["compact", "comfortable", "airy"]), "comfortable"),
     }),
   },
