@@ -28,6 +28,7 @@ export const RESUME_ANNOTATION_CELLS = {
 
 export const RESUME_RENDER_CELLS = {
   projectId: "projectId",
+  chatId: "chatId",
   markup: "markup",
   createdAt: "createdAt",
 } as const;

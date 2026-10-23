@@ -94,14 +94,18 @@ export function resumeAnnotationsToRow(projectId: string, annotations: ResumeAnn
 export type ResumeRender = {
   id: Uuid;
   projectId: Uuid;
+  chatId: Uuid | null;
   createdAt: Date;
   markup: string;
 };
 
 export function rowToResumeRender(id: string, row: Row): ResumeRender {
+  const chatId = asString(row[RESUME_RENDER_CELLS.chatId]);
+
   return {
     id: id as Uuid,
     projectId: asString(row[RESUME_RENDER_CELLS.projectId]) as Uuid,
+    chatId: chatId ? (chatId as Uuid) : null,
     createdAt: new Date(asNumber(row[RESUME_RENDER_CELLS.createdAt])),
     markup: asString(row[RESUME_RENDER_CELLS.markup]),
   };
@@ -110,6 +114,7 @@ export function rowToResumeRender(id: string, row: Row): ResumeRender {
 export function resumeRenderToRow(render: ResumeRender): Row {
   return {
     [RESUME_RENDER_CELLS.projectId]: render.projectId,
+    [RESUME_RENDER_CELLS.chatId]: render.chatId ?? "",
     [RESUME_RENDER_CELLS.createdAt]: render.createdAt.getTime(),
     [RESUME_RENDER_CELLS.markup]: render.markup,
   };

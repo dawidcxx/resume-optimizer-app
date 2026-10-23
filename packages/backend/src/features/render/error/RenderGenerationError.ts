@@ -4,6 +4,6 @@ import { HttpError } from "@/lib/HttpErrorMetadata";
 @HttpError({ status: HttpStatusCodes.BAD_GATEWAY })
 export class RenderGenerationError extends Error {
   constructor() {
-    super("The resume could not be rendered. Please try again.");
+    super("The resume could not be generated. Please try again.");
   }
 }

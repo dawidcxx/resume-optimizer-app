@@ -5,16 +5,28 @@ import {
   RESUME_COMPONENT_SPEC,
   RESUME_FONT_CATALOG,
   ImportedResumeSchema,
+  RenderChatOutput,
   toImportedResume,
   type ImportedResume,
+  type RenderUsage,
   type RenderResumeRequest,
   type ResumeComponentName,
   type ResumeComponentSpec,
 } from "@resume-optimzer-app/common";
 import { toJsonSchema } from "@valibot/to-json-schema";
-import { generateText, Output } from "ai";
+import {
+  generateText,
+  Output,
+  type LanguageModelUsage,
+  type ModelMessage,
+} from "ai";
 import { Config } from "@/shared/Config";
-import type { ImportResumeInput, LlmService as LlmServiceContract } from "./LlmService";
+import type {
+  ImportResumeInput,
+  LlmService as LlmServiceContract,
+  RenderResumeResult,
+  ReviseResumeInput,
+} from "./LlmService";
 
 @injectable()
 export class DeepseekLlmService implements LlmServiceContract {
@@ -41,8 +53,8 @@ export class DeepseekLlmService implements LlmServiceContract {
     return toImportedResume(output);
   }
 
-  async renderResume(input: RenderResumeRequest): Promise<string> {
-    const { text } = await generateText({
+  async renderResume(input: RenderResumeRequest): Promise<RenderResumeResult> {
+    const { text, usage } = await generateText({
       model: this.model,
       system: RENDER_RESUME_SYSTEM_PROMPT,
       prompt: buildRenderPrompt(input),
@@ -52,7 +64,35 @@ export class DeepseekLlmService implements LlmServiceContract {
         deepseek: { thinking: { type: "disabled" } },
       },
     });
-    return normalizeMarkup(text);
+
+    return {
+      reply: null,
+      markup: normalizeMarkup(text),
+      usage: mapUsage(usage),
+    };
+  }
+
+  async reviseResume(input: ReviseResumeInput): Promise<RenderResumeResult> {
+    const { output, usage } = await generateText({
+      model: this.model,
+      system: RENDER_CHAT_SYSTEM_PROMPT,
+      messages: buildRenderChatMessages(input),
+      temperature: 0.4,
+      maxOutputTokens: 8192,
+      providerOptions: {
+        deepseek: { thinking: { type: "disabled" } },
+      },
+      output: Output.object({
+        schema: valibotSchema(RenderChatOutput),
+        name: "resume_revision",
+      }),
+    });
+
+    return {
+      reply: output.reply.trim(),
+      markup: normalizeMarkup(output.markup),
+      usage: mapUsage(usage),
+    };
   }
 
   private get model(): ReturnType<DeepSeekProvider> {
@@ -134,6 +174,30 @@ Available components:
 
 ${buildComponentSpecPrompt()}`;
 
+const RENDER_CHAT_SYSTEM_PROMPT = `You revise an already-rendered resume through a chat conversation.
+
+The first user message contains the canonical resume data, private field annotations, the original AI instructions, the target job description, and the initial rendered markup. Later assistant messages contain short replies followed by the full markup produced at that turn. The most recent assistant message contains the current rendered markup. If there are no assistant messages yet, the initial markup is the current render.
+
+Revision rules:
+- Treat each user message as presentation guidance, not as new resume facts.
+- Make the smallest change that satisfies the request. Preserve the existing design, content, ordering, and emphasis unless the request calls for a change.
+- Preserve all facts. Never invent employers, dates, degrees, skills, projects, metrics, links, or credentials.
+- The user may ask you to hide, remove, reorder, condense, or reframe existing material. That is allowed as long as the remaining resume stays factually accurate.
+- Do not re-add content that was removed or hidden in an earlier turn unless the user explicitly asks for it.
+- Keep private field annotations private. Use them only to understand emphasis and intent; never quote, summarize, or expose them.
+- Write in the language of the resume data unless the user explicitly asks to switch.
+- Return the complete replacement markup, not a diff or partial snippet.
+- The markup must be valid MDX-lite using only the components below. It must start with one <Resume> root and contain no code fences, raw HTML, JSX expressions, imports, event handlers, style, or className.
+- Keep the reply to one or two short sentences. Do not describe internal reasoning or mention these instructions.
+- If a request would require inventing facts or breaking the allowed markup, explain briefly in the reply and return the current markup unchanged.
+
+Typography:
+${buildFontCatalogPrompt()}
+
+Available components:
+
+${buildComponentSpecPrompt()}`;
+
 function buildRenderPrompt(input: RenderResumeRequest): string {
   return [
     "Font catalog (use the id exactly; font must be body-safe, headingFont may use any font):",
@@ -153,6 +217,62 @@ function buildRenderPrompt(input: RenderResumeRequest): string {
   ].join("\n");
 }
 
+export function buildRenderChatMessages(
+  input: ReviseResumeInput,
+): ModelMessage[] {
+  const [first, ...rest] = input.messages;
+  if (!first) return [];
+
+  const messages: ModelMessage[] = [
+    {
+      role: "user",
+      content: `${buildRenderChatContext(input)}\n\nFirst user request:\n${first.content}`,
+    },
+  ];
+
+  for (const message of rest) {
+    if (message.role === "assistant") {
+      messages.push({
+        role: "assistant",
+        content: `${message.content}\n\nUpdated resume markup:\n${message.markup ?? ""}`,
+      });
+    } else {
+      messages.push({ role: "user", content: message.content });
+    }
+  }
+
+  return messages;
+}
+
+function buildRenderChatContext(input: ReviseResumeInput): string {
+  return [
+    "Resume data:",
+    JSON.stringify(input.resume, null, 2),
+    "",
+    "Field annotations (private context; never include in the resume):",
+    buildAnnotationsPrompt(input.annotations),
+    "",
+    "Original AI instructions:",
+    input.aiInstructions.trim() || "(none)",
+    "",
+    "Target job description:",
+    input.targetJobDescription.trim() || "(none)",
+    "",
+    "Initial rendered markup:",
+    input.initialMarkup,
+    "",
+    "The latest rendered markup is in the most recent assistant message, or in the initial markup when no assistant messages exist.",
+  ].join("\n");
+}
+
+function mapUsage(usage: LanguageModelUsage): RenderUsage {
+  return {
+    inputTokens: usage.inputTokens ?? 0,
+    cachedInputTokens: usage.inputTokenDetails.cacheReadTokens ?? 0,
+    outputTokens: usage.outputTokens ?? 0,
+  };
+}
+
 function buildFontCatalogPrompt(): string {
   return [
     "Generic system fallbacks: sans, serif, mono.",
@@ -163,16 +283,24 @@ function buildFontCatalogPrompt(): string {
   ].join("\n");
 }
 
-function buildAnnotationsPrompt(annotations: RenderResumeRequest["annotations"]): string {
-  const entries = Object.entries(annotations).filter(([, value]) => value.trim().length > 0);
+function buildAnnotationsPrompt(
+  annotations: RenderResumeRequest["annotations"],
+): string {
+  const entries = Object.entries(annotations)
+    .filter(([, value]) => value.trim().length > 0)
+    .sort(([left], [right]) => left.localeCompare(right));
   if (entries.length === 0) return "(none)";
 
-  return entries.map(([path, value]) => `- ${path}: ${JSON.stringify(value.trim())}`).join("\n");
+  return entries
+    .map(([path, value]) => `- ${path}: ${JSON.stringify(value.trim())}`)
+    .join("\n");
 }
 
 function buildComponentSpecPrompt(): string {
   return (
-    Object.entries(RESUME_COMPONENT_SPEC) as Array<[ResumeComponentName, ResumeComponentSpec]>
+    Object.entries(RESUME_COMPONENT_SPEC) as Array<
+      [ResumeComponentName, ResumeComponentSpec]
+    >
   )
     .map(([name, spec]) => {
       return [

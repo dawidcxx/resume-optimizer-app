@@ -38,18 +38,22 @@ export function PreviewStep({
     setError(null);
 
     try {
-      const markup = await renderResume({
+      const render = await renderResume({
         resume,
         annotations,
         aiInstructions,
         targetJobDescription,
       });
-      const validationError = validateResumeMarkup(markup);
+      const validationError = validateResumeMarkup(render.markup);
       if (validationError) {
         setError(validationError);
         return;
       }
-      saveResumeRender({ projectId: resume.id, markup });
+      saveResumeRender({
+        projectId: resume.id,
+        chatId: render.chatId,
+        markup: render.markup,
+      });
     } catch (renderError) {
       setError(renderError instanceof Error ? renderError.message : "Could not render the resume.");
     } finally {

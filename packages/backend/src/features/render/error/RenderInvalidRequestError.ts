@@ -3,7 +3,7 @@ import { HttpError } from "@/lib/HttpErrorMetadata";
 
 @HttpError({ status: HttpStatusCodes.BAD_REQUEST })
 export class RenderInvalidRequestError extends Error {
-  constructor() {
-    super("The render request is invalid.");
+  constructor(message = "The render request is invalid.") {
+    super(message);
   }
 }

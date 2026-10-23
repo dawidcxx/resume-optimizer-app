@@ -8,10 +8,12 @@ const __dirname = dirname(__filename);
 
 const migration001 = readFileSync(resolve(__dirname, "./sql/001_initial_schema.sql"), "utf-8");
 const migration002 = readFileSync(resolve(__dirname, "./sql/002_files.sql"), "utf-8");
+const migration003 = readFileSync(resolve(__dirname, "./sql/003_render_chats.sql"), "utf-8");
 
 export const dbMigrations: readonly DbMigration[] = [
   migration("migration001", migration001),
   migration("migration002", migration002),
+  migration("migration003", migration003),
   // Add Migrations here
 ] as const;
 
