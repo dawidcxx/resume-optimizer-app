@@ -66,10 +66,7 @@ export const RenderResumeRequest = object({
   resume: ImportedResumeSchema,
   annotations: ResumeAnnotations,
   aiInstructions: pipe(string(), maxLength(RENDER_AI_INSTRUCTIONS_MAX_LENGTH)),
-  targetJobDescription: pipe(
-    string(),
-    maxLength(RENDER_TARGET_JOB_DESCRIPTION_MAX_LENGTH),
-  ),
+  targetJobDescription: pipe(string(), maxLength(RENDER_TARGET_JOB_DESCRIPTION_MAX_LENGTH)),
 });
 
 export const RenderChatParams = object({
@@ -90,16 +87,8 @@ export const GetRenderChatResponse = object({
 });
 
 export const RenderChatOutput = object({
-  reply: pipe(
-    string(),
-    minLength(1),
-    maxLength(RENDER_CHAT_ASSISTANT_REPLY_MAX_LENGTH),
-  ),
-  markup: pipe(
-    string(),
-    minLength(1),
-    maxLength(RENDER_CHAT_MARKUP_MAX_LENGTH),
-  ),
+  reply: pipe(string(), minLength(1), maxLength(RENDER_CHAT_ASSISTANT_REPLY_MAX_LENGTH)),
+  markup: pipe(string(), minLength(1), maxLength(RENDER_CHAT_MARKUP_MAX_LENGTH)),
 });
 
 export type RenderRole = InferOutput<typeof RenderRole>;
@@ -109,9 +98,7 @@ export type RenderChat = InferOutput<typeof RenderChat>;
 export type RenderTurnResponse = InferOutput<typeof RenderTurnResponse>;
 export type RenderResumeRequest = InferOutput<typeof RenderResumeRequest>;
 export type RenderChatParams = InferOutput<typeof RenderChatParams>;
-export type SendRenderMessageRequest = InferOutput<
-  typeof SendRenderMessageRequest
->;
+export type SendRenderMessageRequest = InferOutput<typeof SendRenderMessageRequest>;
 export type GetRenderChatResponse = InferOutput<typeof GetRenderChatResponse>;
 export type RenderChatOutput = InferOutput<typeof RenderChatOutput>;
 

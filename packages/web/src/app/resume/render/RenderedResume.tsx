@@ -1,4 +1,4 @@
-import { RESUME_COMPONENT_SPEC } from "@resume-optimzer-app/common";
+import { RESUME_COMPONENT_SPEC, sanitizeResumeTheme } from "@resume-optimzer-app/common";
 import { Markdown, parser, RuleType, type MarkdownToJSX } from "markdown-to-jsx";
 import type { ReactNode } from "react";
 import { parse } from "valibot";
@@ -151,7 +151,7 @@ const markdownOverrides: MarkdownToJSX.Overrides = {
 };
 
 export function RenderedResume({ markup }: { markup: string }) {
-  const normalizedMarkup = normalizeMarkup(markup);
+  const normalizedMarkup = sanitizeResumeTheme(normalizeMarkup(markup));
   const error = validateResumeMarkup(normalizedMarkup);
   if (error) {
     return (

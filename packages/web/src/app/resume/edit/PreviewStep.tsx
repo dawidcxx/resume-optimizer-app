@@ -1,7 +1,8 @@
-import type {
-  RenderTurnResponse,
-  Resume,
-  ResumeAnnotations,
+import {
+  sanitizeResumeTheme,
+  type RenderTurnResponse,
+  type Resume,
+  type ResumeAnnotations,
 } from "@resume-optimzer-app/common";
 import { useState } from "react";
 import { renderResume } from "@/api/render";
@@ -50,7 +51,8 @@ export function PreviewStep({
         aiInstructions,
         targetJobDescription,
       });
-      const validationError = validateResumeMarkup(render.markup);
+      const markup = sanitizeResumeTheme(render.markup);
+      const validationError = validateResumeMarkup(markup);
       if (validationError) {
         setError(validationError);
         return;
@@ -58,7 +60,7 @@ export function PreviewStep({
       saveResumeRender({
         projectId: resume.id,
         chatId: render.chatId,
-        markup: render.markup,
+        markup,
       });
     } catch (renderError) {
       setError(renderError instanceof Error ? renderError.message : "Could not render the resume.");
@@ -68,14 +70,15 @@ export function PreviewStep({
   }
 
   function handleChatTurn(turn: RenderTurnResponse): void {
-    const validationError = validateResumeMarkup(turn.markup);
+    const markup = sanitizeResumeTheme(turn.markup);
+    const validationError = validateResumeMarkup(markup);
     if (validationError) {
       setError(validationError);
       return;
     }
 
     if (!latest || latest.chatId !== turn.chatId) return;
-    updateResumeRender({ id: latest.id, markup: turn.markup });
+    updateResumeRender({ id: latest.id, markup });
   }
 
   return (

@@ -6,6 +6,7 @@ import {
   RESUME_FONT_CATALOG,
   ImportedResumeSchema,
   RenderChatOutput,
+  sanitizeResumeTheme,
   toImportedResume,
   type ImportedResume,
   type RenderUsage,
@@ -14,12 +15,7 @@ import {
   type ResumeComponentSpec,
 } from "@resume-optimzer-app/common";
 import { toJsonSchema } from "@valibot/to-json-schema";
-import {
-  generateText,
-  Output,
-  type LanguageModelUsage,
-  type ModelMessage,
-} from "ai";
+import { generateText, Output, type LanguageModelUsage, type ModelMessage } from "ai";
 import { safeParse } from "valibot";
 import { Logger } from "@/lib/Logger";
 import { Config } from "@/shared/Config";
@@ -69,7 +65,7 @@ export class DeepseekLlmService implements LlmServiceContract {
 
     return {
       reply: null,
-      markup: normalizeMarkup(text),
+      markup: sanitizeResumeTheme(normalizeMarkup(text)),
       usage: mapUsage(usage),
     };
   }
@@ -100,7 +96,7 @@ export class DeepseekLlmService implements LlmServiceContract {
       if (output) {
         return {
           reply: output.reply,
-          markup: output.markup,
+          markup: sanitizeResumeTheme(output.markup),
           usage: { inputTokens, cachedInputTokens, outputTokens },
         };
       }
@@ -249,9 +245,7 @@ function buildRenderPrompt(input: RenderResumeRequest): string {
   ].join("\n");
 }
 
-export function buildRenderChatMessages(
-  input: ReviseResumeInput,
-): ModelMessage[] {
+export function buildRenderChatMessages(input: ReviseResumeInput): ModelMessage[] {
   const [first, ...rest] = input.messages;
   if (!first) return [];
 
@@ -315,24 +309,18 @@ function buildFontCatalogPrompt(): string {
   ].join("\n");
 }
 
-function buildAnnotationsPrompt(
-  annotations: RenderResumeRequest["annotations"],
-): string {
+function buildAnnotationsPrompt(annotations: RenderResumeRequest["annotations"]): string {
   const entries = Object.entries(annotations)
     .filter(([, value]) => value.trim().length > 0)
     .sort(([left], [right]) => left.localeCompare(right));
   if (entries.length === 0) return "(none)";
 
-  return entries
-    .map(([path, value]) => `- ${path}: ${JSON.stringify(value.trim())}`)
-    .join("\n");
+  return entries.map(([path, value]) => `- ${path}: ${JSON.stringify(value.trim())}`).join("\n");
 }
 
 function buildComponentSpecPrompt(): string {
   return (
-    Object.entries(RESUME_COMPONENT_SPEC) as Array<
-      [ResumeComponentName, ResumeComponentSpec]
-    >
+    Object.entries(RESUME_COMPONENT_SPEC) as Array<[ResumeComponentName, ResumeComponentSpec]>
   )
     .map(([name, spec]) => {
       return [
@@ -345,9 +333,7 @@ function buildComponentSpecPrompt(): string {
     .join("\n\n");
 }
 
-export function parseRenderChatText(
-  text: string,
-): { reply: string; markup: string } | null {
+export function parseRenderChatText(text: string): { reply: string; markup: string } | null {
   const replyMatch = /<reply>([\s\S]*?)<\/reply>/i.exec(text);
   const markupMatch = /<markup>([\s\S]*?)<\/markup>/i.exec(text);
   const reply = replyMatch?.[1]?.trim() || "Updated the render.";

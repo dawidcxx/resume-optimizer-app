@@ -75,3 +75,13 @@ Built the design system.
     expect(container.querySelectorAll("li")).toHaveLength(2);
   });
 });
+describe("RenderedResume theme sanitization", () => {
+  it("falls back when the body font is not body-safe", () => {
+    const markup = '<Resume font="jetbrains-mono"><Header name="Ada" /></Resume>';
+
+    const { container } = render(<RenderedResume markup={markup} />);
+
+    expect(container.textContent).toContain("Ada");
+    expect(container.querySelector("article")).not.toBeNull();
+  });
+});

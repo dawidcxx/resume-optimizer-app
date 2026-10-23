@@ -85,9 +85,7 @@ describe("buildRenderChatMessages", () => {
   });
 
   it("builds the identical history on every call", () => {
-    expect(buildRenderChatMessages(input)).toEqual(
-      buildRenderChatMessages(input),
-    );
+    expect(buildRenderChatMessages(input)).toEqual(buildRenderChatMessages(input));
   });
 });
 

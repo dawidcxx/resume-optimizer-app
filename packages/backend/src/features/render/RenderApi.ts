@@ -49,9 +49,7 @@ export class RenderApi {
         throw new RenderInvalidRequestError();
       }
 
-      return c.json(
-        await this.service.sendMessage(params.chatId, input.content),
-      );
+      return c.json(await this.service.sendMessage(params.chatId, input.content));
     });
 
     return api;

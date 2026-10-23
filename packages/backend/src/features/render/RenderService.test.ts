@@ -5,10 +5,7 @@ import {
   type RenderTurnResponse,
   type Uuid,
 } from "@resume-optimzer-app/common";
-import type {
-  LlmService,
-  ReviseResumeInput,
-} from "@/features/llm/LlmService";
+import type { LlmService, ReviseResumeInput } from "@/features/llm/LlmService";
 import { DB } from "@/shared/Db";
 import {
   getIntegrationTestContext,
@@ -92,18 +89,12 @@ describe("RenderService", () => {
     expect(created.chat.initialMarkup).toBe(initial.markup);
     expect(created.messages).toEqual([]);
 
-    const first = await service.sendMessage(
-      initial.chatId,
-      "Hide education dates.",
-    );
+    const first = await service.sendMessage(initial.chatId, "Hide education dates.");
     assertTurnShape(first, initial.chatId);
     expect(first.reply).toBe("Revision 1");
     expect(first.usage.inputTokens).toBe(100);
 
-    const second = await service.sendMessage(
-      initial.chatId,
-      "Reword the summary.",
-    );
+    const second = await service.sendMessage(initial.chatId, "Reword the summary.");
     assertTurnShape(second, initial.chatId);
     expect(second.reply).toBe("Revision 2");
 

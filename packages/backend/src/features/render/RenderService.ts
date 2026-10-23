@@ -62,10 +62,7 @@ export class RenderService {
     }
   }
 
-  async sendMessage(
-    chatId: Uuid,
-    contentInput: string,
-  ): Promise<RenderTurnResponse> {
+  async sendMessage(chatId: Uuid, contentInput: string): Promise<RenderTurnResponse> {
     const content = contentInput.trim();
     if (content.length === 0) {
       throw new RenderInvalidRequestError("The message cannot be empty.");
@@ -73,8 +70,7 @@ export class RenderService {
 
     const { chat, messages } = await this.loadChat(chatId);
     const existingCharacters = messages.reduce(
-      (total, message) =>
-        total + message.content.length + (message.markup?.length ?? 0),
+      (total, message) => total + message.content.length + (message.markup?.length ?? 0),
       0,
     );
 
@@ -122,9 +118,7 @@ export class RenderService {
     const now = new Date();
 
     const inserted = await this.db.transaction(async (tx) => {
-      await tx.execute(
-        sql`SELECT id FROM render_chats WHERE id = ${chatId} FOR UPDATE`,
-      );
+      await tx.execute(sql`SELECT id FROM render_chats WHERE id = ${chatId} FOR UPDATE`);
 
       const [latest] = await tx
         .select({ seq: max(renderChatMessages.seq) })
@@ -159,17 +153,12 @@ export class RenderService {
         ])
         .returning();
 
-      await tx
-        .update(renderChats)
-        .set({ updatedAt: now })
-        .where(eq(renderChats.id, chatId));
+      await tx.update(renderChats).set({ updatedAt: now }).where(eq(renderChats.id, chatId));
 
       return rows;
     });
 
-    const assistantMessage = inserted.find(
-      (message) => message.id === assistantMessageId,
-    );
+    const assistantMessage = inserted.find((message) => message.id === assistantMessageId);
     if (!assistantMessage) {
       throw new Error("Render chat messages could not be persisted.");
     }
@@ -202,10 +191,7 @@ export class RenderService {
     chat: RenderChatRow;
     messages: RenderMessageRow[];
   }> {
-    const [chat] = await this.db
-      .select()
-      .from(renderChats)
-      .where(eq(renderChats.id, chatId));
+    const [chat] = await this.db.select().from(renderChats).where(eq(renderChats.id, chatId));
     if (!chat) {
       throw new RenderNotFoundError();
     }
@@ -248,11 +234,7 @@ function mapMessage(row: RenderMessageRow): RenderMessage {
 }
 
 function mapMessageUsage(row: RenderMessageRow): RenderUsage | null {
-  if (
-    row.inputTokens === null &&
-    row.cachedTokens === null &&
-    row.outputTokens === null
-  ) {
+  if (row.inputTokens === null && row.cachedTokens === null && row.outputTokens === null) {
     return null;
   }
 
