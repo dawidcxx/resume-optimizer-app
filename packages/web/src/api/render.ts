@@ -1,6 +1,7 @@
 import {
   createFetchClient,
   renderContract,
+  type GetRenderChatResponse,
   type RenderTurnResponse,
   type Resume,
   type ResumeAnnotations,
@@ -31,4 +32,8 @@ export async function sendRenderMessage(
   content: string,
 ): Promise<RenderTurnResponse> {
   return client.sendMessage({ params: { chatId }, body: { content } });
+}
+
+export async function getRenderChat(chatId: Uuid): Promise<GetRenderChatResponse> {
+  return client.getChat({ params: { chatId } });
 }

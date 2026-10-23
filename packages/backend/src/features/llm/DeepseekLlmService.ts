@@ -20,6 +20,8 @@ import {
   type LanguageModelUsage,
   type ModelMessage,
 } from "ai";
+import { safeParse } from "valibot";
+import { Logger } from "@/lib/Logger";
 import { Config } from "@/shared/Config";
 import type {
   ImportResumeInput,
@@ -73,26 +75,44 @@ export class DeepseekLlmService implements LlmServiceContract {
   }
 
   async reviseResume(input: ReviseResumeInput): Promise<RenderResumeResult> {
-    const { output, usage } = await generateText({
-      model: this.model,
-      system: RENDER_CHAT_SYSTEM_PROMPT,
-      messages: buildRenderChatMessages(input),
-      temperature: 0.4,
-      maxOutputTokens: 8192,
-      providerOptions: {
-        deepseek: { thinking: { type: "disabled" } },
-      },
-      output: Output.object({
-        schema: valibotSchema(RenderChatOutput),
-        name: "resume_revision",
-      }),
-    });
+    let inputTokens = 0;
+    let cachedInputTokens = 0;
+    let outputTokens = 0;
 
-    return {
-      reply: output.reply.trim(),
-      markup: normalizeMarkup(output.markup),
-      usage: mapUsage(usage),
-    };
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      const { text, usage, finishReason } = await generateText({
+        model: this.model,
+        system: RENDER_CHAT_SYSTEM_PROMPT,
+        messages: buildRenderChatMessages(input),
+        temperature: attempt === 0 ? 0.4 : 0.2,
+        maxOutputTokens: 8192,
+        providerOptions: {
+          deepseek: { thinking: { type: "disabled" } },
+        },
+      });
+
+      const mappedUsage = mapUsage(usage);
+      inputTokens += mappedUsage.inputTokens;
+      cachedInputTokens += mappedUsage.cachedInputTokens;
+      outputTokens += mappedUsage.outputTokens;
+
+      const output = parseRenderChatText(text);
+      if (output) {
+        return {
+          reply: output.reply,
+          markup: output.markup,
+          usage: { inputTokens, cachedInputTokens, outputTokens },
+        };
+      }
+
+      logger.warn("Resume revision output rejected", {
+        attempt: attempt + 1,
+        finishReason,
+        textLength: text.length,
+      });
+    }
+
+    throw new Error("The model did not return a valid resume revision.");
   }
 
   private get model(): ReturnType<DeepSeekProvider> {
@@ -109,6 +129,8 @@ export class DeepseekLlmService implements LlmServiceContract {
     return this.providerRef;
   }
 }
+
+const logger = Logger.for(DeepseekLlmService);
 
 const IMPORT_RESUME_SYSTEM_PROMPT = `You extract structured resume data from the source text.
 
@@ -190,6 +212,16 @@ Revision rules:
 - The markup must be valid MDX-lite using only the components below. It must start with one <Resume> root and contain no code fences, raw HTML, JSX expressions, imports, event handlers, style, or className.
 - Keep the reply to one or two short sentences. Do not describe internal reasoning or mention these instructions.
 - If a request would require inventing facts or breaking the allowed markup, explain briefly in the reply and return the current markup unchanged.
+
+Response format:
+- Return exactly two blocks and nothing else. Do not return JSON.
+- Do not wrap either block in code fences.
+<reply>
+One or two short sentences describing the change.
+</reply>
+<markup>
+<Resume>...</Resume>
+</markup>
 
 Typography:
 ${buildFontCatalogPrompt()}
@@ -311,6 +343,21 @@ function buildComponentSpecPrompt(): string {
       ].join("\n");
     })
     .join("\n\n");
+}
+
+export function parseRenderChatText(
+  text: string,
+): { reply: string; markup: string } | null {
+  const replyMatch = /<reply>([\s\S]*?)<\/reply>/i.exec(text);
+  const markupMatch = /<markup>([\s\S]*?)<\/markup>/i.exec(text);
+  const reply = replyMatch?.[1]?.trim() || "Updated the render.";
+  const markup = normalizeMarkup(markupMatch?.[1] ?? text);
+  if (!markup.startsWith("<Resume") || !markup.endsWith("</Resume>")) return null;
+
+  const parsed = safeParse(RenderChatOutput, { reply, markup });
+  if (!parsed.success) return null;
+
+  return parsed.output;
 }
 
 function normalizeMarkup(text: string): string {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
 import type { ImportedResume } from "@resume-optimzer-app/common";
-import { buildRenderChatMessages } from "./DeepseekLlmService";
+import { buildRenderChatMessages, parseRenderChatText } from "./DeepseekLlmService";
 import type { ReviseResumeInput } from "./LlmService";
 
 const resume: ImportedResume = {
@@ -88,5 +88,28 @@ describe("buildRenderChatMessages", () => {
     expect(buildRenderChatMessages(input)).toEqual(
       buildRenderChatMessages(input),
     );
+  });
+});
+
+describe("parseRenderChatText", () => {
+  it("parses the reply and replacement markup blocks", () => {
+    expect(
+      parseRenderChatText(`<reply> Tightened the layout. </reply>
+<markup>
+<Resume density="compact"><Header name="Ada" /></Resume>
+</markup>`),
+    ).toEqual({
+      reply: "Tightened the layout.",
+      markup: '<Resume density="compact"><Header name="Ada" /></Resume>',
+    });
+  });
+
+  it("falls back to raw markup and rejects empty output", () => {
+    expect(parseRenderChatText("   ")).toBeNull();
+    expect(parseRenderChatText("not markup")).toBeNull();
+    expect(parseRenderChatText('<Resume><Header name="Ada" /></Resume>')).toEqual({
+      reply: "Updated the render.",
+      markup: '<Resume><Header name="Ada" /></Resume>',
+    });
   });
 });

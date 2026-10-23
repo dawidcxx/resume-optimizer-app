@@ -8,7 +8,7 @@ export {
   useStoreReady,
 } from "./hooks";
 export { saveResumeAnnotations } from "./resumeAnnotations";
-export { saveResumeRender } from "./resumeRenders";
+export { saveResumeRender, updateResumeRender } from "./resumeRenders";
 export type { ResumeRender } from "./mappers";
 export {
   createEmptyResume,
