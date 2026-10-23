@@ -1,0 +1,15 @@
+@import "@fontsource-variable/inter/wght.css";
+@import "@fontsource-variable/source-serif-4/wght.css";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "./global.css";
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  .landing-body {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+}

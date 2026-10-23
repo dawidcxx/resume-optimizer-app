@@ -53,7 +53,7 @@ export function ResumeProjectsPage() {
             <ResumeProjectTile
               key={project.id}
               project={project}
-              href={`/resume/${project.id}/edit`}
+              href={`/resumes/${project.id}/edit`}
               onDelete={setProjectToDelete}
             />
           ))}
@@ -79,7 +79,7 @@ export function ResumeProjectsPage() {
             ),
             resume,
           });
-          navigate(`/resume/${project.id}/edit`);
+          navigate(`/resumes/${project.id}/edit`);
         }}
       />
 

@@ -16,7 +16,7 @@ describe("serveStaticAssets (built dist)", () => {
 
   afterAll(() => dist.dispose());
 
-  it("serves the root SPA with no-cache", async () => {
+  it("serves the root landing page with no-cache", async () => {
     const res = await app.request("/");
     expect(res.status).toBe(200);
     expect(await res.text()).toContain("ROOT_INDEX");
@@ -24,7 +24,21 @@ describe("serveStaticAssets (built dist)", () => {
     expect(res.headers.get("cache-control")).toBe("no-cache");
   });
 
-  it("serves a page SPA directly and its sub-routes via prefix fallback", async () => {
+  it("serves the resumes SPA directly and its sub-routes via prefix fallback", async () => {
+    const direct = await app.request("/resumes");
+    expect(direct.status).toBe(200);
+    expect(await direct.text()).toContain("RESUMES_INDEX");
+
+    const nested = await app.request("/resumes/de8cbab9-9aa9-4722-88ff-340d53d743a1/edit");
+    expect(nested.status).toBe(200);
+    expect(await nested.text()).toContain("RESUMES_INDEX");
+
+    const legacy = await app.request("/resume/de8cbab9-9aa9-4722-88ff-340d53d743a1/edit");
+    expect(legacy.status).toBe(200);
+    expect(await legacy.text()).toContain("RESUMES_INDEX");
+  });
+
+  it("serves the design system SPA directly and its sub-routes via prefix fallback", async () => {
     const direct = await app.request("/design");
     expect(direct.status).toBe(200);
     expect(await direct.text()).toContain("DESIGN_INDEX");
@@ -66,6 +80,10 @@ describe("serveStaticAssets (built dist)", () => {
     expect(res.status).toBe(200);
     expect(res.headers.get("content-type")).toBe("image/svg+xml");
     expect(res.headers.get("cache-control")).toBe("public, max-age=3600");
+
+    const robots = await app.request("/robots.txt");
+    expect(robots.status).toBe(200);
+    expect(robots.headers.get("content-type")).toBe("text/plain; charset=utf-8");
   });
 
   it("404s missing asset-like files", async () => {
@@ -76,7 +94,7 @@ describe("serveStaticAssets (built dist)", () => {
     expect(css.status).toBe(404);
   });
 
-  it("falls back to the root SPA for unknown non-asset routes", async () => {
+  it("falls back to the root landing page for unknown non-asset routes", async () => {
     const res = await app.request("/totally/unknown");
     expect(res.status).toBe(200);
     expect(await res.text()).toContain("ROOT_INDEX");
@@ -118,6 +136,10 @@ describe("serveStaticAssets (missing dist)", () => {
     const design = await app.request("/design");
     expect(design.status).toBe(404);
     expect(await design.text()).toBe("Missing frontend assets");
+
+    const resumes = await app.request("/resumes");
+    expect(resumes.status).toBe(404);
+    expect(await resumes.text()).toBe("Missing frontend assets");
   });
 
   it("passes non-page routes through", async () => {
@@ -137,10 +159,12 @@ type BuiltDist = {
 // files at the root, and one HTML entry per SPA declared in `pages`.
 const BUILT_FILES = {
   "index.html": "<!doctype html><title>root</title><body>ROOT_INDEX</body>",
+  "resumes.html": "<!doctype html><title>resumes</title><body>RESUMES_INDEX</body>",
   "design.html": "<!doctype html><title>design</title><body>DESIGN_INDEX</body>",
   "assets/app-abc12345.js": 'console.log("app");',
   "assets/app-abc12345.js.map": '{"version":3}',
   "favicon.svg": '<svg xmlns="http://www.w3.org/2000/svg"></svg>',
+  "robots.txt": "User-agent: *",
 } as const;
 
 // Mounts the middleware the same way HttpServer does, with a trailing handler

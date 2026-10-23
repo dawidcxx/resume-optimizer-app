@@ -18,7 +18,7 @@ export default defineConfig({
           if (url.pathname.includes(".")) return next();
           for (const route of Object.keys(pages)) {
             if (route !== "/" && (url.pathname === route || url.pathname.startsWith(`${route}/`))) {
-              req.url = route + url.search;
+              req.url = `/${pages[route as keyof typeof pages]}` + url.search;
               return next();
             }
           }

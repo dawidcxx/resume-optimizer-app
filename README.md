@@ -33,7 +33,7 @@ Create the local file once, then fill in your DeepSeek API key:
 cp packages/backend/.env.example packages/backend/.env.local
 ```
 
-Set `DEEPSEEK_API_KEY` in `packages/backend/.env.local` to use LLM-backed features such as resume import. The offline-first app and its non-LLM features run without it, but LLM calls will fail until the key is provided.
+Set `DEEPSEEK_API_KEY` in `packages/backend/.env.local` to use LLM-backed features such as resume import, rendering, and iteration. Those features fail without it; local editing still works.
 
 ## Key commands
 

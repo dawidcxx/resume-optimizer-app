@@ -6,7 +6,7 @@ import { ResumeLoading } from "../resume/ResumeLoading";
 import { ResumeNotFound } from "../resume/ResumeNotFound";
 
 export function ResumeEditPage() {
-  const { id } = useParams<"/resume/:id/edit">();
+  const { id } = useParams<"/resumes/:id/edit">();
   const ready = useStoreReady();
   const bundle = useResumeBundle(isUuid(id) ? id : "");
 

@@ -5,6 +5,10 @@ import { NotFoundPage } from "./pages/NotFoundPage";
 import { ResumeEditPage } from "./pages/ResumeEditPage";
 import { ResumeProjectsPage } from "./pages/ResumeProjectsPage";
 import { AnnotationToolbarProvider } from "./resume/annotations";
+import {
+  LegacyResumeListRedirect,
+  LegacyResumeRedirect,
+} from "./resume/LegacyResumeRedirect";
 import { ResumeProjectRedirect } from "./resume/ResumeProjectRedirect";
 
 export function App() {
@@ -13,9 +17,12 @@ export function App() {
       <AnnotationToolbarProvider>
         <AppLayout>
           <Switch>
-            <Route path="/resume/:id/edit" component={ResumeEditPage} />
-            <Route path="/resume/:id" component={ResumeProjectRedirect} />
-            <Route path="/" component={ResumeProjectsPage} />
+            <Route path="/resumes/:id/edit" component={ResumeEditPage} />
+            <Route path="/resumes/:id" component={ResumeProjectRedirect} />
+            <Route path="/resumes" component={ResumeProjectsPage} />
+            <Route path="/resume/:id/edit" component={LegacyResumeRedirect} />
+            <Route path="/resume/:id" component={LegacyResumeRedirect} />
+            <Route path="/resume" component={LegacyResumeListRedirect} />
             <Route component={NotFoundPage} />
           </Switch>
         </AppLayout>

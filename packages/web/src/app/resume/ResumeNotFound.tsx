@@ -8,7 +8,7 @@ export function ResumeNotFound() {
       <Text variant="muted" className="mt-2">
         This resume doesn't exist on this device.
       </Text>
-      <Link href="/" className="mt-4 inline-block text-sm font-medium text-primary hover:underline">
+      <Link href="/resumes" className="mt-4 inline-block text-sm font-medium text-primary hover:underline">
         Back to resumes
       </Link>
     </div>

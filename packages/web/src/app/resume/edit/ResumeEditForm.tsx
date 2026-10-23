@@ -70,7 +70,7 @@ export function ResumeEditForm({ projectName, resume }: ResumeEditFormProps) {
     <>
       <div className="pb-28">
         <div className="mb-8">
-          <Link href="/" className="text-sm font-medium text-primary hover:underline">
+          <Link href="/resumes" className="text-sm font-medium text-primary hover:underline">
             ← Back to resumes
           </Link>
           <Heading level={2} className="mt-2">

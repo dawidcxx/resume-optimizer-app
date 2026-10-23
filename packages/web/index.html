@@ -4,20 +4,290 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ResumeFixer</title>
-
-    <script>
-      (() => {
-        try {
-          if (localStorage.getItem("ro-ui-theme") === "dark") {
-            document.documentElement.classList.add("dark");
-          }
-        } catch {}
-      })();
-    </script>
+    <meta name="theme-color" content="#f6f2e9" />
+    <title>ResumeFixer — Keep the facts. Shape the story.</title>
+    <meta
+      name="description"
+      content="A resume studio for focused, role-targeted versions. Keep one structured source of truth, then shape the presentation without inventing your history."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="ResumeFixer — Keep the facts. Shape the story." />
+    <meta
+      property="og:description"
+      content="Keep one structured source of truth, then shape a focused resume for each role. AI changes the presentation, not the facts."
+    />
+    <meta property="og:site_name" content="ResumeFixer" />
+    <meta property="og:image" content="/landing/preview.png" />
+    <meta property="og:image:alt" content="A rendered resume beside the ResumeFixer iteration chat." />
+    <meta property="og:image:width" content="1952" />
+    <meta property="og:image:height" content="1536" />
+    <meta name="twitter:image" content="/landing/preview.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preload" as="image" href="/landing/preview.png" fetchpriority="high" />
+    <link rel="stylesheet" href="/src/landing.css" />
   </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/entry/index/main.tsx"></script>
+
+  <body class="landing-body min-h-screen bg-[#f6f2e9] text-base text-[#1c1b18]">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-[#1c1b18] focus:px-4 focus:py-2 focus:text-sm focus:text-[#f8f4ec]"
+    >
+      Skip to content
+    </a>
+
+    <header class="border-b border-[#d8d1c3]">
+      <div class="mx-auto flex h-20 w-full max-w-[1240px] items-center justify-between px-6">
+        <a href="/" class="flex items-center gap-3" aria-label="ResumeFixer home">
+          <img src="/favicon.svg" alt="" width="32" height="32" class="h-8 w-8 rounded-[7px]" />
+          <span class="text-[15px] font-semibold tracking-[-0.02em]">ResumeFixer</span>
+        </a>
+
+        <nav class="hidden items-center gap-7 text-sm text-[#5e594f] md:flex" aria-label="Main navigation">
+          <a href="#how" class="transition-colors hover:text-[#1c1b18]">How it works</a>
+          <a href="#principles" class="transition-colors hover:text-[#1c1b18]">Principles</a>
+        </nav>
+
+        <a
+          href="/resumes"
+          class="inline-flex h-10 items-center gap-2 rounded-full border border-[#1c1b18] px-4 text-sm font-medium transition-colors hover:bg-[#1c1b18] hover:text-[#f8f4ec] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#245a46] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f6f2e9]"
+        >
+          Open resumes
+          <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="border-b border-[#d8d1c3]">
+        <div
+          class="mx-auto grid w-full max-w-[1240px] gap-14 px-6 py-16 md:py-24 lg:grid-cols-[0.82fr_1.18fr] lg:items-center lg:gap-16"
+        >
+          <div>
+            <p class="font-mono text-[10px] uppercase tracking-[0.24em] text-[#756f63]">
+              Targeted resume studio
+            </p>
+            <h1
+              class="mt-6 max-w-[12ch] text-balance font-serif text-[clamp(3.4rem,7vw,6.5rem)] font-normal leading-[0.88] tracking-[-0.055em] text-[#1c1b18]"
+            >
+              Make the resume fit the job. Keep the facts yours.
+            </h1>
+            <p class="mt-7 max-w-[31rem] text-[1.05rem] leading-7 text-[#5b554b]">
+              ResumeFixer keeps one structured source of truth, then shapes a focused version for each
+              role. AI moves the presentation around. It does not invent your history.
+            </p>
+
+            <div class="mt-9 flex flex-wrap items-center gap-x-6 gap-y-4">
+              <a
+                href="/resumes"
+                class="inline-flex h-11 items-center gap-2.5 rounded-full bg-[#1c1b18] px-5 text-sm font-medium text-[#f8f4ec] transition-colors hover:bg-[#245a46] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#245a46] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f6f2e9]"
+              >
+                Open your resumes
+                <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" class="h-3.5 w-3.5">
+                  <path
+                    d="M3 8h9M8.5 3.5 13 8l-4.5 4.5"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </a>
+              <a
+                href="#how"
+                class="text-sm font-medium text-[#5b554b] underline decoration-[#aaa18f] underline-offset-4 transition-colors hover:text-[#1c1b18]"
+              >
+                See how it works
+              </a>
+            </div>
+
+            <p class="mt-8 flex items-center gap-2 text-xs text-[#766f62]">
+              <span class="h-1.5 w-1.5 rounded-full bg-[#245a46]" aria-hidden="true"></span>
+              No account. Start with the resume you already have.
+            </p>
+          </div>
+
+          <figure class="relative">
+            <div
+              class="overflow-hidden rounded-md border border-[#c9c0af] bg-white shadow-[0_30px_90px_-44px_rgba(43,38,25,0.7)]"
+            >
+              <div class="flex h-9 items-center gap-2 border-b border-[#e4ddcf] bg-[#fbf8f1] px-4">
+                <span class="h-2 w-2 rounded-full bg-[#d8d1c3]" aria-hidden="true"></span>
+                <span class="h-2 w-2 rounded-full bg-[#d8d1c3]" aria-hidden="true"></span>
+                <span class="h-2 w-2 rounded-full bg-[#d8d1c3]" aria-hidden="true"></span>
+                <span class="ml-2 font-mono text-[10px] text-[#8a8275]">resumefixer / preview</span>
+              </div>
+              <img
+                src="/landing/preview.png"
+                width="1952"
+                height="1536"
+                alt="A rendered resume beside the ResumeFixer iteration chat."
+                class="block h-auto w-full"
+                fetchpriority="high"
+              />
+            </div>
+            <figcaption class="mt-3 text-right font-mono text-[10px] text-[#8a8275]">
+              Actual product view · fictional resume
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section id="how" class="border-b border-[#d8d1c3]">
+        <div class="mx-auto w-full max-w-[1240px] px-6 py-20 md:py-24">
+          <div class="grid gap-10 lg:grid-cols-[0.62fr_1.38fr] lg:gap-16">
+            <div class="lg:sticky lg:top-24 lg:self-start">
+              <p class="font-mono text-[10px] uppercase tracking-[0.24em] text-[#756f63]">
+                How it works
+              </p>
+              <h2
+                class="mt-5 max-w-[12ch] font-serif text-[clamp(2.4rem,4vw,3.8rem)] font-normal leading-[0.98] tracking-[-0.04em]"
+              >
+                Three passes, not three resumes.
+              </h2>
+              <p class="mt-5 max-w-[24rem] text-[15px] leading-6 text-[#5b554b]">
+                Keep the canonical record clean. The version you send is a draft on top of it.
+              </p>
+            </div>
+
+            <div class="grid gap-10">
+              <ol class="border-y border-[#d8d1c3]">
+                <li class="grid gap-4 py-7 sm:grid-cols-[3rem_1fr]">
+                  <span class="font-serif text-2xl leading-none text-[#8c8374]">01</span>
+                  <div>
+                    <h3 class="font-serif text-2xl tracking-[-0.025em]">Write it once.</h3>
+                    <p class="mt-2 max-w-[34rem] text-sm leading-6 text-[#5b554b]">
+                      Basics, contact details, experience, education, skills, and projects live in
+                      one structured workspace. Add field notes where a fact needs context.
+                    </p>
+                  </div>
+                </li>
+                <li class="grid gap-4 border-t border-[#d8d1c3] py-7 sm:grid-cols-[3rem_1fr]">
+                  <span class="font-serif text-2xl leading-none text-[#8c8374]">02</span>
+                  <div>
+                    <h3 class="font-serif text-2xl tracking-[-0.025em]">Aim it.</h3>
+                    <p class="mt-2 max-w-[34rem] text-sm leading-6 text-[#5b554b]">
+                      Paste a job description and describe the tone, density, and visual direction.
+                      The same facts get reordered around what matters for this role.
+                    </p>
+                  </div>
+                </li>
+                <li class="grid gap-4 border-t border-[#d8d1c3] py-7 sm:grid-cols-[3rem_1fr]">
+                  <span class="font-serif text-2xl leading-none text-[#8c8374]">03</span>
+                  <div>
+                    <h3 class="font-serif text-2xl tracking-[-0.025em]">Iterate on the render.</h3>
+                    <p class="mt-2 max-w-[34rem] text-sm leading-6 text-[#5b554b]">
+                      Ask for a tighter layout, a different emphasis, or a warmer tone. The preview
+                      updates in place, and the source record stays untouched.
+                    </p>
+                  </div>
+                </li>
+              </ol>
+
+              <figure class="overflow-hidden rounded-md border border-[#d0c7b7] bg-white shadow-[0_24px_70px_-48px_rgba(43,38,25,0.7)]">
+                <div class="flex h-8 items-center gap-2 border-b border-[#e4ddcf] bg-[#fbf8f1] px-4">
+                  <span class="h-1.5 w-1.5 rounded-full bg-[#d8d1c3]" aria-hidden="true"></span>
+                  <span class="font-mono text-[9px] text-[#8a8275]">source of truth</span>
+                </div>
+                <img
+                  src="/landing/editor.png"
+                  width="2880"
+                  height="2000"
+                  alt="The ResumeFixer editor showing structured resume fields for Maya Chen."
+                  class="block h-auto w-full"
+                  loading="lazy"
+                />
+              </figure>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="principles" class="bg-[#1c1b18] text-[#f5f0e6]">
+        <div class="mx-auto grid w-full max-w-[1240px] gap-12 px-6 py-20 md:py-24 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+          <div>
+            <p class="font-mono text-[10px] uppercase tracking-[0.24em] text-[#aaa293]">
+              Principles
+            </p>
+            <h2
+              class="mt-5 max-w-[11ch] font-serif text-[clamp(2.5rem,4.5vw,4.4rem)] font-normal leading-[0.94] tracking-[-0.045em]"
+            >
+              Your experience is not a prompt.
+            </h2>
+            <p class="mt-6 max-w-[24rem] text-[15px] leading-6 text-[#bdb5a8]">
+              The point is not to generate more words. It is to present the record you already have
+              with more intention.
+            </p>
+          </div>
+
+          <div class="grid gap-0 border-t border-white/15">
+            <div class="grid gap-4 border-b border-white/15 py-6 sm:grid-cols-[2.5rem_1fr]">
+              <span class="font-mono text-[10px] text-[#8f8779]">01</span>
+              <div>
+                <h3 class="text-sm font-semibold">Facts stay fixed.</h3>
+                <p class="mt-1.5 max-w-[34rem] text-sm leading-6 text-[#bdb5a8]">
+                  No invented employers, dates, metrics, or credentials. The renderer can hide,
+                  merge, reorder, and rewrite existing material, but it cannot make up a career.
+                </p>
+              </div>
+            </div>
+            <div class="grid gap-4 border-b border-white/15 py-6 sm:grid-cols-[2.5rem_1fr]">
+              <span class="font-mono text-[10px] text-[#8f8779]">02</span>
+              <div>
+                <h3 class="text-sm font-semibold">One record, many angles.</h3>
+                <p class="mt-1.5 max-w-[34rem] text-sm leading-6 text-[#bdb5a8]">
+                  Write the resume once, then give each target its own emphasis, density, and
+                  hierarchy. The underlying record does not fork just because the version does.
+                </p>
+              </div>
+            </div>
+            <div class="grid gap-4 py-6 sm:grid-cols-[2.5rem_1fr]">
+              <span class="font-mono text-[10px] text-[#8f8779]">03</span>
+              <div>
+                <h3 class="text-sm font-semibold">Presentation is a layer.</h3>
+                <p class="mt-1.5 max-w-[34rem] text-sm leading-6 text-[#bdb5a8]">
+                  The layout, type, emphasis, and tone belong to the version. The structured data
+                  belongs to you. Change the target without rewriting your history.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="border-b border-[#d8d1c3]">
+        <div class="mx-auto flex w-full max-w-[1240px] flex-col items-start justify-between gap-8 px-6 py-20 md:flex-row md:items-end md:py-24">
+          <div>
+            <p class="font-mono text-[10px] uppercase tracking-[0.24em] text-[#756f63]">
+              Ready when you are
+            </p>
+            <h2
+              class="mt-5 max-w-[16ch] text-balance font-serif text-[clamp(2.7rem,5vw,5rem)] font-normal leading-[0.94] tracking-[-0.045em]"
+            >
+              The resume is already yours. Give it a better draft.
+            </h2>
+          </div>
+          <a
+            href="/resumes"
+            class="inline-flex h-11 shrink-0 items-center gap-2.5 rounded-full bg-[#245a46] px-5 text-sm font-medium text-[#f8f4ec] transition-colors hover:bg-[#1c1b18] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#245a46] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f6f2e9]"
+          >
+            Open your resumes
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="mx-auto flex w-full max-w-[1240px] flex-col gap-4 px-6 py-8 text-xs text-[#766f62] sm:flex-row sm:items-center sm:justify-between">
+      <div class="flex items-center gap-2.5">
+        <img src="/favicon.svg" alt="" width="20" height="20" class="h-5 w-5 rounded-[4px]" />
+        <span class="font-medium text-[#1c1b18]">ResumeFixer</span>
+        <span aria-hidden="true">/</span>
+        <span>Keep the facts. Shape the story.</span>
+      </div>
+      <div class="flex items-center gap-5">
+        <a href="/resumes" class="transition-colors hover:text-[#1c1b18]">Your resumes</a>
+        <a href="#main" class="transition-colors hover:text-[#1c1b18]">Back to top</a>
+      </div>
+    </footer>
   </body>
 </html>
