@@ -2,6 +2,7 @@ import { GenericSchema, InferOutput, parse as vParse } from "valibot";
 
 export type CreateFetchClientOptions<TContract extends FetchContract = FetchContract> = {
   baseUrl?: string;
+  headers?: HeadersInit;
   fetch?: typeof globalThis.fetch;
   overrides?: RouteOverrides<TContract>;
 };
@@ -42,14 +43,15 @@ export function createFetchClient<TContract extends FetchContract>(
       const queryString = searchParams.toString();
       const finalUrl = `${baseUrl}${path}${queryString ? "?" + queryString : ""}`;
 
+      const headers = new Headers(options.headers);
+      if (body !== undefined) {
+        headers.set("content-type", "application/json");
+      }
+
       const response = await fetchFn(finalUrl, {
         method: route.method,
-        ...(body === undefined
-          ? {}
-          : {
-              headers: { "content-type": "application/json" },
-              body: JSON.stringify(body),
-            }),
+        headers,
+        ...(body === undefined ? {} : { body: JSON.stringify(body) }),
       });
 
       await ensureOk(response);

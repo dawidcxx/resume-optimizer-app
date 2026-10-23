@@ -7,17 +7,23 @@ import {
 } from "@resume-optimzer-app/common";
 import { Hono } from "hono";
 import { parse } from "valibot";
+import { requireTurnstile, TurnstileService } from "@/features/turnstile";
 import { RenderInvalidRequestError } from "./error/RenderInvalidRequestError";
 import { RenderService } from "./RenderService";
 
 @injectable()
 export class RenderApi {
-  constructor(private readonly service = inject(RenderService)) {}
+  constructor(
+    private readonly service = inject(RenderService),
+    private readonly turnstile = inject(TurnstileService),
+  ) {}
 
   build(): Hono {
     const api = new Hono();
 
     api.post(renderContract.render.path, async (c) => {
+      await requireTurnstile(c, this.turnstile);
+
       let input: RenderResumeRequest;
       try {
         input = parse(RenderResumeRequest, await c.req.json());

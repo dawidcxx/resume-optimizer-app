@@ -87,6 +87,23 @@ export class Config {
     return this.overridesMap.deepseekModel ?? process.env["DEEPSEEK_MODEL"] ?? "deepseek-v4-flash";
   }
 
+  public get turnstileSiteKey(): string {
+    return (
+      this.overridesMap.turnstileSiteKey ??
+      process.env["VITE_TURNSTILE_SITE_KEY"] ??
+      "1x00000000000000000000AA"
+    ).trim();
+  }
+
+  public get turnstileSecretKey(): string {
+    const key =
+      this.overridesMap.turnstileSecretKey ??
+      process.env["TURNSTILE_SECRET_KEY"] ??
+      "1x0000000000000000000000000000000AA";
+    invariant(key.trim().length > 0, "TURNSTILE_SECRET_KEY must not be empty");
+    return key.trim();
+  }
+
   public checkConfig(): void {
     const issues: string[] = [];
 
@@ -139,6 +156,27 @@ export class Config {
       issues.push("DEEPSEEK_MODEL must not be empty");
     }
 
+    const turnstileSiteKey =
+      this.overridesMap.turnstileSiteKey ?? process.env["VITE_TURNSTILE_SITE_KEY"];
+    if (!isNil(turnstileSiteKey) && turnstileSiteKey.trim().length === 0) {
+      issues.push("VITE_TURNSTILE_SITE_KEY must not be empty");
+    }
+
+    const turnstileSecretKey =
+      this.overridesMap.turnstileSecretKey ?? process.env["TURNSTILE_SECRET_KEY"];
+    if (!isNil(turnstileSecretKey) && turnstileSecretKey.trim().length === 0) {
+      issues.push("TURNSTILE_SECRET_KEY must not be empty");
+    }
+
+    if (process.env["NODE_ENV"] === "production") {
+      if (TURNSTILE_TEST_SITE_KEYS.has(this.turnstileSiteKey)) {
+        issues.push("VITE_TURNSTILE_SITE_KEY must use a production key in production");
+      }
+      if (TURNSTILE_TEST_SECRET_PATTERN.test(this.turnstileSecretKey)) {
+        issues.push("TURNSTILE_SECRET_KEY must use a production key in production");
+      }
+    }
+
     if (issues.length > 0) {
       throw new Error(`Invalid configuration:\n${issues.map((issue) => `- ${issue}`).join("\n")}`);
     }
@@ -146,3 +184,11 @@ export class Config {
 }
 
 const CRON_ENABLED_VALUES = ["true", "false", "1", "0", "yes", "no", "on", "off"];
+const TURNSTILE_TEST_SECRET_PATTERN = /^[123]x0{31}AA$/;
+const TURNSTILE_TEST_SITE_KEYS = new Set([
+  "1x00000000000000000000AA",
+  "2x00000000000000000000AB",
+  "1x00000000000000000000BB",
+  "2x00000000000000000000BB",
+  "3x00000000000000000000FF",
+]);

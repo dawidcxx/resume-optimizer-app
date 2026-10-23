@@ -53,8 +53,8 @@ The landing page is static: `packages/web/index.html` plus `packages/web/src/lan
 
 Regenerate them with Playwright against the dev server and a mocked `/api` layer. Do not call the real LLM or use real resume data.
 
-1. Start `bun run dev:web`.
-2. In a fresh browser context, intercept `/api/**`:
+1. Set `VITE_TURNSTILE_SITE_KEY` in `packages/web/.env.local` from `packages/web/.env.example`, then start `bun run dev:web`.
+2. In a fresh browser context, intercept `/api/**`. The Turnstile gate still runs client-side even with mocked APIs, so use the default always-pass test keys and wait for any “Quick verification” dialog to close. Do not use the forced-interactive sitekey.
    - `POST /api/resumes/import` → fictional imported resume.
    - `POST /api/renders` → `{ chatId, reply: null, markup, usage }`.
    - `GET /api/renders/:chatId` → `{ chat, messages }`.
@@ -63,3 +63,23 @@ Regenerate them with Playwright against the dev server and a mocked `/api` layer
 4. Capture `editor.png` on the Details step after import. Hide the floating step indicator (`.fixed.bottom-6`) first.
 5. Continue to Preview, generate, send one suggestion, then screenshot the Preview card element (`div.rounded-ui...` containing “Generate a rendered version”) as `preview.png`.
 6. Use the same approach for any new screenshots, keep the browser console clean, and update image `width`/`height` and OG metrics in `index.html` if dimensions change.
+
+## Turnstile gates
+
+`POST /api/resumes/import` and `POST /api/renders` require a Cloudflare Turnstile token in `X-Turnstile-Token`. Render chat routes are intentionally not gated.
+
+- Backend verification lives in `packages/backend/src/features/turnstile`.
+- The frontend renders an interaction-only Turnstile widget and only shows it when Cloudflare requires interaction.
+- `VITE_TURNSTILE_SITE_KEY` is injected into a `window.__APP_CONFIG__` prelude. Vite injects it in development; the backend injects and caches it into page HTML once at startup in production. The frontend reads it synchronously through `configService`.
+- `TURNSTILE_SECRET_KEY` is backend-only. The frontend never receives it.
+- Docker `-e VITE_TURNSTILE_SITE_KEY=...` works at runtime without rebuilding the frontend.
+- Backend defaults both to Cloudflare's always-pass test credentials. Development has no frontend default: set `VITE_TURNSTILE_SITE_KEY` in `packages/web/.env.local`.
+- Production startup rejects test credentials when `NODE_ENV=production`.
+
+## Frontend runtime config
+
+All `VITE_*` environment variables are serialized into `window.__APP_CONFIG__` at HTML serve time. Vite does this in development; the backend does it once at startup and caches the rendered HTML in production.
+
+- Read them only through `configService` in `packages/web/src/lib/config.ts`.
+- Keys keep their `VITE_` names in the prelude.
+- Never give a secret a `VITE_` prefix; every `VITE_*` value is sent to the browser.

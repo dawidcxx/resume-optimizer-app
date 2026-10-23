@@ -3,6 +3,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { Hono } from "hono";
+import { CONFIG_PRELUDE_PLACEHOLDER } from "@resume-optimzer-app/common";
 import { serveStaticAssets } from "@/lib/serveStaticAssets";
 
 describe("serveStaticAssets (built dist)", () => {
@@ -46,6 +47,19 @@ describe("serveStaticAssets (built dist)", () => {
     const nested = await app.request("/design/components");
     expect(nested.status).toBe(200);
     expect(await nested.text()).toContain("DESIGN_INDEX");
+  });
+
+  it("injects the runtime config prelude into app HTML only", async () => {
+    const resumes = await app.request("/resumes");
+    const html = await resumes.text();
+    expect(html).toContain('"VITE_TURNSTILE_SITE_KEY":"test-site-key"');
+    expect(html).not.toContain(CONFIG_PRELUDE_PLACEHOLDER);
+
+    const nested = await app.request("/resumes/de8cbab9-9aa9-4722-88ff-340d53d743a1/edit");
+    expect(await nested.text()).toContain("__APP_CONFIG__");
+
+    const root = await app.request("/");
+    expect(await root.text()).not.toContain("__APP_CONFIG__");
   });
 
   it("serves hashed assets as immutable with an ETag", async () => {
@@ -159,7 +173,7 @@ type BuiltDist = {
 // files at the root, and one HTML entry per SPA declared in `pages`.
 const BUILT_FILES = {
   "index.html": "<!doctype html><title>root</title><body>ROOT_INDEX</body>",
-  "resumes.html": "<!doctype html><title>resumes</title><body>RESUMES_INDEX</body>",
+  "resumes.html": `<!doctype html><title>resumes</title><script>${CONFIG_PRELUDE_PLACEHOLDER}</script><body>RESUMES_INDEX</body>`,
   "design.html": "<!doctype html><title>design</title><body>DESIGN_INDEX</body>",
   "assets/app-abc12345.js": 'console.log("app");',
   "assets/app-abc12345.js.map": '{"version":3}',
@@ -171,7 +185,7 @@ const BUILT_FILES = {
 // so we can prove when the middleware calls `next()`.
 function buildApp(distPath: string): Hono {
   const app = new Hono();
-  app.get("*", serveStaticAssets(distPath));
+  app.get("*", serveStaticAssets(distPath, { VITE_TURNSTILE_SITE_KEY: "test-site-key" }));
   app.get("*", (c) => c.text("NEXT"));
   return app;
 }

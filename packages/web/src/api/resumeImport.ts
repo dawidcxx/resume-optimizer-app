@@ -1,16 +1,18 @@
 import {
+  TURNSTILE_TOKEN_HEADER,
   resumeImportContract,
   toImportedResume,
   type ImportedResume,
 } from "@resume-optimzer-app/common";
 import { parse } from "valibot";
 
-export async function importResumeFile(file: File): Promise<ImportedResume> {
+export async function importResumeFile(file: File, turnstileToken: string): Promise<ImportedResume> {
   const response = await fetch(`/api${resumeImportContract.importResume.path}`, {
     method: resumeImportContract.importResume.method,
     headers: {
       "content-type": file.type || "application/octet-stream",
       "x-file-name": encodeURIComponent(file.name),
+      [TURNSTILE_TOKEN_HEADER]: turnstileToken,
     },
     body: file,
   });

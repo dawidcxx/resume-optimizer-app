@@ -10,23 +10,26 @@ import {
   LegacyResumeRedirect,
 } from "./resume/LegacyResumeRedirect";
 import { ResumeProjectRedirect } from "./resume/ResumeProjectRedirect";
+import { TurnstileGateProvider } from "./turnstile/TurnstileGate";
 
 export function App() {
   return (
     <HistoryProvider>
-      <AnnotationToolbarProvider>
-        <AppLayout>
-          <Switch>
-            <Route path="/resumes/:id/edit" component={ResumeEditPage} />
-            <Route path="/resumes/:id" component={ResumeProjectRedirect} />
-            <Route path="/resumes" component={ResumeProjectsPage} />
-            <Route path="/resume/:id/edit" component={LegacyResumeRedirect} />
-            <Route path="/resume/:id" component={LegacyResumeRedirect} />
-            <Route path="/resume" component={LegacyResumeListRedirect} />
-            <Route component={NotFoundPage} />
-          </Switch>
-        </AppLayout>
-      </AnnotationToolbarProvider>
+      <TurnstileGateProvider>
+        <AnnotationToolbarProvider>
+          <AppLayout>
+            <Switch>
+              <Route path="/resumes/:id/edit" component={ResumeEditPage} />
+              <Route path="/resumes/:id" component={ResumeProjectRedirect} />
+              <Route path="/resumes" component={ResumeProjectsPage} />
+              <Route path="/resume/:id/edit" component={LegacyResumeRedirect} />
+              <Route path="/resume/:id" component={LegacyResumeRedirect} />
+              <Route path="/resume" component={LegacyResumeListRedirect} />
+              <Route component={NotFoundPage} />
+            </Switch>
+          </AppLayout>
+        </AnnotationToolbarProvider>
+      </TurnstileGateProvider>
     </HistoryProvider>
   );
 }

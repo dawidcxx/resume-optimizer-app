@@ -1,6 +1,7 @@
 import { RESUME_IMPORT_MAX_BYTES, type ImportedResume } from "@resume-optimzer-app/common";
 import { useEffect, useRef, useState } from "react";
 import { importResumeFile } from "@/api/resumeImport";
+import { useTurnstileGate } from "@/app/turnstile/TurnstileGate";
 import { cn } from "@/lib/cn";
 import {
   Button,
@@ -23,9 +24,11 @@ export type ImportResumeDialogProps = {
 const ACCEPTED_FILE_TYPES = ".pdf,.docx,.txt,.md,.json";
 
 export function ImportResumeDialog({ open, onOpenChange, onImported }: ImportResumeDialogProps) {
+  const { verify } = useTurnstileGate();
   const [file, setFile] = useState<File | null>(null);
   const [text, setText] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [isVerifying, setIsVerifying] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -37,6 +40,7 @@ export function ImportResumeDialog({ open, onOpenChange, onImported }: ImportRes
     setFile(null);
     setText("");
     setError(null);
+    setIsVerifying(false);
     setIsImporting(false);
     setIsDragging(false);
     if (fileInputRef.current) fileInputRef.current.value = "";
@@ -60,7 +64,7 @@ export function ImportResumeDialog({ open, onOpenChange, onImported }: ImportRes
   }
 
   async function handleImport(): Promise<void> {
-    if (isImporting) return;
+    if (isImporting || isVerifying) return;
 
     const source =
       file ?? (text.trim() ? new File([text], "pasted-resume.txt", { type: "text/plain" }) : null);
@@ -70,22 +74,33 @@ export function ImportResumeDialog({ open, onOpenChange, onImported }: ImportRes
       return;
     }
 
-    setIsImporting(true);
+    setIsVerifying(true);
     setError(null);
 
     try {
-      const resume = await importResumeFile(source);
+      const turnstileToken = await verify("import");
+      setIsVerifying(false);
+      setIsImporting(true);
+      const resume = await importResumeFile(source, turnstileToken);
       onImported(resume);
       onOpenChange(false);
     } catch (importError) {
       setError(importError instanceof Error ? importError.message : "Could not import the resume.");
     } finally {
+      setIsVerifying(false);
       setIsImporting(false);
     }
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange} className="max-w-2xl!">
+    <Dialog
+      open={open}
+      onOpenChange={(next) => {
+        if (!next && (isImporting || isVerifying)) return;
+        onOpenChange(next);
+      }}
+      className="max-w-2xl!"
+    >
       <form
         onSubmit={(event) => {
           event.preventDefault();
@@ -127,7 +142,7 @@ export function ImportResumeDialog({ open, onOpenChange, onImported }: ImportRes
             variant="outline"
             size="sm"
             onClick={() => fileInputRef.current?.click()}
-            disabled={isImporting}
+            disabled={isImporting || isVerifying}
           >
             Choose file
           </Button>
@@ -150,7 +165,7 @@ export function ImportResumeDialog({ open, onOpenChange, onImported }: ImportRes
                   setFile(null);
                   if (fileInputRef.current) fileInputRef.current.value = "";
                 }}
-                disabled={isImporting}
+                disabled={isImporting || isVerifying}
               >
                 Remove
               </Button>
@@ -173,7 +188,7 @@ export function ImportResumeDialog({ open, onOpenChange, onImported }: ImportRes
               if (event.target.value.trim()) setFile(null);
             }}
             placeholder="Paste your resume here…"
-            disabled={isImporting}
+            disabled={isImporting || isVerifying}
           />
         </Field>
 
@@ -184,11 +199,15 @@ export function ImportResumeDialog({ open, onOpenChange, onImported }: ImportRes
         ) : null}
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isImporting}>
+          <Button
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+            disabled={isImporting || isVerifying}
+          >
             Cancel
           </Button>
-          <Button type="submit" variant="primary" disabled={isImporting}>
-            {isImporting ? "Analyzing…" : "Import resume"}
+          <Button type="submit" variant="primary" disabled={isImporting || isVerifying}>
+            {isVerifying ? "Verifying…" : isImporting ? "Analyzing…" : "Import resume"}
           </Button>
         </DialogFooter>
       </form>

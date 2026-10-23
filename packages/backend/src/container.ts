@@ -4,6 +4,7 @@ import postgres from "postgres";
 import { FileService, filesModule } from "./features/files";
 import { llmModule } from "./features/llm";
 import { RenderApi, RenderService } from "./features/render";
+import { TurnstileService } from "./features/turnstile";
 import { ResumeImportApi, ResumeImportService } from "./features/resumeImport";
 import { Cache } from "./shared/Cache";
 import { Config } from "./shared/Config";
@@ -49,6 +50,7 @@ export function createContainer(): Container {
   container.bind(ResumeImportApi);
   container.bind(RenderService);
   container.bind(RenderApi);
+  container.bind(TurnstileService);
 
   // Initables
   container.bind({

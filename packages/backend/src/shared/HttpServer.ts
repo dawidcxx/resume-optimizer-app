@@ -2,7 +2,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { serve } from "@hono/node-server";
 import { inject, injectable } from "@needle-di/core";
-import { HttpStatusCodes, invariant } from "@resume-optimzer-app/common";
+import { HttpStatusCodes, invariant, pickViteConfig } from "@resume-optimzer-app/common";
 import { Hono } from "hono";
 import { bodyLimit } from "hono/body-limit";
 import { cors } from "hono/cors";
@@ -64,7 +64,10 @@ export class HttpServer implements OnDeinit, OnInit {
     api.route("/", this.renderApi.build());
 
     app.route("/api", api);
-    app.get("*", serveStaticAssets(frontendDistPath));
+    app.get(
+      "*",
+      serveStaticAssets(frontendDistPath, pickViteConfig(process.env)),
+    );
 
     logger.info("Registered API routes", { routes: app.routes.map((it) => [it.method, it.path]) });
 
@@ -84,7 +87,13 @@ function applySecurityMiddlewares(app: Hono, config: Config) {
         origin: config.corsOrigins,
         credentials: true,
         allowMethods: ["GET", "HEAD", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
-        allowHeaders: ["Content-Type", "Authorization", "X-Request-Id", "X-File-Name"],
+        allowHeaders: [
+          "Content-Type",
+          "Authorization",
+          "X-Request-Id",
+          "X-File-Name",
+          "X-Turnstile-Token",
+        ],
         maxAge: 600,
       }),
     );

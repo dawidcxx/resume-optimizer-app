@@ -6,6 +6,7 @@ import {
 } from "@resume-optimzer-app/common";
 import { useState } from "react";
 import { renderResume } from "@/api/render";
+import { useTurnstileGate } from "@/app/turnstile/TurnstileGate";
 import { saveResumeRender, updateResumeRender, useResumeRenders } from "@/store";
 import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Text } from "@/ui";
 import { validateResumeMarkup } from "@/ui/resume";
@@ -31,6 +32,7 @@ export function PreviewStep({
   aiInstructions,
   targetJobDescription,
 }: PreviewStepProps) {
+  const { verify } = useTurnstileGate();
   const [isGenerating, setIsGenerating] = useState(false);
   const [isChatting, setIsChatting] = useState(false);
   const [isPrinting, setIsPrinting] = useState(false);
@@ -45,11 +47,13 @@ export function PreviewStep({
     setError(null);
 
     try {
+      const turnstileToken = await verify("render");
       const render = await renderResume({
         resume,
         annotations,
         aiInstructions,
         targetJobDescription,
+        turnstileToken,
       });
       const markup = sanitizeResumeTheme(render.markup);
       const validationError = validateResumeMarkup(markup);

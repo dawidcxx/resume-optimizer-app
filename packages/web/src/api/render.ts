@@ -1,4 +1,5 @@
 import {
+  TURNSTILE_TOKEN_HEADER,
   createFetchClient,
   renderContract,
   type GetRenderChatResponse,
@@ -15,8 +16,14 @@ export async function renderResume(input: {
   annotations: ResumeAnnotations;
   aiInstructions: string;
   targetJobDescription: string;
+  turnstileToken: string;
 }): Promise<RenderTurnResponse> {
-  return client.render({
+  const gatedClient = createFetchClient(renderContract, {
+    baseUrl: "/api",
+    headers: { [TURNSTILE_TOKEN_HEADER]: input.turnstileToken },
+  });
+
+  return gatedClient.render({
     body: {
       projectId: input.resume.id,
       resume: input.resume,
