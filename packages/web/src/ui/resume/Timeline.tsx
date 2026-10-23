@@ -1,7 +1,7 @@
 import type { ResumeComponentProps } from "@resume-optimzer-app/common";
 import type { ReactNode } from "react";
-import { DENSITY_GAPS, useResumeTheme } from "./theme";
 import { cn } from "@/lib/cn";
+import { DENSITY_GAPS, useResumeTheme } from "./theme";
 
 export type TimelineProps = ResumeComponentProps<"Timeline"> & {
   children?: ReactNode;

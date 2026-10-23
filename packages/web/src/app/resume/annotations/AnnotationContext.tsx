@@ -17,11 +17,7 @@ export type AnnotationProviderProps = {
   children: ReactNode;
 };
 
-export function AnnotationProvider({
-  annotations,
-  onChange,
-  children,
-}: AnnotationProviderProps) {
+export function AnnotationProvider({ annotations, onChange, children }: AnnotationProviderProps) {
   const value = useMemo<AnnotationContextValue>(() => {
     function setAnnotation(path: string, annotation: string) {
       const next = { ...annotations };

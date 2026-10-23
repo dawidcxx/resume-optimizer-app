@@ -5,12 +5,8 @@ export type AnnotatedFieldProps = Omit<FieldProps, "action"> & {
   annotationPath: string;
 };
 
-export function AnnotatedField({
-  annotationPath,
-  ...fieldProps
-}: AnnotatedFieldProps) {
-  const label =
-    typeof fieldProps.label === "string" ? fieldProps.label : "this field";
+export function AnnotatedField({ annotationPath, ...fieldProps }: AnnotatedFieldProps) {
+  const label = typeof fieldProps.label === "string" ? fieldProps.label : "this field";
 
   return (
     <Field

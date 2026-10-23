@@ -54,11 +54,7 @@ export class Config {
   }
 
   public get fsStoragePath(): string {
-    return (
-      this.overridesMap.fsStoragePath ??
-      process.env["FS_STORAGE_PATH"] ??
-      ".storage"
-    );
+    return this.overridesMap.fsStoragePath ?? process.env["FS_STORAGE_PATH"] ?? ".storage";
   }
 
   public get cronEnabled(): boolean {
@@ -88,11 +84,7 @@ export class Config {
   }
 
   public get deepseekModel(): string {
-    return (
-      this.overridesMap.deepseekModel ??
-      process.env["DEEPSEEK_MODEL"] ??
-      "deepseek-v4-flash"
-    );
+    return this.overridesMap.deepseekModel ?? process.env["DEEPSEEK_MODEL"] ?? "deepseek-v4-flash";
   }
 
   public checkConfig(): void {
@@ -148,9 +140,7 @@ export class Config {
     }
 
     if (issues.length > 0) {
-      throw new Error(
-        `Invalid configuration:\n${issues.map((issue) => `- ${issue}`).join("\n")}`,
-      );
+      throw new Error(`Invalid configuration:\n${issues.map((issue) => `- ${issue}`).join("\n")}`);
     }
   }
 }

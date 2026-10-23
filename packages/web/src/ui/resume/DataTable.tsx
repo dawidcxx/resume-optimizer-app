@@ -20,10 +20,7 @@ export function DataTable({ headers, rows, caption, accent }: DataTableProps) {
   const color = accent ?? theme.accent;
   const headerCells = headers.trim() ? parseCells(headers) : [];
   const bodyRows = parseRows(rows);
-  const columnCount = Math.max(
-    headerCells.length,
-    ...bodyRows.map((row) => row.length),
-  );
+  const columnCount = Math.max(headerCells.length, ...bodyRows.map((row) => row.length));
 
   if (columnCount === 0) return null;
 

@@ -1,10 +1,6 @@
 import { useEffect, useRef } from "react";
 
-export function useDebouncedSave<T>(
-  value: T,
-  save: (value: T) => void,
-  delay = 500,
-): void {
+export function useDebouncedSave<T>(value: T, save: (value: T) => void, delay = 500): void {
   const saveRef = useRef(save);
   const valueRef = useRef(value);
   const savedValueRef = useRef(value);

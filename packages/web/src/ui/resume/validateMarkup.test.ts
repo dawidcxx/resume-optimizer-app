@@ -36,9 +36,7 @@ describe("validateResumeMarkup", () => {
   });
 
   it("rejects display fonts as the body font", () => {
-    expect(validateResumeMarkup(`<Resume font="fraunces"></Resume>`)).toContain(
-      "Invalid props",
-    );
+    expect(validateResumeMarkup(`<Resume font="fraunces"></Resume>`)).toContain("Invalid props");
   });
 
   it("logs invalid prop details to the console", () => {
@@ -60,21 +58,15 @@ describe("validateResumeMarkup", () => {
   });
 
   it("rejects unknown components", () => {
-    expect(validateResumeMarkup(`<Marquee>Hello</Marquee>`)).toContain(
-      "Unsupported component",
-    );
+    expect(validateResumeMarkup(`<Marquee>Hello</Marquee>`)).toContain("Unsupported component");
   });
 
   it("rejects invalid props", () => {
-    expect(validateResumeMarkup(`<Resume accent="pink"></Resume>`)).toContain(
-      "Invalid props",
-    );
+    expect(validateResumeMarkup(`<Resume accent="pink"></Resume>`)).toContain("Invalid props");
   });
 
   it("rejects children on components that do not accept them", () => {
-    expect(validateResumeMarkup(`<Divider>oops</Divider>`)).toContain(
-      "does not accept children",
-    );
+    expect(validateResumeMarkup(`<Divider>oops</Divider>`)).toContain("does not accept children");
   });
 
   it("rejects styling props", () => {

@@ -28,18 +28,10 @@ const ALIGN_CLASSES = {
   right: "text-right",
 } as const;
 
-export function ResumeText({
-  size,
-  weight,
-  align,
-  color,
-  background,
-  children,
-}: ResumeTextProps) {
+export function ResumeText({ size, weight, align, color, background, children }: ResumeTextProps) {
   const theme = useResumeTheme();
   const verticalInset = "0.375rem";
-  const horizontalInset =
-    "min(0.25rem, calc(var(--resume-column-gap, 1rem) / 2))";
+  const horizontalInset = "min(0.25rem, calc(var(--resume-column-gap, 1rem) / 2))";
   const style: CSSProperties = {
     color: color ?? theme.text,
     backgroundColor: background,

@@ -1,16 +1,9 @@
 import type { ResumeAnnotations } from "@resume-optimzer-app/common";
 import { resumeAnnotationsToRow } from "./mappers";
 import { store } from "./store";
-import {
-  RESUME_ANNOTATIONS_TABLE,
-  RESUME_PROJECTS_TABLE,
-  RESUME_PROJECT_CELLS,
-} from "./tables";
+import { RESUME_ANNOTATIONS_TABLE, RESUME_PROJECTS_TABLE, RESUME_PROJECT_CELLS } from "./tables";
 
-export function saveResumeAnnotations(
-  projectId: string,
-  annotations: ResumeAnnotations,
-): void {
+export function saveResumeAnnotations(projectId: string, annotations: ResumeAnnotations): void {
   if (!store.hasRow(RESUME_PROJECTS_TABLE, projectId)) return;
 
   if (Object.keys(annotations).length === 0) {
@@ -24,11 +17,6 @@ export function saveResumeAnnotations(
   }
 
   if (store.hasRow(RESUME_PROJECTS_TABLE, projectId)) {
-    store.setCell(
-      RESUME_PROJECTS_TABLE,
-      projectId,
-      RESUME_PROJECT_CELLS.updatedAt,
-      Date.now(),
-    );
+    store.setCell(RESUME_PROJECTS_TABLE, projectId, RESUME_PROJECT_CELLS.updatedAt, Date.now());
   }
 }

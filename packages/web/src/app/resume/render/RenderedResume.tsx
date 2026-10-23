@@ -24,9 +24,7 @@ function getResumeRoot(markup: string): {
 } | null {
   const nodes = parser(markup);
   const root = nodes.find(
-    (
-      node,
-    ): node is MarkdownToJSX.HTMLNode | MarkdownToJSX.HTMLSelfClosingNode =>
+    (node): node is MarkdownToJSX.HTMLNode | MarkdownToJSX.HTMLSelfClosingNode =>
       (node.type === RuleType.htmlBlock || node.type === RuleType.htmlSelfClosing) &&
       node.tag === "Resume",
   );
@@ -38,8 +36,7 @@ function getResumeRoot(markup: string): {
 
   const openEnd = openTag.index + openTag[0].length;
   const closeStart = markup.lastIndexOf("</Resume>");
-  const innerMarkup =
-    closeStart >= openEnd ? markup.slice(openEnd, closeStart) : "";
+  const innerMarkup = closeStart >= openEnd ? markup.slice(openEnd, closeStart) : "";
 
   return {
     attrs: root.attrs ?? {},
@@ -105,9 +102,7 @@ const markdownOverrides: MarkdownToJSX.Overrides = {
     </ol>
   ),
   li: ({ children }: MarkdownProps) => <li className="min-w-0">{children}</li>,
-  strong: ({ children }: MarkdownProps) => (
-    <strong className="font-semibold">{children}</strong>
-  ),
+  strong: ({ children }: MarkdownProps) => <strong className="font-semibold">{children}</strong>,
   em: ({ children }: MarkdownProps) => <em className="italic">{children}</em>,
   blockquote: ({ children }: MarkdownProps) => (
     <blockquote
@@ -167,9 +162,7 @@ export function RenderedResume({ markup }: { markup: string }) {
   }
 
   const root = getResumeRoot(normalizedMarkup);
-  const theme = root
-    ? parse(RESUME_COMPONENT_SPEC.Resume.props, root.attrs)
-    : DEFAULT_RESUME_THEME;
+  const theme = root ? parse(RESUME_COMPONENT_SPEC.Resume.props, root.attrs) : DEFAULT_RESUME_THEME;
 
   return (
     <Resume {...theme}>

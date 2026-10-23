@@ -163,24 +163,16 @@ function buildFontCatalogPrompt(): string {
   ].join("\n");
 }
 
-function buildAnnotationsPrompt(
-  annotations: RenderResumeRequest["annotations"],
-): string {
-  const entries = Object.entries(annotations).filter(
-    ([, value]) => value.trim().length > 0,
-  );
+function buildAnnotationsPrompt(annotations: RenderResumeRequest["annotations"]): string {
+  const entries = Object.entries(annotations).filter(([, value]) => value.trim().length > 0);
   if (entries.length === 0) return "(none)";
 
-  return entries
-    .map(([path, value]) => `- ${path}: ${JSON.stringify(value.trim())}`)
-    .join("\n");
+  return entries.map(([path, value]) => `- ${path}: ${JSON.stringify(value.trim())}`).join("\n");
 }
 
 function buildComponentSpecPrompt(): string {
   return (
-    Object.entries(RESUME_COMPONENT_SPEC) as Array<
-      [ResumeComponentName, ResumeComponentSpec]
-    >
+    Object.entries(RESUME_COMPONENT_SPEC) as Array<[ResumeComponentName, ResumeComponentSpec]>
   )
     .map(([name, spec]) => {
       return [

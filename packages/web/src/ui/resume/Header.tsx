@@ -6,15 +6,7 @@ export type HeaderProps = ResumeComponentProps<"Header"> & {
   children?: ReactNode;
 };
 
-export function Header({
-  name,
-  title,
-  email,
-  phone,
-  website,
-  location,
-  children,
-}: HeaderProps) {
+export function Header({ name, title, email, phone, website, location, children }: HeaderProps) {
   const theme = useResumeTheme();
   const contacts = [email, phone, location, website].filter((value) => value.length > 0);
 

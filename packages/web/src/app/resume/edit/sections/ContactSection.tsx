@@ -49,10 +49,7 @@ const SOCIAL_OPTIONS = SOCIAL_PROVIDERS.map(({ value, label }) => ({
 }));
 
 function socialPlaceholder(type: SocialType) {
-  return (
-    SOCIAL_PROVIDERS.find((provider) => provider.value === type)?.placeholder ??
-    "https://"
-  );
+  return SOCIAL_PROVIDERS.find((provider) => provider.value === type)?.placeholder ?? "https://";
 }
 
 export type ContactSectionProps = {
@@ -77,8 +74,7 @@ export function ContactSection({ value, onChange }: ContactSectionProps) {
   function addSocial() {
     const usedProviders = new Set(value.socials.map((social) => social.type));
     const provider =
-      SOCIAL_PROVIDERS.find(({ value: type }) => !usedProviders.has(type))
-        ?.value ?? "github";
+      SOCIAL_PROVIDERS.find(({ value: type }) => !usedProviders.has(type))?.value ?? "github";
 
     onChange({
       ...value,
@@ -99,9 +95,7 @@ export function ContactSection({ value, onChange }: ContactSectionProps) {
             type="email"
             autoComplete="email"
             value={value.email}
-            onChange={(event) =>
-              onChange({ ...value, email: event.target.value as Email })
-            }
+            onChange={(event) => onChange({ ...value, email: event.target.value as Email })}
             placeholder="ada@example.com"
           />
         </Field>
@@ -111,9 +105,7 @@ export function ContactSection({ value, onChange }: ContactSectionProps) {
             type="tel"
             autoComplete="tel"
             value={value.phone}
-            onChange={(event) =>
-              onChange({ ...value, phone: event.target.value })
-            }
+            onChange={(event) => onChange({ ...value, phone: event.target.value })}
             placeholder="+1 555 0100"
           />
         </Field>
@@ -123,9 +115,7 @@ export function ContactSection({ value, onChange }: ContactSectionProps) {
             type="url"
             autoComplete="url"
             value={value.website}
-            onChange={(event) =>
-              onChange({ ...value, website: event.target.value })
-            }
+            onChange={(event) => onChange({ ...value, website: event.target.value })}
             placeholder="https://ada.dev"
           />
         </Field>
@@ -150,18 +140,14 @@ export function ContactSection({ value, onChange }: ContactSectionProps) {
           <div className="flex items-start justify-between gap-3">
             <div className="grid gap-1">
               <Heading level={4}>Social profiles</Heading>
-              <Text variant="subtle">
-                Public profiles recruiters can visit.
-              </Text>
+              <Text variant="subtle">Public profiles recruiters can visit.</Text>
             </div>
             <Button variant="outline" size="sm" onClick={addSocial}>
               Add social
             </Button>
           </div>
 
-          {value.socials.length === 0 ? (
-            <Text variant="muted">No social profiles yet.</Text>
-          ) : null}
+          {value.socials.length === 0 ? <Text variant="muted">No social profiles yet.</Text> : null}
 
           {value.socials.map((social, index) => (
             <div
@@ -185,9 +171,7 @@ export function ContactSection({ value, onChange }: ContactSectionProps) {
                   type="url"
                   autoComplete="url"
                   value={social.link}
-                  onChange={(event) =>
-                    updateSocial(index, { link: event.target.value })
-                  }
+                  onChange={(event) => updateSocial(index, { link: event.target.value })}
                   placeholder={socialPlaceholder(social.type)}
                 />
               </Field>
@@ -197,9 +181,7 @@ export function ContactSection({ value, onChange }: ContactSectionProps) {
                 onClick={() =>
                   onChange({
                     ...value,
-                    socials: value.socials.filter(
-                      (_, socialIndex) => socialIndex !== index,
-                    ),
+                    socials: value.socials.filter((_, socialIndex) => socialIndex !== index),
                   })
                 }
                 aria-label={`Remove social profile ${index + 1}`}

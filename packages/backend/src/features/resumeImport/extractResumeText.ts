@@ -2,8 +2,7 @@ import mammoth from "mammoth";
 import { extractText } from "unpdf";
 import { ResumeImportUnsupportedFileError } from "./error/ResumeImportUnsupportedFileError";
 
-const DOCX_MIME_TYPE =
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+const DOCX_MIME_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 
 export async function extractResumeText(
   content: Uint8Array,

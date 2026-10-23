@@ -14,8 +14,8 @@ describe("resume variety components", () => {
     );
 
     expect(getByRole("img", { name: "3.5 out of 5" })).toBeTruthy();
-    const fills = Array.from(container.querySelectorAll("[data-star-fill]")).map(
-      (element) => Number(element.getAttribute("data-star-fill")),
+    const fills = Array.from(container.querySelectorAll("[data-star-fill]")).map((element) =>
+      Number(element.getAttribute("data-star-fill")),
     );
     expect(fills).toEqual([1, 1, 1, 0.5, 0]);
   });
@@ -29,9 +29,7 @@ describe("resume variety components", () => {
   });
 
   it("supports decimal progress values", () => {
-    const { getByRole, getByText } = render(
-      <ProgressBar label="React" value="4.5" max="5" />,
-    );
+    const { getByRole, getByText } = render(<ProgressBar label="React" value="4.5" max="5" />);
 
     expect(getByText("90%")).toBeTruthy();
     expect(getByRole("progressbar").getAttribute("aria-valuenow")).toBe("4.5");

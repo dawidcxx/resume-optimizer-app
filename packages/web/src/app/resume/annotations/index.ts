@@ -1,9 +1,6 @@
 export { AnnotatedField, type AnnotatedFieldProps } from "./AnnotatedField";
 export { AnnotationIcon } from "./AnnotationIcon";
-export {
-  AnnotationPopover,
-  type AnnotationPopoverProps,
-} from "./AnnotationPopover";
+export { AnnotationPopover, type AnnotationPopoverProps } from "./AnnotationPopover";
 export {
   AnnotationToolbarButton,
   AnnotationToolbarProvider,

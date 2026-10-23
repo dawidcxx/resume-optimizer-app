@@ -17,9 +17,7 @@ describe("normalizeMarkup", () => {
       normalizeMarkup(
         `<Section title="Experience">\nText\n<Entry title="Role"></Entry>\n</Section>`,
       ),
-    ).toBe(
-      `<Section title="Experience">\nText\n\n<Entry title="Role"></Entry>\n</Section>`,
-    );
+    ).toBe(`<Section title="Experience">\nText\n\n<Entry title="Role"></Entry>\n</Section>`);
   });
 
   it("unwraps BulletList so its items parse as markdown", () => {

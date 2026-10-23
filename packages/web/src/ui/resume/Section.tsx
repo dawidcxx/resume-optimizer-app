@@ -11,8 +11,7 @@ export function Section({ title, accent, background, children }: SectionProps) {
   const theme = useResumeTheme();
   const color = accent ?? theme.accent;
   const verticalInset = "0.375rem";
-  const horizontalInset =
-    "min(0.25rem, calc(var(--resume-column-gap, 1rem) / 2))";
+  const horizontalInset = "min(0.25rem, calc(var(--resume-column-gap, 1rem) / 2))";
   const style: CSSProperties | undefined = background
     ? {
         backgroundColor: background,

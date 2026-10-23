@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it } from "vitest";
+import { saveResumeAnnotations } from "./resumeAnnotations";
 import {
   createResumeProject,
   deleteResumeProject,
   nextResumeProjectName,
   saveResumeDraft,
 } from "./resumeProjects";
-import { saveResumeAnnotations } from "./resumeAnnotations";
 import {
   readResume,
   readResumeAnnotations,
@@ -79,12 +79,12 @@ describe("createResumeProject", () => {
 
     saveResumeDraft({ ...resume, fullName: "Grace Hopper" });
     saveResumeAnnotations(project.id, {
-      "aboutMe": "I prefer a concise summary.",
+      aboutMe: "I prefer a concise summary.",
     });
 
     expect(readResume(store, project.id)?.fullName).toBe("Grace Hopper");
     expect(readResumeAnnotations(store, project.id)).toEqual({
-      "aboutMe": "I prefer a concise summary.",
+      aboutMe: "I prefer a concise summary.",
     });
   });
 

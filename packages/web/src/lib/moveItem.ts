@@ -1,11 +1,5 @@
 export function moveItem<T>(items: readonly T[], from: number, to: number): T[] {
-  if (
-    from === to ||
-    from < 0 ||
-    to < 0 ||
-    from >= items.length ||
-    to >= items.length
-  ) {
+  if (from === to || from < 0 || to < 0 || from >= items.length || to >= items.length) {
     return [...items];
   }
 

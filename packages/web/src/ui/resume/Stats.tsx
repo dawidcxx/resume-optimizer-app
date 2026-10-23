@@ -6,7 +6,5 @@ export type StatsProps = ResumeComponentProps<"Stats"> & {
 };
 
 export function Stats({ children }: StatsProps) {
-  return (
-    <div className="flex min-w-0 flex-wrap gap-2 print:break-inside-avoid">{children}</div>
-  );
+  return <div className="flex min-w-0 flex-wrap gap-2 print:break-inside-avoid">{children}</div>;
 }

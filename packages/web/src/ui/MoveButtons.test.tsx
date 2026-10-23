@@ -21,16 +21,14 @@ describe("MoveButtons", () => {
       <MoveButtons index={0} count={2} onMove={() => undefined} label="item 1" />,
     );
 
-    expect(
-      (getByRole("button", { name: "Move item 1 up" }) as HTMLButtonElement).disabled,
-    ).toBe(true);
-
-    rerender(
-      <MoveButtons index={1} count={2} onMove={() => undefined} label="item 2" />,
+    expect((getByRole("button", { name: "Move item 1 up" }) as HTMLButtonElement).disabled).toBe(
+      true,
     );
 
-    expect(
-      (getByRole("button", { name: "Move item 2 down" }) as HTMLButtonElement).disabled,
-    ).toBe(true);
+    rerender(<MoveButtons index={1} count={2} onMove={() => undefined} label="item 2" />);
+
+    expect((getByRole("button", { name: "Move item 2 down" }) as HTMLButtonElement).disabled).toBe(
+      true,
+    );
   });
 });

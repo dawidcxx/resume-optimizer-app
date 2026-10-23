@@ -31,8 +31,8 @@ export function RenderStep({ value, onChange }: RenderStepProps) {
           description={
             <span className="flex justify-between gap-3">
               <span>
-                Describe the tone, mood, layout, colours, or anything else that should shape
-                this version.
+                Describe the tone, mood, layout, colours, or anything else that should shape this
+                version.
               </span>
               <span className="shrink-0">
                 {value.aiInstructions.length}/{RENDER_AI_INSTRUCTIONS_MAX_LENGTH}
@@ -56,8 +56,7 @@ export function RenderStep({ value, onChange }: RenderStepProps) {
           description={
             <span className="flex justify-between gap-3">
               <span>
-                Optional. Paste the job description to focus this version on a specific
-                position.
+                Optional. Paste the job description to focus this version on a specific position.
               </span>
               <span className="shrink-0">
                 {value.targetJobDescription.length}/{RENDER_TARGET_JOB_DESCRIPTION_MAX_LENGTH}

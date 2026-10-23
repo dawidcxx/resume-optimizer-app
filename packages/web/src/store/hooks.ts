@@ -1,9 +1,6 @@
-import type {
-  Resume,
-  ResumeAnnotations,
-  ResumeProject,
-} from "@resume-optimzer-app/common";
+import type { Resume, ResumeAnnotations, ResumeProject } from "@resume-optimzer-app/common";
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import type { ResumeRender } from "./mappers";
 import {
   readResume,
   readResumeAnnotations,
@@ -13,7 +10,6 @@ import {
   readResumeRenders,
   type ResumeBundle,
 } from "./selectors";
-import type { ResumeRender } from "./mappers";
 import { isStoreReady, store, subscribeStoreReady } from "./store";
 
 export function useStoreReady(): boolean {

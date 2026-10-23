@@ -1,7 +1,4 @@
-import {
-  RESUME_FONT_CATALOG,
-  type ResumeComponentProps,
-} from "@resume-optimzer-app/common";
+import { RESUME_FONT_CATALOG, type ResumeComponentProps } from "@resume-optimzer-app/common";
 import { createContext, useContext } from "react";
 
 export type ResumeTheme = ResumeComponentProps<"Resume">;

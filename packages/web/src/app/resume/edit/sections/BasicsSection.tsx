@@ -1,12 +1,5 @@
 import type { Resume } from "@resume-optimzer-app/common";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  Input,
-  Textarea,
-} from "@/ui";
+import { Card, CardContent, CardHeader, CardTitle, Input, Textarea } from "@/ui";
 import { AnnotatedField } from "../../annotations";
 
 export type BasicsSectionProps = {
@@ -30,11 +23,7 @@ export function BasicsSection({ value, onChange }: BasicsSectionProps) {
             placeholder="Ada Lovelace"
           />
         </AnnotatedField>
-        <AnnotatedField
-          id="careerName"
-          label="Career title"
-          annotationPath="careerName"
-        >
+        <AnnotatedField id="careerName" label="Career title" annotationPath="careerName">
           <Input
             id="careerName"
             autoComplete="organization-title"

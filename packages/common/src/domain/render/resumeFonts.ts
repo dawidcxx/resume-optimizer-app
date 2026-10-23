@@ -200,9 +200,4 @@ export const RESUME_BODY_FONT_IDS = [
   "crimson-pro",
 ] as const;
 
-export const RESUME_HEADING_FONT_IDS = [
-  "sans",
-  "serif",
-  "mono",
-  ...RESUME_FONT_IDS,
-] as const;
+export const RESUME_HEADING_FONT_IDS = ["sans", "serif", "mono", ...RESUME_FONT_IDS] as const;

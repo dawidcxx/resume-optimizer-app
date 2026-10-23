@@ -50,9 +50,7 @@ export function useEditorHistory({
   onRestoreRef.current = onRestore;
 
   const updateAvailability = useCallback(() => {
-    setCanUndo(
-      undoStackRef.current.length > 0 || pendingBeforeRef.current !== null,
-    );
+    setCanUndo(undoStackRef.current.length > 0 || pendingBeforeRef.current !== null);
     setCanRedo(redoStackRef.current.length > 0);
   }, []);
 

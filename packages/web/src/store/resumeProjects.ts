@@ -38,10 +38,9 @@ export function nextResumeProjectName(
   return `${baseName} (${suffix})`;
 }
 
-export function createEmptyResume(input: Omit<CreateResumeProjectInput, "name"> = {}): Omit<
-  Resume,
-  "id"
-> {
+export function createEmptyResume(
+  input: Omit<CreateResumeProjectInput, "name"> = {},
+): Omit<Resume, "id"> {
   return {
     fullName: input.fullName ?? "",
     careerName: input.careerName ?? "",
@@ -105,12 +104,7 @@ export function saveResumeDraft(resume: Resume): void {
   if (!store.hasRow(RESUME_PROJECTS_TABLE, resume.id)) return;
 
   store.setRow(RESUMES_TABLE, resume.id, resumeToRow(resume));
-  store.setCell(
-    RESUME_PROJECTS_TABLE,
-    resume.id,
-    RESUME_PROJECT_CELLS.updatedAt,
-    Date.now(),
-  );
+  store.setCell(RESUME_PROJECTS_TABLE, resume.id, RESUME_PROJECT_CELLS.updatedAt, Date.now());
 }
 
 export function deleteResumeProject(id: string): void {
@@ -119,11 +113,7 @@ export function deleteResumeProject(id: string): void {
   store.delRow(RESUME_ANNOTATIONS_TABLE, id);
 
   for (const renderId of store.getRowIds(RESUME_RENDERS_TABLE)) {
-    const projectId = store.getCell(
-      RESUME_RENDERS_TABLE,
-      renderId,
-      RESUME_RENDER_CELLS.projectId,
-    );
+    const projectId = store.getCell(RESUME_RENDERS_TABLE, renderId, RESUME_RENDER_CELLS.projectId);
     if (projectId === id) {
       store.delRow(RESUME_RENDERS_TABLE, renderId);
     }

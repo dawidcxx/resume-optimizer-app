@@ -1,9 +1,5 @@
 import type { ResumeComponentProps } from "@resume-optimzer-app/common";
-import {
-  Children,
-  type CSSProperties,
-  type ReactNode,
-} from "react";
+import { Children, type CSSProperties, type ReactNode } from "react";
 import { cn } from "@/lib/cn";
 import { Column } from "./Column";
 
@@ -37,9 +33,7 @@ function isRenderable(node: ReactNode): boolean {
 }
 
 function columnCounts(total: number, columns: number): number[] {
-  const counts = Array.from({ length: columns }, () =>
-    Math.floor(total / columns),
-  );
+  const counts = Array.from({ length: columns }, () => Math.floor(total / columns));
   const remaining = total % columns;
 
   for (let index = 0; index < remaining; index += 1) {

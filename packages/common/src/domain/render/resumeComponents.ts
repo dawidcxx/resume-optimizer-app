@@ -1,12 +1,4 @@
-import {
-  InferOutput,
-  optional,
-  picklist,
-  pipe,
-  regex,
-  strictObject,
-  string,
-} from "valibot";
+import { InferOutput, optional, picklist, pipe, regex, strictObject, string } from "valibot";
 import { RESUME_BODY_FONT_IDS, RESUME_HEADING_FONT_IDS } from "./resumeFonts";
 
 const HexColor = pipe(string(), regex(/^#[0-9a-fA-F]{6}$/));
@@ -19,8 +11,7 @@ const HeadingFont = picklist(RESUME_HEADING_FONT_IDS);
 
 export const RESUME_COMPONENT_SPEC = {
   Resume: {
-    description:
-      "Root container. Sets page colors, the body font, the heading font, and spacing.",
+    description: "Root container. Sets page colors, the body font, the heading font, and spacing.",
     children: true,
     props: strictObject({
       accent: optional(HexColor, "#2563eb"),

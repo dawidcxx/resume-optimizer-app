@@ -2,8 +2,8 @@ import { describe, expect, it } from "bun:test";
 import { Container } from "@needle-di/core";
 import { Config } from "@/shared/Config";
 import { DeepseekLlmService } from "./DeepseekLlmService";
-import { LlmService } from "./LlmService";
 import { llmModule } from "./LlmModule";
+import { LlmService } from "./LlmService";
 
 describe("llmModule", () => {
   it("resolves LlmService to the default DeepSeek implementation", () => {

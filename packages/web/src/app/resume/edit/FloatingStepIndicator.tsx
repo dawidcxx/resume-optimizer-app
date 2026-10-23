@@ -40,13 +40,7 @@ export function FloatingStepIndicator({
               Back
             </Button>
           ) : null}
-          <Button
-            variant="primary"
-            size="sm"
-            shape="pill"
-            onClick={onNext}
-            disabled={isLast}
-          >
+          <Button variant="primary" size="sm" shape="pill" onClick={onNext} disabled={isLast}>
             {isLast ? "Finish" : "Continue"}
             {isLast ? null : <ArrowRightIcon />}
           </Button>

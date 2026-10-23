@@ -1,8 +1,5 @@
 import { inject, injectable } from "@needle-di/core";
-import {
-  RESUME_IMPORT_MAX_BYTES,
-  resumeImportContract,
-} from "@resume-optimzer-app/common";
+import { RESUME_IMPORT_MAX_BYTES, resumeImportContract } from "@resume-optimzer-app/common";
 import { Hono } from "hono";
 import { ResumeImportFileTooLargeError } from "./error/ResumeImportFileTooLargeError";
 import { ResumeImportNoTextError } from "./error/ResumeImportNoTextError";

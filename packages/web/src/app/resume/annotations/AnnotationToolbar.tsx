@@ -1,11 +1,4 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-  type ReactNode,
-} from "react";
+import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
 import { IconButton } from "@/ui";
 import { AnnotationIcon } from "./AnnotationIcon";
 
@@ -16,8 +9,7 @@ type AnnotationToolbarContextValue = {
   setAnnotationCount: (count: number | null) => void;
 };
 
-const AnnotationToolbarContext =
-  createContext<AnnotationToolbarContextValue | null>(null);
+const AnnotationToolbarContext = createContext<AnnotationToolbarContextValue | null>(null);
 
 export function AnnotationToolbarProvider({ children }: { children: ReactNode }) {
   const [annotationsVisible, setAnnotationsVisible] = useState(false);
@@ -41,9 +33,7 @@ export function AnnotationToolbarProvider({ children }: { children: ReactNode })
   );
 
   return (
-    <AnnotationToolbarContext.Provider value={value}>
-      {children}
-    </AnnotationToolbarContext.Provider>
+    <AnnotationToolbarContext.Provider value={value}>{children}</AnnotationToolbarContext.Provider>
   );
 }
 
@@ -58,8 +48,7 @@ export function useAnnotationToolbar(): AnnotationToolbarContextValue {
 }
 
 export function AnnotationToolbarButton() {
-  const { annotationsVisible, annotationCount, toggleAnnotations } =
-    useAnnotationToolbar();
+  const { annotationsVisible, annotationCount, toggleAnnotations } = useAnnotationToolbar();
 
   if (annotationCount === null) return null;
 

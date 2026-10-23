@@ -83,9 +83,7 @@ export class FileService implements OnInit, OnDeinit {
       return new Map();
     }
     const dbFiles = await this.db.select().from(files).where(inArray(files.id, fileIds));
-    return new Map(
-      dbFiles.map((it) => [uuidFromStringUnchecked(it.id), mapToFileDetails(it)]),
-    );
+    return new Map(dbFiles.map((it) => [uuidFromStringUnchecked(it.id), mapToFileDetails(it)]));
   }
 
   async downloadFile(fileId: Uuid): Promise<Uint8Array | null> {

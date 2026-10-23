@@ -1,13 +1,4 @@
-import {
-  array,
-  InferOutput,
-  literal,
-  nullable,
-  object,
-  picklist,
-  string,
-  variant,
-} from "valibot";
+import { array, InferOutput, literal, nullable, object, picklist, string, variant } from "valibot";
 import { Email } from "../core/Email";
 import { KnownIcon } from "../core/KnownIcon";
 import { PlainDate } from "../core/PlainDate";
@@ -92,9 +83,7 @@ export const ImportedResumeSchema = object({
 
 export type ImportedResume = Omit<Resume, "id">;
 
-export function toImportedResume(
-  value: InferOutput<typeof ImportedResumeSchema>,
-): ImportedResume {
+export function toImportedResume(value: InferOutput<typeof ImportedResumeSchema>): ImportedResume {
   return {
     ...value,
     contact: {

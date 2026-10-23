@@ -2,15 +2,7 @@ import type { Resume, ResumeAnnotations } from "@resume-optimzer-app/common";
 import { useState } from "react";
 import { renderResume } from "@/api/render";
 import { saveResumeRender, useResumeRenders } from "@/store";
-import {
-  Button,
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-  Text,
-} from "@/ui";
+import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Text } from "@/ui";
 import { validateResumeMarkup } from "@/ui/resume";
 import { PrintIcon } from "../print/PrintIcon";
 import { ResumePrintPreview } from "../print/ResumePrintPreview";
@@ -59,11 +51,7 @@ export function PreviewStep({
       }
       saveResumeRender({ projectId: resume.id, markup });
     } catch (renderError) {
-      setError(
-        renderError instanceof Error
-          ? renderError.message
-          : "Could not render the resume.",
-      );
+      setError(renderError instanceof Error ? renderError.message : "Could not render the resume.");
     } finally {
       setIsGenerating(false);
     }
@@ -83,11 +71,7 @@ export function PreviewStep({
             </div>
             <div className="flex items-center gap-2">
               {latest ? (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setIsPrinting(true)}
-                >
+                <Button variant="outline" size="sm" onClick={() => setIsPrinting(true)}>
                   <PrintIcon className="h-4 w-4" />
                   Print
                 </Button>

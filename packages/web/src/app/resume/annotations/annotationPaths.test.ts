@@ -68,9 +68,7 @@ describe("moveAnnotationsAt", () => {
       "experience[1].role": "unrelated role",
     };
 
-    expect(
-      moveAnnotationsAt(annotations, "experience[0].bulletPoints", 1, 0),
-    ).toEqual({
+    expect(moveAnnotationsAt(annotations, "experience[0].bulletPoints", 1, 0)).toEqual({
       "experience[0].bulletPoints[0]": "second bullet",
       "experience[0].bulletPoints[1]": "first bullet",
       "experience[1].role": "unrelated role",

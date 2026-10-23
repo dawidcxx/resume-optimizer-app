@@ -33,8 +33,8 @@ type ChildProps<K extends ResumeComponentName> =
     ? { children?: ReactNode }
     : { children?: never };
 
-export type ResumeComponentRuntimeProps<K extends ResumeComponentName> =
-  ResumeComponentProps<K> & ChildProps<K>;
+export type ResumeComponentRuntimeProps<K extends ResumeComponentName> = ResumeComponentProps<K> &
+  ChildProps<K>;
 
 export const RESUME_COMPONENT_IMPLEMENTATIONS: {
   [K in ResumeComponentName]: ComponentType<ResumeComponentRuntimeProps<K>>;

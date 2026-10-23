@@ -21,13 +21,7 @@ export type SocialIconProps = SVGProps<SVGSVGElement> & {
 
 export function SocialIcon({ provider, ...props }: SocialIconProps) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      aria-hidden="true"
-      focusable="false"
-      {...props}
-    >
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false" {...props}>
       <path d={SOCIAL_ICON_PATHS[provider]} />
     </svg>
   );

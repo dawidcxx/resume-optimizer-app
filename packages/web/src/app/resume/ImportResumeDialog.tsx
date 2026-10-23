@@ -1,8 +1,6 @@
-import {
-  RESUME_IMPORT_MAX_BYTES,
-  type ImportedResume,
-} from "@resume-optimzer-app/common";
+import { RESUME_IMPORT_MAX_BYTES, type ImportedResume } from "@resume-optimzer-app/common";
 import { useEffect, useRef, useState } from "react";
+import { importResumeFile } from "@/api/resumeImport";
 import { cn } from "@/lib/cn";
 import {
   Button,
@@ -15,7 +13,6 @@ import {
   Textarea,
 } from "@/ui";
 import { Field } from "@/ui/form";
-import { importResumeFile } from "@/api/resumeImport";
 
 export type ImportResumeDialogProps = {
   open: boolean;
@@ -25,11 +22,7 @@ export type ImportResumeDialogProps = {
 
 const ACCEPTED_FILE_TYPES = ".pdf,.docx,.txt,.md,.json";
 
-export function ImportResumeDialog({
-  open,
-  onOpenChange,
-  onImported,
-}: ImportResumeDialogProps) {
+export function ImportResumeDialog({ open, onOpenChange, onImported }: ImportResumeDialogProps) {
   const [file, setFile] = useState<File | null>(null);
   const [text, setText] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -70,10 +63,7 @@ export function ImportResumeDialog({
     if (isImporting) return;
 
     const source =
-      file ??
-      (text.trim()
-        ? new File([text], "pasted-resume.txt", { type: "text/plain" })
-        : null);
+      file ?? (text.trim() ? new File([text], "pasted-resume.txt", { type: "text/plain" }) : null);
 
     if (!source) {
       setError("Paste a resume or choose a file first.");
@@ -106,8 +96,8 @@ export function ImportResumeDialog({
         <DialogHeader>
           <DialogTitle>Import resume</DialogTitle>
           <DialogDescription>
-            Drop a PDF, DOCX, or text file, or paste the contents. We'll extract what we can
-            into a new resume for you to review.
+            Drop a PDF, DOCX, or text file, or paste the contents. We'll extract what we can into a
+            new resume for you to review.
           </DialogDescription>
         </DialogHeader>
 

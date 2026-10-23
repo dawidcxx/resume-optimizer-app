@@ -3,13 +3,9 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "wouter";
 import type { EditorSnapshot } from "@/app/history";
 import { useEditorHistory, useRegisterHistory } from "@/app/history";
-import { Heading, Text } from "@/ui";
 import { useDebouncedSave } from "@/lib/useDebouncedSave";
-import {
-  saveResumeAnnotations,
-  saveResumeDraft,
-  useResumeAnnotations,
-} from "@/store";
+import { saveResumeAnnotations, saveResumeDraft, useResumeAnnotations } from "@/store";
+import { Heading, Text } from "@/ui";
 import { AnnotationProvider, useAnnotationToolbar } from "../annotations";
 import { FloatingStepIndicator } from "./FloatingStepIndicator";
 import { PreviewStep } from "./PreviewStep";
@@ -41,15 +37,10 @@ export function ResumeEditForm({ projectName, resume }: ResumeEditFormProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const { setAnnotationCount } = useAnnotationToolbar();
   const annotationCount = useMemo(
-    () =>
-      Object.values(annotations).filter((value) => value.trim().length > 0)
-        .length,
+    () => Object.values(annotations).filter((value) => value.trim().length > 0).length,
     [annotations],
   );
-  const snapshot = useMemo(
-    () => ({ resume: draft, annotations }),
-    [draft, annotations],
-  );
+  const snapshot = useMemo(() => ({ resume: draft, annotations }), [draft, annotations]);
   const restoreSnapshot = useCallback((next: EditorSnapshot) => {
     setDraft(next.resume);
     setAnnotations(next.annotations);
@@ -96,47 +87,33 @@ export function ResumeEditForm({ projectName, resume }: ResumeEditFormProps) {
               <>
                 <BasicsSection
                   value={draft}
-                  onChange={(patch) =>
-                    setDraft((current) => ({ ...current, ...patch }))
-                  }
+                  onChange={(patch) => setDraft((current) => ({ ...current, ...patch }))}
                 />
                 <ContactSection
                   value={draft.contact}
-                  onChange={(contact) =>
-                    setDraft((current) => ({ ...current, contact }))
-                  }
+                  onChange={(contact) => setDraft((current) => ({ ...current, contact }))}
                 />
                 <ExperienceSection
                   value={draft.experience}
-                  onChange={(experience) =>
-                    setDraft((current) => ({ ...current, experience }))
-                  }
+                  onChange={(experience) => setDraft((current) => ({ ...current, experience }))}
                 />
                 <EducationSection
                   value={draft.education}
-                  onChange={(education) =>
-                    setDraft((current) => ({ ...current, education }))
-                  }
+                  onChange={(education) => setDraft((current) => ({ ...current, education }))}
                 />
                 <SkillsSection
                   value={draft.skills}
-                  onChange={(skills) =>
-                    setDraft((current) => ({ ...current, skills }))
-                  }
+                  onChange={(skills) => setDraft((current) => ({ ...current, skills }))}
                 />
                 <ProjectsSection
                   value={draft.projects}
-                  onChange={(projects) =>
-                    setDraft((current) => ({ ...current, projects }))
-                  }
+                  onChange={(projects) => setDraft((current) => ({ ...current, projects }))}
                 />
               </>
             ) : currentStep === 1 ? (
               <RenderStep
                 value={renderDraft}
-                onChange={(patch) =>
-                  setRenderDraft((current) => ({ ...current, ...patch }))
-                }
+                onChange={(patch) => setRenderDraft((current) => ({ ...current, ...patch }))}
               />
             ) : (
               <PreviewStep

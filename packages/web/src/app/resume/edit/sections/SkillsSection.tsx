@@ -112,10 +112,7 @@ export function SkillsSection({ value, onChange }: SkillsSectionProps) {
                 />
               </Field>
               <div className="flex items-center justify-self-end">
-                <AnnotationPopover
-                  path={`skills.listed[${index}]`}
-                  label={`skill ${index + 1}`}
-                />
+                <AnnotationPopover path={`skills.listed[${index}]`} label={`skill ${index + 1}`} />
                 <IconButton
                   size="sm"
                   className="text-muted-foreground hover:bg-danger/10 hover:text-danger focus-visible:bg-danger/10 focus-visible:text-danger"
@@ -154,9 +151,7 @@ export function SkillsSection({ value, onChange }: SkillsSectionProps) {
         <section className="grid gap-4">
           <Heading level={4}>Categorized</Heading>
 
-          {value.categorized.length === 0 ? (
-            <Text variant="muted">No categories yet.</Text>
-          ) : null}
+          {value.categorized.length === 0 ? <Text variant="muted">No categories yet.</Text> : null}
 
           {value.categorized.map((item, index) => (
             <div
@@ -170,9 +165,7 @@ export function SkillsSection({ value, onChange }: SkillsSectionProps) {
                   options={categoryOptions}
                   localOptions={availableLocalCategories}
                   onLocalOptionsChange={addLocalCategories}
-                  onChange={(category) =>
-                    updateCategorized(index, { category: category ?? "" })
-                  }
+                  onChange={(category) => updateCategorized(index, { category: category ?? "" })}
                   placeholder="Select or create a category"
                   emptyMessage="No categories yet"
                   createMessage={(input) => `Create "${input}"`}
@@ -198,9 +191,7 @@ export function SkillsSection({ value, onChange }: SkillsSectionProps) {
                     removeAnnotationsAt("skills.categorized", index);
                     onChange({
                       ...value,
-                      categorized: value.categorized.filter(
-                        (_, itemIndex) => itemIndex !== index,
-                      ),
+                      categorized: value.categorized.filter((_, itemIndex) => itemIndex !== index),
                     });
                   }}
                   aria-label={`Remove category ${index + 1}`}
@@ -219,10 +210,7 @@ export function SkillsSection({ value, onChange }: SkillsSectionProps) {
               onClick={() =>
                 onChange({
                   ...value,
-                  categorized: [
-                    ...value.categorized,
-                    { category: "", skill: "" },
-                  ],
+                  categorized: [...value.categorized, { category: "", skill: "" }],
                 })
               }
             >

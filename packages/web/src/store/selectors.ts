@@ -1,8 +1,4 @@
-import type {
-  Resume,
-  ResumeAnnotations,
-  ResumeProject,
-} from "@resume-optimzer-app/common";
+import type { Resume, ResumeAnnotations, ResumeProject } from "@resume-optimzer-app/common";
 import type { Store } from "tinybase";
 import {
   rowToResume,

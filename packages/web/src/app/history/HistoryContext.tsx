@@ -27,9 +27,7 @@ const HistoryContext = createContext<HistoryContextValue | null>(null);
 function isTextEntryTarget(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLElement)) return false;
   return Boolean(
-    target.closest(
-      "input, textarea, select, [contenteditable]:not([contenteditable='false'])",
-    ),
+    target.closest("input, textarea, select, [contenteditable]:not([contenteditable='false'])"),
   );
 }
 
@@ -77,10 +75,7 @@ export function HistoryProvider({ children }: { children: ReactNode }) {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  const value = useMemo<HistoryContextValue>(
-    () => ({ controls, register }),
-    [controls, register],
-  );
+  const value = useMemo<HistoryContextValue>(() => ({ controls, register }), [controls, register]);
 
   return <HistoryContext.Provider value={value}>{children}</HistoryContext.Provider>;
 }

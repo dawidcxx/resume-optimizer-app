@@ -1,15 +1,7 @@
-import {
-  plainDateFromString,
-  type PlainDate,
-  type Resume,
-} from "@resume-optimzer-app/common";
-import {
-  differenceInMonths,
-  format,
-  isValid,
-  parseISO,
-  startOfMonth,
-} from "date-fns";
+import { plainDateFromString, type PlainDate, type Resume } from "@resume-optimzer-app/common";
+import { differenceInMonths, format, isValid, parseISO, startOfMonth } from "date-fns";
+import { cn } from "@/lib/cn";
+import { moveItem } from "@/lib/moveItem";
 import {
   Button,
   Card,
@@ -26,13 +18,7 @@ import {
   Textarea,
 } from "@/ui";
 import { Field } from "@/ui/form";
-import { cn } from "@/lib/cn";
-import { moveItem } from "@/lib/moveItem";
-import {
-  AnnotatedField,
-  AnnotationPopover,
-  useAnnotations,
-} from "../../annotations";
+import { AnnotatedField, AnnotationPopover, useAnnotations } from "../../annotations";
 
 type Experience = Resume["experience"][number];
 type WorkType = Experience["workType"];
@@ -110,11 +96,7 @@ export function ExperienceSection({ value, onChange }: ExperienceSectionProps) {
   const { moveAnnotationsAt, removeAnnotationsAt } = useAnnotations();
 
   function update(index: number, patch: Partial<Experience>) {
-    onChange(
-      value.map((item, itemIndex) =>
-        itemIndex === index ? { ...item, ...patch } : item,
-      ),
-    );
+    onChange(value.map((item, itemIndex) => (itemIndex === index ? { ...item, ...patch } : item)));
   }
 
   function updateCompany(index: number, patch: Partial<Experience["company"]>) {
@@ -166,9 +148,7 @@ export function ExperienceSection({ value, onChange }: ExperienceSectionProps) {
         </div>
       </CardHeader>
       <CardContent className="grid gap-5">
-        {value.length === 0 ? (
-          <Text variant="muted">No experience added yet.</Text>
-        ) : null}
+        {value.length === 0 ? <Text variant="muted">No experience added yet.</Text> : null}
 
         {value.map((item, index) => {
           const preview = getExperiencePreview(item);
@@ -212,9 +192,7 @@ export function ExperienceSection({ value, onChange }: ExperienceSectionProps) {
                       {preview.range}
                     </p>
                     {preview.duration ? (
-                      <p className="text-[11px] text-muted-foreground">
-                        {preview.duration}
-                      </p>
+                      <p className="text-[11px] text-muted-foreground">{preview.duration}</p>
                     ) : null}
                   </div>
                 </div>
@@ -224,9 +202,7 @@ export function ExperienceSection({ value, onChange }: ExperienceSectionProps) {
                     <Input
                       id={`experience-${index}-company`}
                       value={item.company.name}
-                      onChange={(event) =>
-                        updateCompany(index, { name: event.target.value })
-                      }
+                      onChange={(event) => updateCompany(index, { name: event.target.value })}
                       placeholder="Analytical Engines Ltd."
                     />
                   </Field>
@@ -238,9 +214,7 @@ export function ExperienceSection({ value, onChange }: ExperienceSectionProps) {
                     <Input
                       id={`experience-${index}-role`}
                       value={item.role ?? ""}
-                      onChange={(event) =>
-                        update(index, { role: event.target.value })
-                      }
+                      onChange={(event) => update(index, { role: event.target.value })}
                       placeholder="Senior Frontend Engineer"
                     />
                   </AnnotatedField>
@@ -248,9 +222,7 @@ export function ExperienceSection({ value, onChange }: ExperienceSectionProps) {
                     <Input
                       id={`experience-${index}-city`}
                       value={item.company.city}
-                      onChange={(event) =>
-                        updateCompany(index, { city: event.target.value })
-                      }
+                      onChange={(event) => updateCompany(index, { city: event.target.value })}
                       placeholder="London"
                     />
                   </Field>
@@ -297,9 +269,7 @@ export function ExperienceSection({ value, onChange }: ExperienceSectionProps) {
                         value={item.to ?? ""}
                         onChange={(event) =>
                           update(index, {
-                            to: event.target.value
-                              ? toPlainDate(event.target.value)
-                              : null,
+                            to: event.target.value ? toPlainDate(event.target.value) : null,
                           })
                         }
                       />
@@ -319,9 +289,7 @@ export function ExperienceSection({ value, onChange }: ExperienceSectionProps) {
                   <Textarea
                     id={`experience-${index}-description`}
                     value={item.company.description}
-                    onChange={(event) =>
-                      updateCompany(index, { description: event.target.value })
-                    }
+                    onChange={(event) => updateCompany(index, { description: event.target.value })}
                     placeholder="Fintech startup building payment infrastructure."
                   />
                 </AnnotatedField>
@@ -329,9 +297,7 @@ export function ExperienceSection({ value, onChange }: ExperienceSectionProps) {
                 <section className="grid gap-3">
                   <div className="grid gap-1">
                     <Heading level={4}>Bullet points</Heading>
-                    <Text variant="subtle">
-                      One responsibility or achievement per bullet.
-                    </Text>
+                    <Text variant="subtle">One responsibility or achievement per bullet.</Text>
                   </div>
 
                   {(item.bulletPoints ?? []).length === 0 ? (
@@ -345,9 +311,7 @@ export function ExperienceSection({ value, onChange }: ExperienceSectionProps) {
                         className="min-w-0 flex-1"
                         rows={2}
                         value={bullet}
-                        onChange={(event) =>
-                          updateBullet(index, bulletIndex, event.target.value)
-                        }
+                        onChange={(event) => updateBullet(index, bulletIndex, event.target.value)}
                         placeholder="Shipped a design system used by every product team."
                       />
                       <AnnotationPopover
@@ -358,17 +322,9 @@ export function ExperienceSection({ value, onChange }: ExperienceSectionProps) {
                         index={bulletIndex}
                         count={(item.bulletPoints ?? []).length}
                         onMove={(from, to) => {
-                          moveAnnotationsAt(
-                            `experience[${index}].bulletPoints`,
-                            from,
-                            to,
-                          );
+                          moveAnnotationsAt(`experience[${index}].bulletPoints`, from, to);
                           update(index, {
-                            bulletPoints: moveItem(
-                              item.bulletPoints ?? [],
-                              from,
-                              to,
-                            ),
+                            bulletPoints: moveItem(item.bulletPoints ?? [], from, to),
                           });
                         }}
                         label={`experience ${index + 1} bullet ${bulletIndex + 1}`}
@@ -418,9 +374,7 @@ export function ExperienceSection({ value, onChange }: ExperienceSectionProps) {
                     className="text-muted-foreground hover:bg-danger/10 hover:text-danger"
                     onClick={() => {
                       removeAnnotationsAt("experience", index);
-                      onChange(
-                        value.filter((_, itemIndex) => itemIndex !== index),
-                      );
+                      onChange(value.filter((_, itemIndex) => itemIndex !== index));
                     }}
                     aria-label={`Remove experience ${index + 1}`}
                   >

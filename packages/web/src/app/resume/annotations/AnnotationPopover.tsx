@@ -2,8 +2,8 @@ import { RESUME_ANNOTATION_MAX_LENGTH } from "@resume-optimzer-app/common";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 import { Button, IconButton, Textarea } from "@/ui";
-import { AnnotationIcon } from "./AnnotationIcon";
 import { useAnnotations } from "./AnnotationContext";
+import { AnnotationIcon } from "./AnnotationIcon";
 import { useAnnotationToolbar } from "./AnnotationToolbar";
 
 export type AnnotationPopoverProps = {
@@ -92,10 +92,7 @@ export function AnnotationPopover({
           {...triggerProps}
           variant="ghost"
           size="sm"
-          className={cn(
-            "h-7 px-2 text-xs",
-            hasValue ? "text-primary" : "text-muted-foreground",
-          )}
+          className={cn("h-7 px-2 text-xs", hasValue ? "text-primary" : "text-muted-foreground")}
         >
           <AnnotationIcon className="h-3.5 w-3.5" />
           {hasValue ? "Edit note" : "Add note"}

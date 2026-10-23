@@ -1,7 +1,6 @@
 import { RESUME_COMPONENT_SPEC } from "@resume-optimzer-app/common";
 
-const SELF_CLOSING_COMPONENT =
-  /<([A-Z][A-Za-z0-9]*)(\s(?:[^<>"']|"[^"]*"|'[^']*')*)?\/>/g;
+const SELF_CLOSING_COMPONENT = /<([A-Z][A-Za-z0-9]*)(\s(?:[^<>"']|"[^"]*"|'[^']*')*)?\/>/g;
 const BULLET_LIST_TAG = /<\/?BulletList\s*>/g;
 const OPENING_COMPONENT_LINE = /^\s*<([A-Z][A-Za-z0-9]*)\b/;
 const ANY_COMPONENT_LINE = /^\s*<\/?([A-Z][A-Za-z0-9]*)\b/;
@@ -12,14 +11,9 @@ function isResumeComponent(tag: string): boolean {
 }
 
 export function normalizeMarkup(markup: string): string {
-  const expanded = markup.replace(
-    SELF_CLOSING_COMPONENT,
-    (match, tag: string, attrs = "") => {
-      return isResumeComponent(tag)
-        ? `<${tag}${attrs.trimEnd()}></${tag}>`
-        : match;
-    },
-  );
+  const expanded = markup.replace(SELF_CLOSING_COMPONENT, (match, tag: string, attrs = "") => {
+    return isResumeComponent(tag) ? `<${tag}${attrs.trimEnd()}></${tag}>` : match;
+  });
 
   const lines: string[] = [];
   let inFence = false;

@@ -84,10 +84,7 @@ export function rowToResumeAnnotations(row: Row): ResumeAnnotations {
   return asObject<ResumeAnnotations>(row[RESUME_ANNOTATION_CELLS.annotations], {});
 }
 
-export function resumeAnnotationsToRow(
-  projectId: string,
-  annotations: ResumeAnnotations,
-): Row {
+export function resumeAnnotationsToRow(projectId: string, annotations: ResumeAnnotations): Row {
   return {
     [RESUME_ANNOTATION_CELLS.projectId]: projectId,
     [RESUME_ANNOTATION_CELLS.annotations]: annotations,
