@@ -37,12 +37,19 @@ export class ResumeImportService {
         throw new ResumeImportNoTextError();
       }
 
+      let resume: ImportedResume;
       try {
-        return await this.llm.importResume({ text });
+        resume = await this.llm.importResume({ text });
       } catch (error) {
         logger.error("Resume analysis failed", { error: serializeError(error) });
         throw new ResumeImportAnalysisError();
       }
+
+      logger.info("Resume import completed", {
+        mimeType: file.mimeType,
+        fileSizeBytes: file.content.byteLength,
+      });
+      return resume;
     } finally {
       try {
         await this.files.deleteFile(uploaded.id);

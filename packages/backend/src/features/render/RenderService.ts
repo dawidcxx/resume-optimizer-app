@@ -14,7 +14,7 @@ import {
 } from "@resume-optimzer-app/common";
 import { asc, eq, max, sql } from "drizzle-orm";
 import { serializeError } from "serialize-error";
-import { LlmService } from "@/features/llm/LlmService";
+import { LlmService, type RenderResumeResult } from "@/features/llm/LlmService";
 import { Logger } from "@/lib/Logger";
 import { DB, type DrizzleDb } from "@/shared/Db";
 import { RenderGenerationError } from "./error/RenderGenerationError";
@@ -33,9 +33,11 @@ export class RenderService {
   ) {}
 
   async render(input: RenderResumeRequest): Promise<RenderTurnResponse> {
+    let result: RenderResumeResult;
+    const chatId = generateId();
+
     try {
-      const result = await this.llm.renderResume(input);
-      const chatId = generateId();
+      result = await this.llm.renderResume(input);
       const now = new Date();
 
       await this.db.insert(renderChats).values({
@@ -49,17 +51,25 @@ export class RenderService {
         createdAt: now,
         updatedAt: now,
       });
-
-      return {
-        chatId,
-        reply: null,
-        markup: result.markup,
-        usage: result.usage,
-      };
     } catch (error) {
       logger.error("Resume render failed", { error: serializeError(error) });
       throw new RenderGenerationError();
     }
+
+    logger.info("Resume render completed", {
+      chatId,
+      projectId: input.projectId,
+      inputTokens: result.usage.inputTokens,
+      cachedInputTokens: result.usage.cachedInputTokens,
+      outputTokens: result.usage.outputTokens,
+    });
+
+    return {
+      chatId,
+      reply: null,
+      markup: result.markup,
+      usage: result.usage,
+    };
   }
 
   async sendMessage(chatId: Uuid, contentInput: string): Promise<RenderTurnResponse> {
